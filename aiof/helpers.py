@@ -9,7 +9,7 @@ _frequency = {
 
 def convert_frequency(frequency):
     if frequency not in _frequency:
-        raise Exception("frequency must be one of the following: " + ",".join(_frequency))
+        raise Exception("frequency must be one of the following: " + ", ".join(_frequency))
     return float(_frequency[frequency])
 
 
