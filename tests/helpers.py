@@ -24,7 +24,18 @@ class HelpersTestSuite(unittest.TestCase):
 
 
     def test_compound_interest(self):
-        assert True
+        assert aiof.compound_interest_calc(1000, 5, 8) > 1000
+
+    def test_compound_interest_all_frequencies(self):
+        frequencies = [
+            "daily",
+            "monthly",
+            "quarterly",
+            "half-year",
+            "yearly"
+        ]
+        for f in frequencies:
+            assert aiof.compound_interest_calc(1000, 5, 8) > 1000
 
 
 if __name__ == "__main__":
