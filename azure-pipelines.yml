@@ -1,0 +1,28 @@
+trigger:
+- master
+
+resources:
+- repo: self
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  tag: latest
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:  
+  - job: Build
+    displayName: Build
+    steps:
+    - task: Docker@2
+      displayName: docker build and push
+      inputs:
+        containerRegistry: gkama-docker-cr
+        repository: gkama/aiof-metadata
+        command: buildAndPush
+        Dockerfile: $(Build.SourcesDirectory)/Dockerfile
+        tags: |
+          $(tag)
