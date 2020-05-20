@@ -1,4 +1,3 @@
-
 _frequency = [
     "daily",
     "monthly",
@@ -20,6 +19,8 @@ def convert_frequency(frequency):
         frequency_float = 6
     elif frequency == "yearly":
         frequency_float = 1
+
+    return float(frequency_float)
 
 
 def compound_interest(principal_amount, number_of_years, rate_of_interest, frequency = "yearly"):
