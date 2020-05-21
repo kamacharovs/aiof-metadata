@@ -1,4 +1,5 @@
 import unittest
+import json
 
 from .context import aiof
 
@@ -53,6 +54,15 @@ class HelpersTestSuite(unittest.TestCase):
         assert aiof.loan_payments_calc(10000, 5, 7) > 0
     def test_loan_payments_calc_monthly(self):
         assert aiof.loan_payments_calc(10000, 5, 7, "monthly") > 0
+
+    def test_loan_payments_calc_as_table(self):
+        loan_json = json.loads(aiof.loan_payments_calc_as_table(10000, 6, 7))
+        loan_json_len = len(loan_json)
+
+        assert loan_json[0]["year"] == 1
+        assert loan_json[loan_json_len - 1]["year"] == 6
+        assert loan_json[loan_json_len - 1]["endingBalance"] == 0
+
 
 
 if __name__ == "__main__":
