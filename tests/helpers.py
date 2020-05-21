@@ -23,6 +23,16 @@ class HelpersTestSuite(unittest.TestCase):
 
 
 
+    def test_to_percentage_80(self):
+        assert aiof.to_percentage(80) == 0.8
+    def test_to_percentage_5(self):
+        assert aiof.to_percentage(5) == 0.05
+
+    def test_to_percentage_raises_exception(self):
+        with self.assertRaises(Exception): aiof.to_percentage(200)
+
+
+
     def test_compound_interest(self):
         assert aiof.compound_interest_calc(1000, 5, 8) > 1000
 
@@ -38,15 +48,11 @@ class HelpersTestSuite(unittest.TestCase):
             assert aiof.compound_interest_calc(1000, 5, 8) > 1000
 
 
-
-    def test_to_percentage_80(self):
-        assert aiof.to_percentage(80) == 0.8
-    def test_to_percentage_5(self):
-        assert aiof.to_percentage(5) == 0.05
-
-    def test_to_percentage_raises_exception(self):
-        with self.assertRaises(Exception): aiof.to_percentage(200)
-        
+    
+    def test_loan_payments_calc_yearly(self):
+        assert aiof.loan_payments_calc(10000, 5, 7) > 0
+    def test_loan_payments_calc_monthly(self):
+        assert aiof.loan_payments_calc(10000, 5, 7, "monthly") > 0
 
 
 if __name__ == "__main__":
