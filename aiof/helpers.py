@@ -16,3 +16,9 @@ def convert_frequency(frequency):
 def compound_interest_calc(principal_amount, number_of_years, rate_of_interest, frequency = "yearly"):
     frequency_float = convert_frequency(frequency)
     return principal_amount * (pow(1 + ((rate_of_interest / 100) / frequency_float), frequency_float * number_of_years))
+
+
+def to_percentage(number):
+    if number < 0 or number > 100:
+        raise Exception("number can't be less than 0 or bigger than 100")
+    return float(number) / 100
