@@ -38,5 +38,16 @@ class HelpersTestSuite(unittest.TestCase):
             assert aiof.compound_interest_calc(1000, 5, 8) > 1000
 
 
+
+    def test_to_percentage_80(self):
+        assert aiof.to_percentage(80) == 0.8
+    def test_to_percentage_5(self):
+        assert aiof.to_percentage(5) == 0.05
+
+    def test_to_percentage_raises_exception(self):
+        with self.assertRaises(Exception): aiof.to_percentage(200)
+        
+
+
 if __name__ == "__main__":
     unittest.main()
