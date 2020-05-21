@@ -55,7 +55,7 @@ class HelpersTestSuite(unittest.TestCase):
     def test_loan_payments_calc_monthly(self):
         assert aiof.loan_payments_calc(10000, 5, 7, "monthly") > 0
 
-    def test_loan_payments_calc_as_table(self):
+    def test_loan_payments_calc_as_table_yearly(self):
         loan_json = json.loads(aiof.loan_payments_calc_as_table(10000, 6, 7))
         loan_json_len = len(loan_json)
 
