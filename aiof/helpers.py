@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import numpy_financial as npf
 
 
@@ -31,3 +32,30 @@ def compound_interest_calc(principal_amount, number_of_years, rate_of_interest, 
 def loan_payments_calc(loan_amount, number_of_years, rate_of_interest, frequency = "yearly"):
     car_payments = npf.pmt(rate = to_percentage(rate_of_interest), nper = number_of_years, pv = -loan_amount)
     return car_payments / convert_frequency(frequency)
+
+def loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency = "yearly"):
+    car_payments = loan_payments_calc(loan_amount, number_of_years, rate_of_interest, frequency)
+    interest = to_percentage(rate_of_interest)
+    loan_df = np.zeros((number_of_years, 6))
+    loan_df = pd.DataFrame(loan_df)
+    loan_df.columns = ["year", "initialBalance", "payments", "interest",
+                                "principal", "endingBalance"]
+    loan_df.iloc[0,0] = 1
+    loan_df.iloc[0,1] = loan_amount
+    loan_df.iloc[0,2] = car_payments
+    loan_df.iloc[0,3] = loan_amount * interest
+    loan_df.iloc[0,4] = car_payments - (loan_amount * interest)
+    loan_df.iloc[0,5] = loan_amount - (car_payments - (loan_amount * interest))
+    for i in range(1, number_of_years):
+        loan_df.iloc[i,0] = i + 1
+        loan_df.iloc[i,1] = loan_df.iloc[(i-1), 5]
+        loan_df.iloc[i,2] = car_payments
+        loan_df.iloc[i,3] = loan_df.iloc[i,1] * interest
+        loan_df.iloc[i,4] = car_payments - (loan_df.iloc[i,1] * interest)
+        loan_df.iloc[i,5] = loan_df.iloc[i,1] - (car_payments - (loan_df.iloc[i,1] * interest))
+    
+    loan_df = loan_df.round(2)
+    loan_df["year"] = loan_df["year"].astype(int)
+
+    with pd.option_context("display.max_rows", None, "display.max_columns", None):
+        return loan_df.to_json(orient="records")
