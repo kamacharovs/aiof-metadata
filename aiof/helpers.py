@@ -13,7 +13,7 @@ _frequency = {
 _frequency_text = {
     "daily": "day",
     "monthly": "month",
-    "quarterly": "querter",
+    "quarterly": "quarter",
     "half-year": "half-year",
     "yearly": "year"
 }
