@@ -1,6 +1,8 @@
 import os
 
 from flask import Flask
+from flask import jsonify
+from aiof.core import frequencies
 
 
 def create_app(test_config=None):
@@ -19,9 +21,9 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route("/hello")
-    def hello():
-        return "Hello, World!"
+    @app.route("/metadata/frequencies")
+    def get_frequencies():
+        return jsonify(frequencies())
 
     return app
 
