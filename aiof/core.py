@@ -1,5 +1,5 @@
-from . import helpers
+from aiof.helpers import *
 
 
 def test():
-    return helpers.convert_frequency("daily")
+    return convert_frequency("daily")
