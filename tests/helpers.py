@@ -65,5 +65,9 @@ class HelpersTestCase(unittest.TestCase):
 
 
 
+    def test_simple_interest_calc(self):
+        assert simple_interest_calc(1000, 15, 5) == 7.5
+
+
 if __name__ == "__main__":
     unittest.main()
