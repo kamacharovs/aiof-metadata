@@ -69,5 +69,10 @@ class HelpersTestCase(unittest.TestCase):
         assert simple_interest_calc(1000, 15, 5) == 7.5
 
 
+    
+    def test_equated_monthly_installment(self):
+        assert equated_monthly_installment(1000, 7.5, 36) > 0
+
+
 if __name__ == "__main__":
     unittest.main()
