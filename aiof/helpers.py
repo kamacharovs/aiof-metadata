@@ -78,6 +78,6 @@ def simple_interest_calc(principal_amount, rate_of_interest, number_of_years):
     return (principal_amount * to_percentage(rate_of_interest) * number_of_years) / 100
 
 
-def equated_monthly_installment(principal_amount, rate_of_interest, number_of_months):
+def equated_monthly_installment_calc(principal_amount, rate_of_interest, number_of_months):
     interest = to_percentage(rate_of_interest)
     return (principal_amount * interest * (pow(1 + interest, number_of_months))) / ((pow(1 + interest, number_of_months)) - 1)

@@ -70,8 +70,8 @@ class HelpersTestCase(unittest.TestCase):
 
 
     
-    def test_equated_monthly_installment(self):
-        assert equated_monthly_installment(1000, 7.5, 36) > 0
+    def test_equated_monthly_installment_calc(self):
+        assert equated_monthly_installment_calc(1000, 7.5, 36) > 0
 
 
 if __name__ == "__main__":
