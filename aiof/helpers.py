@@ -72,3 +72,7 @@ def loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest):
 
     with pd.option_context("display.max_rows", None, "display.max_columns", None):
         return loan_df.to_json(orient="records")
+
+
+def simple_interest_calc(principal_amount, rate_of_interest, number_of_years):
+    return (principal_amount * to_percentage(rate_of_interest) * number_of_years) / 100
