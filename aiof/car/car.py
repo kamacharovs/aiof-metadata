@@ -1,5 +1,0 @@
-
-
-
-def test():
-    return "car"

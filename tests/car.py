@@ -1,7 +1,7 @@
 import unittest
 import json
 
-from aiof.car.car import *
+from aiof.car.core import *
 
 
 class CarTestCase(unittest.TestCase):

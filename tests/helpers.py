@@ -4,7 +4,7 @@ import json
 from aiof.helpers import *
 
 
-class HelpersTestSuite(unittest.TestCase):
+class HelpersTestCase(unittest.TestCase):
     """Helpers unit tests"""
 
     def test_convert_frequency_daily(self):
