@@ -6,5 +6,6 @@ RUN \
 WORKDIR /app
 COPY . /app/
 RUN pip install .
+WORKDIR /app/api
 ENTRYPOINT ["python"]
 CMD ["api.py"]
