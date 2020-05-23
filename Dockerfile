@@ -2,14 +2,13 @@ FROM ubuntu:18.04
 RUN \
     apt-get update && \
     apt-get -y upgrade && \
-    apt-get install -y python3 python3-pip python3-virtualenv python-dev 
-
-ENV VIRTUAL_ENV=/opt/venv
-RUN python3 -m virtualenv --python=/usr/bin/python3 $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
+    apt-get install -y python python-pip python-virtualenv python-dev 
 WORKDIR /app
 COPY . /app/
-RUN pip install -r requirements.txt
+RUN mkdir -p /venv/
+RUN virtualenv /venv/
+RUN /venv/bin/pip install -r /app/requirements.txt
+# RUN pip install -r requirements.txt
+EXPOSE 5000
 WORKDIR /app/api
 ENTRYPOINT ["flask", "run"]
