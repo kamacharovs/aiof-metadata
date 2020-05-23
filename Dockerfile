@@ -6,4 +6,5 @@ RUN \
 WORKDIR /app
 COPY . /app/
 RUN pip install .
-CMD ["python", "setup.py test"]
+ENTRYPOINT ["python"]
+CMD ["api.py"]
