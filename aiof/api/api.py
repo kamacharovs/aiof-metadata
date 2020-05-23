@@ -1,8 +1,9 @@
 import os
+import aiof.core as core
+import aiof.helpers as helpers
 
 from flask import Flask
 from flask import jsonify
-from aiof.core import frequencies
 
 
 def create_app(test_config=None):
@@ -23,7 +24,7 @@ def create_app(test_config=None):
 
     @app.route("/metadata/frequencies")
     def get_frequencies():
-        return jsonify(frequencies())
+        return jsonify(list(helpers._frequency.keys()))
 
     return app
 

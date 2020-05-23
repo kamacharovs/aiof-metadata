@@ -1,5 +1,5 @@
-from aiof.helpers import _frequency
+import aiof.helpers as helpers
 
 
 def frequencies():
-    return list(_frequency.keys())
+    return list(helpers._frequency.keys())
