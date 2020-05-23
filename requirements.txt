@@ -1,5 +1,4 @@
 numpy
-numpy_financial
 pandas
 pynance
 Flask
