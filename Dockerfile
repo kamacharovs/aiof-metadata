@@ -8,4 +8,4 @@ COPY . /app/
 RUN pip install -r requirements.txt
 RUN pip install numpy_financial
 WORKDIR /app/api
-CMD ["python", "api,py"]
+CMD ["python", "api.py"]
