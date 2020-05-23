@@ -5,7 +5,6 @@ RUN \
     apt-get install -y python python-pip python-dev
 WORKDIR /app
 COPY . /app/
-RUN pip install .
+RUN pip install -r requirements
 WORKDIR /app/api
-ENTRYPOINT ["python"]
-CMD ["api.py"]
+CMD ["python", "api,py"]
