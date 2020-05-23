@@ -7,4 +7,4 @@ WORKDIR /app
 COPY . /app/
 RUN pip install -r requirements.txt
 WORKDIR /app/api
-CMD ["python", "api.py"]
+ENTRYPOINT ["flask run"]
