@@ -6,5 +6,5 @@ RUN \
 WORKDIR /app
 COPY . /app/
 RUN pip install -r requirements.txt
-WORKDIR /app/aiof/api
+WORKDIR /app/api
 CMD ["python", "api.py"]
