@@ -27,12 +27,12 @@ def create_app(test_config=None):
     def get_frequencies():
         return jsonify(list(helpers._frequency.keys()))
 
-    @app.route("car/loan")
+    @app.route("/car/loan")
     def get_car_loan():
         return jsonify(car.loan_calc(25000, 3.75, 72))
 
     return app
 
-
+    
 if __name__ == "__main__":
     create_app().run()
