@@ -1,6 +1,7 @@
 import os
 import aiof.core as core
 import aiof.helpers as helpers
+import aiof.car.core as car
 
 from flask import Flask
 from flask import jsonify
@@ -25,6 +26,10 @@ def create_app(test_config=None):
     @app.route("/metadata/frequencies")
     def get_frequencies():
         return jsonify(list(helpers._frequency.keys()))
+
+    @app.route("car/loan")
+    def get_car_loan():
+        return jsonify(car.loan_calc(25000, 3.75, 72))
 
     return app
 
