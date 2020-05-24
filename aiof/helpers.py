@@ -46,26 +46,27 @@ def loan_payments_calc(loan_amount, number_of_years, rate_of_interest, frequency
 def loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency="monthly"):
     payments = loan_payments_calc(loan_amount, number_of_years, rate_of_interest, frequency)
     interest = to_percentage(rate_of_interest)
-    frequency_num = convert_frequency(frequency, as_int=True) * number_of_years
+    frequency_int = convert_frequency(frequency, as_int=True)
+    frequency_num = frequency_int * number_of_years
     frequency_text = _frequency_text[frequency]
 
     loan_df = np.zeros((frequency_num, 6))
     loan_df = pd.DataFrame(loan_df)
-    loan_df.columns = [frequency_text, "initialBalance", "payments", "interest",
+    loan_df.columns = [frequency_text, "initialBalance", "payment", "interest",
                                 "principal", "endingBalance"]
     loan_df.iloc[0, 0] = 1
     loan_df.iloc[0, 1] = loan_amount
     loan_df.iloc[0, 2] = payments
-    loan_df.iloc[0, 3] = loan_amount * interest
-    loan_df.iloc[0, 4] = payments - (loan_amount * interest)
-    loan_df.iloc[0, 5] = loan_amount - (payments - (loan_amount * interest))
+    loan_df.iloc[0, 3] = loan_amount
+    loan_df.iloc[0, 4] = loan_amount - payments
+    loan_df.iloc[0, 5] = loan_amount - payments
     for i in range(1, frequency_num):
         loan_df.iloc[i, 0] = i + 1
         loan_df.iloc[i, 1] = loan_df.iloc[(i - 1), 5]
         loan_df.iloc[i, 2] = payments
-        loan_df.iloc[i, 3] = loan_df.iloc[i, 1] * interest
-        loan_df.iloc[i, 4] = payments - (loan_df.iloc[i, 1] * interest)
-        loan_df.iloc[i, 5] = loan_df.iloc[i, 1] - (payments - (loan_df.iloc[i, 1] * interest))
+        loan_df.iloc[i, 3] = loan_df.iloc[i, 1] * interest if i % frequency_int == 0 else loan_df.iloc[i, 1]
+        loan_df.iloc[i, 4] = payments - (loan_df.iloc[i, 1] * interest) if i % frequency_int == 0 else loan_df.iloc[i, 1] - payments
+        loan_df.iloc[i, 5] = loan_df.iloc[i, 1] - (payments - (loan_df.iloc[i, 1] * interest)) if i % frequency_int == 0 else loan_df.iloc[i, 1] - payments
     
     loan_df = loan_df.round(2)
     loan_df[frequency_text] = loan_df[frequency_text].astype(int)
