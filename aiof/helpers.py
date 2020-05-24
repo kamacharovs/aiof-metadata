@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-#import numpy_financial as npf
+import numpy_financial as npf
 
 
 _frequency = {
@@ -38,13 +38,12 @@ def compound_interest_calc(principal_amount, number_of_years, rate_of_interest, 
     return principal_amount * (pow(1 + ((rate_of_interest / 100) / frequency_float), frequency_float * number_of_years))
 
 
-def loan_payments_calc(loan_amount, number_of_years, rate_of_interest, frequency="yearly"):
-    #payments = npf.pmt(rate = to_percentage(rate_of_interest), nper = number_of_years, pv = -loan_amount)
-    payments = 1800
-    return payments / convert_frequency(frequency)
+def loan_payments_calc(loan_amount, number_of_years, rate_of_interest, frequency="monthly"):
+    frequency_int = convert_frequency(frequency, as_int=True)
+    return npf.pmt(rate = (to_percentage(rate_of_interest) / frequency_int), nper = number_of_years * frequency_int, pv = -loan_amount)
 
-def loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest):
-    frequency = "yearly"
+
+def loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency="monthly"):
     payments = loan_payments_calc(loan_amount, number_of_years, rate_of_interest, frequency)
     interest = to_percentage(rate_of_interest)
     frequency_num = convert_frequency(frequency, as_int=True) * number_of_years
