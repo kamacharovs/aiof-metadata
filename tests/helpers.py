@@ -56,12 +56,19 @@ class HelpersTestCase(unittest.TestCase):
         assert loan_payments_calc(10000, 5, 7, "monthly") > 0
 
     def test_loan_payments_calc_as_table_yearly(self):
-        loan_json = json.loads(loan_payments_calc_as_table(10000, 6, 7))
+        loan_json = json.loads(loan_payments_calc_as_table(10000, 6, 7, "yearly"))
         loan_json_len = len(loan_json)
 
         assert loan_json[0]["year"] == 1
         assert loan_json[loan_json_len - 1]["year"] == 6
         assert loan_json[loan_json_len - 1]["endingBalance"] == 0
+
+    def test_loan_payments_calc_as_table_monthly(self):
+        loan_json = json.loads(loan_payments_calc_as_table(200000, 15, 3.15))
+        loan_json_len = len(loan_json)
+        print(loan_json)
+        assert loan_json[0]["month"] == 1
+        assert loan_json[loan_json_len - 1]["month"] == 180
 
 
 
