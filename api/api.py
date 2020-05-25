@@ -4,6 +4,7 @@ import aiof.helpers as helpers
 import aiof.car.core as car
 
 from flask import Flask
+from flask import request
 from flask import jsonify
 
 
@@ -23,13 +24,20 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route("/metadata/frequencies")
+    @app.route("/metadata/frequencies", methods=["GET"])
     def get_frequencies():
         return jsonify(list(helpers._frequency.keys()))
 
-    @app.route("/car/loan")
+    @app.route("/car/loan", methods=["GET"])
     def get_car_loan():
         return jsonify(car.loan_calc(25000, 3.75, 72))
+
+    @app.route("/loan/payments/<string:frequency>", methods=["POST"])
+    def get_loan_payments(frequency):
+        loan_amount = request.form["loanAmount"]
+        number_of_years = request.form["numberOfYears"]
+        rate_of_interest = request.form["rateOfInterest"]
+        return core.loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency)
 
     return app
 
