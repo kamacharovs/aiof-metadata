@@ -13,4 +13,5 @@ def loan_payments_calc_as_table(content_as_json, frequency="monthly"):
     return helpers.loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency)
 
 
-def test()
+def test():
+    print("Hello")
