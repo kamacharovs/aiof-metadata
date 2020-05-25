@@ -14,4 +14,4 @@ def loan_payments_calc_as_table(content_as_json, frequency="monthly"):
 
 
 def test():
-    print("Hello")
+    print("Testing hello")
