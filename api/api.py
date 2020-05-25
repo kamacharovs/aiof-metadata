@@ -34,7 +34,7 @@ def create_app(test_config=None):
 
     @app.route("/loan/payments/<string:frequency>", methods=["GET", "POST"])
     def get_loan_payments(frequency):
-        return jsonify(core.loan_payments_calc_as_table(request.get_json(silent=True), frequency))
+        return core.loan_payments_calc_as_table(request.get_json(silent=True), frequency)
 
     return app
 
