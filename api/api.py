@@ -32,12 +32,9 @@ def create_app(test_config=None):
     def get_car_loan():
         return jsonify(car.loan_calc(25000, 3.75, 72))
 
-    @app.route("/loan/payments/<string:frequency>", methods=["POST"])
+    @app.route("/loan/payments/<string:frequency>", methods=["GET", "POST"])
     def get_loan_payments(frequency):
-        loan_amount = request.form["loanAmount"]
-        number_of_years = request.form["numberOfYears"]
-        rate_of_interest = request.form["rateOfInterest"]
-        return core.loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency)
+        return jsonify(core.loan_payments_calc_as_table(request.get_json(silent=True), frequency))
 
     return app
 
