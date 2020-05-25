@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 RUN \
     apt-get update && \
     apt-get -y upgrade && \
-    apt-get install -y python3 python3-pip python-dev
+    apt-get install -y python3 python3-pip python3-venv python-dev
 WORKDIR /app
 COPY . /app/
 
