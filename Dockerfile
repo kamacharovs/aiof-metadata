@@ -9,7 +9,8 @@ COPY . /app/
 RUN python3 -m venv venv
 RUN . venv/bin/activate
 ENV FLASK_APP=api
-RUN /venv/bin/pip install -r /app/requirements.txt
+#RUN /venv/bin/pip install -r /app/requirements.txt
+RUN pip install -r requirements.txt
 
 EXPOSE 5000
 WORKDIR /app/api
