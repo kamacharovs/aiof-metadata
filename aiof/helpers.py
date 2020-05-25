@@ -81,3 +81,14 @@ def simple_interest_calc(principal_amount, rate_of_interest, number_of_years):
 def equated_monthly_installment_calc(principal_amount, rate_of_interest, number_of_months):
     interest = to_percentage(rate_of_interest)
     return (principal_amount * interest * (pow(1 + interest, number_of_months))) / ((pow(1 + interest, number_of_months)) - 1)
+
+
+#create balance sheet list and total
+def balance_sheet_calc(ending_balances):
+    total_liabilities = 0
+    for balance in ending_balances:
+        total_liabilities += balance
+    print(total_liabilities)
+
+
+balance_sheet_calc([20000,30000,40000,10000])
