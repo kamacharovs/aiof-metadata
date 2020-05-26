@@ -80,7 +80,12 @@ def loan_payments_calc_as_table_stats(loan_amount, number_of_years, rate_of_inte
     payments_df_len_half = int(payments_df_len / 2)
 
     #if you were to invest in a high yield savings account
-    hysa_amount = compound_interest_calc(loan_amount, number_of_years, 1.5)
+    hysa_amount = compound_interest_calc(loan_amount, number_of_years, 1.5, frequency)
+
+    #if you were to pay off the loan in 1, 2 and 3 less years
+    payments_1_less_year = loan_payments_calc(loan_amount, number_of_years - 1, rate_of_interest, frequency) if number_of_years >= 2 else "N/A"
+    payments_2_less_years = loan_payments_calc(loan_amount, number_of_years - 2, rate_of_interest, frequency) if number_of_years >= 3 else "N/A"
+    payments_3_less_years = loan_payments_calc(loan_amount, number_of_years - 3, rate_of_interest, frequency) if number_of_years >= 4 else "N/A"
 
     payments_stats = {
         "startingBalance": payments_df.iloc[0]["initialBalance"],
@@ -90,7 +95,15 @@ def loan_payments_calc_as_table_stats(loan_amount, number_of_years, rate_of_inte
         "totalPayments": payments_df["payment"].sum(),
         "totalHalfPayments": payments_df.head(payments_df_len_half)["payment"].sum(),
         "highYieldSavings": {
-            "amount": hysa_amount
+            "years": number_of_years,
+            "amount": hysa_amount,
+            "frequency": frequency
+        },
+        "payments": {
+            "original": payments_df.iloc[0]["payment"],
+            "oneLessYear": payments_1_less_year,
+            "twoLessYears": payments_2_less_years,
+            "threeLessYears": payments_3_less_years
         }
     }
     
