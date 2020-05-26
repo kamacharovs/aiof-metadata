@@ -93,33 +93,41 @@ def loan_payments_calc_stats(loan_amount, number_of_years, rate_of_interest, fre
     reduced_by_30perc_number_of_years = math.ceil(number_of_years * 0.7)
     payments_reduced_by_30perc_df = loan_payments_calc_as_table(loan_amount, reduced_by_30perc_number_of_years, rate_of_interest, frequency)
 
+    # if you were to reduce your rate of interest by 25%
+    reduced_by_25perc_rate_of_interest = rate_of_interest * 0.75
+    payments_roi_reduced_by_25perc_df = loan_payments_calc_as_table(loan_amount, number_of_years, reduced_by_25perc_rate_of_interest, frequency)
+
     data = {
-        "loan": [loan_amount, loan_amount, loan_amount, loan_amount],
-        "interest": [rate_of_interest, rate_of_interest, rate_of_interest, rate_of_interest],
+        "loan": [loan_amount, loan_amount, loan_amount, loan_amount, loan_amount],
+        "interest": [rate_of_interest, rate_of_interest, rate_of_interest, rate_of_interest, reduced_by_25perc_rate_of_interest],
         "years": [
             number_of_years,
             reduced_by_1_number_of_years,
             half_number_of_years,
-            reduced_by_30perc_number_of_years
+            reduced_by_30perc_number_of_years,
+            number_of_years
             ],
-        "frequency": [frequency, frequency, frequency, frequency],
+        "frequency": [frequency, frequency, frequency, frequency, frequency],
         "totalInterest": [
             payments_df["interest"].sum(),
             payments_reduced_by_1_df["interest"].sum(),
             payments_half_df["interest"].sum(),
-            payments_reduced_by_30perc_df["interest"].sum()
+            payments_reduced_by_30perc_df["interest"].sum(),
+            payments_roi_reduced_by_25perc_df["interest"].sum()
         ],
         "totalPayments": [
             payments_df["payment"].sum(),
             payments_reduced_by_1_df["payment"].sum(),
             payments_half_df["payment"].sum(),
-            payments_reduced_by_30perc_df["payment"].sum()
+            payments_reduced_by_30perc_df["payment"].sum(),
+            payments_roi_reduced_by_25perc_df["payment"].sum()
         ],
         "description": [
             "original loan payments",
             "loan payments if the number of years were reduced by 1",
             "loan payments if the number of years were reduced by half",
-            "loan payments if the number of years were reduced by 30%"
+            "loan payments if the number of years were reduced by 30%",
+            "loan payments if the rate of interest was reduced by 25%"
         ]
     }
 
