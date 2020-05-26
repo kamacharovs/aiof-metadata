@@ -83,9 +83,9 @@ def loan_payments_calc_as_table_stats(loan_amount, number_of_years, rate_of_inte
     hysa_amount = compound_interest_calc(loan_amount, number_of_years, 1.5, frequency)
 
     #if you were to pay off the loan in 1, 2 and 3 less years
-    payments_1_less_year = loan_payments_calc(loan_amount, number_of_years - 1, rate_of_interest, frequency) if number_of_years >= 2 else "N/A"
-    payments_2_less_years = loan_payments_calc(loan_amount, number_of_years - 2, rate_of_interest, frequency) if number_of_years >= 3 else "N/A"
-    payments_3_less_years = loan_payments_calc(loan_amount, number_of_years - 3, rate_of_interest, frequency) if number_of_years >= 4 else "N/A"
+    payments_df_1_less_year = loan_payments_calc_as_table(loan_amount, number_of_years - 1, rate_of_interest, frequency)
+    payments_df_2_less_years = loan_payments_calc_as_table(loan_amount, number_of_years - 2, rate_of_interest, frequency)
+    payments_df_3_less_years = loan_payments_calc_as_table(loan_amount, number_of_years - 3, rate_of_interest, frequency)
 
     payments_stats = {
         "startingBalance": payments_df.iloc[0]["initialBalance"],
@@ -99,11 +99,28 @@ def loan_payments_calc_as_table_stats(loan_amount, number_of_years, rate_of_inte
             "amount": hysa_amount,
             "frequency": frequency
         },
-        "payments": {
+        "payment": {
             "original": payments_df.iloc[0]["payment"],
-            "oneLessYear": payments_1_less_year,
-            "twoLessYears": payments_2_less_years,
-            "threeLessYears": payments_3_less_years
+            "less": [
+                {
+                    "year": 1,
+                    "payment": payments_df_1_less_year.iloc[0]["payment"],
+                    "interest": payments_df_1_less_year["interest"].sum(),
+                    "totalPayments": payments_df_1_less_year["payment"].sum()
+                },
+                {
+                    "year": 2,
+                    "payment": payments_df_2_less_years.iloc[0]["payment"],
+                    "interest": payments_df_2_less_years["interest"].sum(),
+                    "totalPayments": payments_df_2_less_years["payment"].sum()
+                },
+                {
+                    "year": 3,
+                    "payment": payments_df_3_less_years.iloc[0]["payment"],
+                    "interest": payments_df_3_less_years["interest"].sum(),
+                    "totalPayments": payments_df_3_less_years["payment"].sum()
+                },
+            ]
         }
     }
     
