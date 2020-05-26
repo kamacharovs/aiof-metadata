@@ -85,15 +85,19 @@ def loan_payments_calc_stats(loan_amount, number_of_years, rate_of_interest, fre
     half_number_of_years = math.ceil(number_of_years / 2)
     payments_half_df = loan_payments_calc_as_table(loan_amount, half_number_of_years, rate_of_interest, frequency)
 
+    # if you were to reduce the years by 1
+    reduced_by_1_number_of_years = number_of_years - 1
+    payments_reduced_by_1_df = loan_payments_calc_as_table(loan_amount, reduced_by_1_number_of_years, rate_of_interest, frequency)
+
     data = {
-        "loanAmount": [loan_amount, loan_amount],
-        "numberOfYears": [number_of_years, half_number_of_years],
-        "frequency": [frequency, frequency],
-        "totalInterest": [payments_df["interest"].sum(), payments_half_df["interest"].sum()],
-        "totalPayments": [payments_df["payment"].sum(), payments_half_df["interest"].sum()]
+        "loan": [loan_amount, loan_amount, loan_amount],
+        "years": [number_of_years, reduced_by_1_number_of_years, half_number_of_years],
+        "frequency": [frequency, frequency, frequency],
+        "totalInterest": [payments_df["interest"].sum(), payments_reduced_by_1_df["interest"].sum(), payments_half_df["interest"].sum()],
+        "totalPayments": [payments_df["payment"].sum(), payments_reduced_by_1_df["payment"].sum(), payments_half_df["payment"].sum()]
     }
 
-    data_df = pd.DataFrame(data, columns=["loanAmount", "numberOfYears", "frequency", "totalInterest", "totalPayments"])
+    data_df = pd.DataFrame(data, columns=["loan", "years", "frequency", "totalInterest", "totalPayments"])
     print(data_df)
     return data_df
 
