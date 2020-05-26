@@ -144,6 +144,8 @@ def loan_payments_calc_stats(loan_amount, number_of_years, rate_of_interest, fre
     return data_df
 
 
+# calculates new loan payments based on the new_ input
+# TODO: make the new_ a list so there can be multiple entries possible
 def loan_payments_calc_custom_stats(loan_amount, number_of_years, rate_of_interest, frequency="monthly",
     new_loan_amount=None,
     new_number_of_years=None,
