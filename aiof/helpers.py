@@ -166,11 +166,11 @@ def loan_payments_calc_custom_stats(loan_amount, number_of_years, rate_of_intere
     data = {
         "loan": [loan_amount, updated_loan_amount],
         "interest": [rate_of_interest, updated_rate_of_interest],
-        "years": [ number_of_years, updated_number_of_years],
+        "years": [number_of_years, updated_number_of_years],
         "frequency": [frequency, updated_frequency],
-        "totalInterest": [ payments_df["interest"].sum(), updated_payments_df["interest"].sum() ],
-        "totalPayments": [ payments_df["payment"].sum(), updated_payments_df["payment"].sum() ],
-        "description": [ "original loan payments", "updated loan payments" ]
+        "totalInterest": [payments_df["interest"].sum(), updated_payments_df["interest"].sum()],
+        "totalPayments": [payments_df["payment"].sum(), updated_payments_df["payment"].sum()],
+        "description": ["original loan payments", "updated loan payments"]
     }
 
     data_df = pd.DataFrame(data, columns=["loan", "interest", "years", "frequency", "totalInterest", "totalPayments", "description"])
