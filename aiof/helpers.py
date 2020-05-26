@@ -42,7 +42,7 @@ def loan_payments_calc(loan_amount, number_of_years, rate_of_interest, frequency
     return np.pmt(rate = (to_percentage(rate_of_interest) / frequency_int), nper = number_of_years * frequency_int, pv = -loan_amount)
 
 
-def loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency="monthly"):
+def loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency="monthly", as_json=True):
     payments = loan_payments_calc(loan_amount, number_of_years, rate_of_interest, frequency)
     interest = to_percentage(rate_of_interest)
     frequency_int = convert_frequency(frequency, as_int=True)
@@ -71,7 +71,7 @@ def loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, 
     loan_df[frequency_text] = loan_df[frequency_text].astype(int)
 
     with pd.option_context("display.max_rows", None, "display.max_columns", None):
-        return loan_df.to_json(orient="records")
+        return loan_df
 
 
 def simple_interest_calc(principal_amount, rate_of_interest, number_of_years):
