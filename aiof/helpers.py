@@ -145,7 +145,6 @@ def loan_payments_calc_stats(loan_amount, number_of_years, rate_of_interest, fre
 
 
 # calculates new loan payments based on the new_ input
-# TODO: make the new_ a list so there can be multiple entries possible
 def loan_payments_calc_custom_stats(loan_amount, number_of_years, rate_of_interest, frequency="monthly",
     new_loan_amount=None,
     new_number_of_years=None,
@@ -178,6 +177,51 @@ def loan_payments_calc_custom_stats(loan_amount, number_of_years, rate_of_intere
     return data_df
 
 
+# same as loan_payments_calc_custom_stats() but accepts only multiple new_* params
+def loan_payments_calc_custom_multiple_stats(loan_amount, number_of_years, rate_of_interest, frequency="monthly",
+    new_loan_amounts=None,
+    new_number_of_years=None,
+    new_rate_of_interests=None,
+    new_frequencies=None):
+    if type(new_loan_amounts) is not list or type(new_number_of_years) is not list or type(new_rate_of_interests) is not list or type(new_frequencies) is not list:
+        raise ValueError("new_* params must all be lists")
+    
+    it = iter([new_loan_amounts, new_number_of_years, new_rate_of_interests, new_frequencies])
+    the_len = len(next(it))
+    if not all(len(l) == the_len for l in it):
+        raise ValueError("not all new_* lists have same length")
+
+    payments_df = loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency)
+
+    data = {
+        "loan": [loan_amount],
+        "interest": [rate_of_interest],
+        "years": [number_of_years],
+        "frequency": [frequency],
+        "totalInterest": [payments_df["interest"].sum()],
+        "totalPayments": [payments_df["payment"].sum()],
+        "description": ["original loan payments"]
+    }
+
+    for i in range(0, len(new_loan_amounts)):
+        updated_payments_df = loan_payments_calc_as_table(new_loan_amounts[i], 
+            new_number_of_years[i], 
+            new_rate_of_interests[i], 
+            new_frequencies[i])
+
+        data["loan"].append(new_loan_amounts[i])
+        data["interest"].append(new_rate_of_interests[i])
+        data["years"].append(new_number_of_years[i])
+        data["frequency"].append(new_frequencies[i])
+        data["totalInterest"].append(updated_payments_df["interest"].sum())
+        data["totalPayments"].append(updated_payments_df["payment"].sum())
+        data["description"].append("updated loan payments")
+
+    data_df = pd.DataFrame(data, columns=["loan", "interest", "years", "frequency", "totalInterest", "totalPayments", "description"])
+    print(data_df)
+    return data_df
+
+
 def simple_interest_calc(principal_amount, rate_of_interest, number_of_years):
     return (principal_amount * to_percentage(rate_of_interest) * number_of_years) / 100
 
@@ -196,6 +240,7 @@ def balance_sheet_calc(ending_balances):
 
 
 #balance_sheet_calc([20000,30000,40000,10000])
-loan_payments_calc_stats(30000, 6, 4.5)
-loan_payments_calc_custom_stats(30000, 6, 4.5, new_rate_of_interest=7.5)
-loan_payments_calc_custom_stats(30000, 6, 4.5, new_loan_amount=45000, new_rate_of_interest=2.5, new_number_of_years=15, new_frequency="yearly")
+#loan_payments_calc_stats(30000, 6, 4.5)
+#loan_payments_calc_custom_stats(30000, 6, 4.5, new_rate_of_interest=7.5)
+#loan_payments_calc_custom_stats(30000, 6, 4.5, new_loan_amount=[45000], new_rate_of_interest=2.5, new_number_of_years=15, new_frequency="yearly")
+loan_payments_calc_custom_multiple_stats(30000, 6, 4.5, new_loan_amounts=[30000, 45000], new_rate_of_interests=[4.0, 2.5], new_number_of_years=[6, 15], new_frequencies=["monthly", "monthly"])
