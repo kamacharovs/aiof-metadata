@@ -154,7 +154,7 @@ def loan_payments_calc_custom_stats(loan_amount, number_of_years, rate_of_intere
     updated_loan_amount = new_loan_amount if new_loan_amount != None else loan_amount
     updated_number_of_years= new_number_of_years if new_number_of_years != None else number_of_years
     updated_rate_of_interest = new_rate_of_interest if new_rate_of_interest != None else rate_of_interest
-    updated_frequency = new_loan_amount if new_frequency != None else frequency
+    updated_frequency = new_frequency if new_frequency != None else frequency
 
     updated_payments_df = loan_payments_calc_as_table(updated_loan_amount, 
         updated_number_of_years, 
@@ -165,7 +165,7 @@ def loan_payments_calc_custom_stats(loan_amount, number_of_years, rate_of_intere
         "loan": [loan_amount, updated_loan_amount],
         "interest": [rate_of_interest, updated_rate_of_interest],
         "years": [ number_of_years, updated_number_of_years],
-        "frequency": [frequency, frequency],
+        "frequency": [frequency, updated_frequency],
         "totalInterest": [ payments_df["interest"].sum(), updated_payments_df["interest"].sum() ],
         "totalPayments": [ payments_df["payment"].sum(), updated_payments_df["payment"].sum() ],
         "description": [ "original loan payments", "updated loan payments" ]
@@ -196,3 +196,4 @@ def balance_sheet_calc(ending_balances):
 #balance_sheet_calc([20000,30000,40000,10000])
 loan_payments_calc_stats(30000, 6, 4.5)
 loan_payments_calc_custom_stats(30000, 6, 4.5, new_rate_of_interest=7.5)
+loan_payments_calc_custom_stats(30000, 6, 4.5, new_loan_amount=45000, new_rate_of_interest=2.5, new_number_of_years=15, new_frequency="yearly")
