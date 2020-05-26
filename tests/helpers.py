@@ -1,5 +1,6 @@
 import unittest
 import json
+import pandas as pd
 
 from aiof.helpers import *
 
@@ -60,7 +61,7 @@ class HelpersTestCase(unittest.TestCase):
         assert round(loan_payments_calc(30000, 6, 4.5), 2) == 476.22
 
     def test_loan_payments_calc_as_table_yearly(self):
-        loan_json = json.loads(loan_payments_calc_as_table(10000, 6, 7, "yearly"))
+        loan_json = json.loads((loan_payments_calc_as_table(10000, 6, 7, "yearly")).to_json(orient="records"))
         loan_json_len = len(loan_json)
 
         assert loan_json[0]["year"] == 1
@@ -68,12 +69,15 @@ class HelpersTestCase(unittest.TestCase):
         assert loan_json[loan_json_len - 1]["endingBalance"] == 0
 
     def test_loan_payments_calc_as_table_monthly(self):
-        loan_json = json.loads(loan_payments_calc_as_table(30000, 6, 4.5))
+        loan_json = json.loads((loan_payments_calc_as_table(30000, 6, 4.5)).to_json(orient="records"))
         loan_json_len = len(loan_json)
-        print(loan_json)
+        
         assert loan_json[0]["month"] == 1
         assert loan_json[loan_json_len - 1]["month"] == 72
         assert loan_json[loan_json_len - 1]["endingBalance"] == 0
+
+    def test_loan_payments_calc_as_table_monthly_as_df(self):
+        payments_df = loan_payments_calc_as_table(30000, 6, 4.5)
 
 
 
@@ -84,6 +88,7 @@ class HelpersTestCase(unittest.TestCase):
     
     def test_equated_monthly_installment_calc(self):
         assert equated_monthly_installment_calc(1000, 7.5, 36) > 0
+
 
 
 if __name__ == "__main__":
