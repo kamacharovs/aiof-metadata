@@ -42,7 +42,7 @@ def loan_payments_calc(loan_amount, number_of_years, rate_of_interest, frequency
     return np.pmt(rate = (to_percentage(rate_of_interest) / frequency_int), nper = number_of_years * frequency_int, pv = -loan_amount)
 
 
-def loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency="monthly", as_json=True):
+def loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency="monthly"):
     payments = loan_payments_calc(loan_amount, number_of_years, rate_of_interest, frequency)
     interest = to_percentage(rate_of_interest)
     frequency_int = convert_frequency(frequency, as_int=True)
@@ -74,6 +74,29 @@ def loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, 
         return loan_df
 
 
+def loan_payments_calc_as_table_stats(loan_amount, number_of_years, rate_of_interest, frequency="monthly"):
+    payments_df = loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency)
+    payments_df_len = int(len(payments_df))
+    payments_df_len_half = int(payments_df_len / 2)
+
+    #if you were to invest in a high yield savings account
+    hysa_amount = compound_interest_calc(loan_amount, number_of_years, 1.5)
+
+    payments_stats = {
+        "startingBalance": payments_df.iloc[0]["initialBalance"],
+        "endingBalance": payments_df.iloc[payments_df_len - 1]["endingBalance"],
+        "totalInterest": payments_df["interest"].sum(),
+        "totalHalfInterest": payments_df.head(payments_df_len_half)["interest"].sum(),
+        "totalPayments": payments_df["payment"].sum(),
+        "totalHalfPayments": payments_df.head(payments_df_len_half)["payment"].sum(),
+        "highYieldSavings": {
+            "amount": hysa_amount
+        }
+    }
+    
+    print(payments_stats)
+
+
 def simple_interest_calc(principal_amount, rate_of_interest, number_of_years):
     return (principal_amount * to_percentage(rate_of_interest) * number_of_years) / 100
 
@@ -91,4 +114,5 @@ def balance_sheet_calc(ending_balances):
     print(total_liabilities)
 
 
-balance_sheet_calc([20000,30000,40000,10000])
+#balance_sheet_calc([20000,30000,40000,10000])
+loan_payments_calc_as_table_stats(30000, 6, 4.5)
