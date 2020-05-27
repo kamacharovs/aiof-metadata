@@ -8,10 +8,17 @@ class Finance():
 
 
     def get_total_assets_value(self):
-        return sum(self.assets.value)
+        total = 0
+        for a in self.assets:
+            total += a.value
+        return total
+
     def get_distinct_assets_types(self):
         return list(set(assets.type))
 
     def get_total_liabilities_value(self):
-        return sum(self.liabilities.value)
+        total = 0
+        for l in self.liabilities:
+            total += l.value
+        return total
 

@@ -9,5 +9,5 @@ class Goal:
 
     def __init__(self, name, type):
         self.name = name
-        self.type = type if type in _types else "other"
+        self.type = type if type in self._types else "other"
         self.savings = False
