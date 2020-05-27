@@ -140,7 +140,6 @@ def loan_payments_calc_stats(loan_amount, number_of_years, rate_of_interest, fre
     }
 
     data_df = pd.DataFrame(data, columns=["loan", "interest", "years", "frequency", "totalInterest", "totalPayments", "description"])
-    print(data_df)
     return data_df
 
 
@@ -173,7 +172,6 @@ def loan_payments_calc_custom_stats(loan_amount, number_of_years, rate_of_intere
     }
 
     data_df = pd.DataFrame(data, columns=["loan", "interest", "years", "frequency", "totalInterest", "totalPayments", "description"])
-    print(data_df)
     return data_df
 
 
@@ -218,7 +216,6 @@ def loan_payments_calc_custom_multiple_stats(loan_amount, number_of_years, rate_
         data["description"].append("updated loan payments")
 
     data_df = pd.DataFrame(data, columns=["loan", "interest", "years", "frequency", "totalInterest", "totalPayments", "description"])
-    print(data_df)
     return data_df
 
 
@@ -240,7 +237,4 @@ def balance_sheet_calc(ending_balances):
 
 
 #balance_sheet_calc([20000,30000,40000,10000])
-#loan_payments_calc_stats(30000, 6, 4.5)
-#loan_payments_calc_custom_stats(30000, 6, 4.5, new_rate_of_interest=7.5)
-#loan_payments_calc_custom_stats(30000, 6, 4.5, new_loan_amount=[45000], new_rate_of_interest=2.5, new_number_of_years=15, new_frequency="yearly")
-loan_payments_calc_custom_multiple_stats(30000, 6, 4.5, new_loan_amounts=[30000, 45000], new_rate_of_interests=[4.0, 2.5], new_number_of_years=[6, 15], new_frequencies=["monthly", "monthly"])
+#loan_payments_calc_custom_multiple_stats(30000, 6, 4.5, new_loan_amounts=[30000, 45000], new_rate_of_interests=[4.0, 2.5], new_number_of_years=[6, 15], new_frequencies=["monthly", "monthly"])
