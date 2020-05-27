@@ -1,6 +1,7 @@
 # Assets
 # Include anything purchased with cash or with a loan – car, house, boat, investment property, etc. 
 # Mainly interested in larger purchases (i.e., don’t care if financing a microwave)
+
 class Asset:
     _types = [
         "car",

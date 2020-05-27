@@ -7,6 +7,7 @@
 #   - RV
 #   - Any personal loan
 #   - Etc.
+
 class Liability:
     _types = [
         "credit card",
