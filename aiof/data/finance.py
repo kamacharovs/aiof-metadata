@@ -14,7 +14,11 @@ class Finance():
         return total
 
     def get_distinct_assets_types(self):
-        return list(set(assets.type))
+        assets_types = []
+        for at in self.assets:
+            if at.type not in assets_types:
+                assets_types.append(at.type)
+        return assets_types
 
     def get_total_liabilities_value(self):
         total = 0
