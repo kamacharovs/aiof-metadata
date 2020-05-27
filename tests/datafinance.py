@@ -30,3 +30,4 @@ class FinanceTestCase(unittest.TestCase):
         assert finance.get_total_assets_value() == 264500
         assert finance.get_distinct_assets_types() == ["car", "house"]
         assert finance.get_total_liabilities_value() == 150878
+        assert finance.get_total_balance_sheet() > 0
