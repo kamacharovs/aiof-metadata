@@ -20,9 +20,15 @@ class Finance():
                 assets_types.append(at.type)
         return assets_types
 
+
     def get_total_liabilities_value(self):
         total = 0
         for l in self.liabilities:
             total += l.value
         return total
 
+
+    def get_total_balance_sheet(self):
+        total_assets = self.get_total_assets_value()
+        total_liabilities = self.get_total_liabilities_value()
+        return total_assets - total_liabilities
