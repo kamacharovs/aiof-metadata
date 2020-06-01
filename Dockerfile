@@ -11,6 +11,6 @@ RUN . venv/bin/activate
 ENV FLASK_APP=api
 RUN pip install -r requirements.txt
 
-EXPOSE 5000
+EXPOSE 8080
 WORKDIR /app/api
 ENTRYPOINT ["flask", "run"]
