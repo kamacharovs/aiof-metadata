@@ -13,4 +13,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 8080
 WORKDIR /app/api
-ENTRYPOINT ["flask", "run"]
+ENTRYPOINT ["flask", "run", "-p", "8080"]
