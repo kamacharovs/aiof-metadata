@@ -28,11 +28,11 @@ def create_app(test_config=None):
     def get_frequencies():
         return jsonify(list(helpers._frequency.keys()))
 
-    @app.route("/car/loan", methods=["GET"])
+    @app.route("/metadata/car/loan", methods=["GET"])
     def get_car_loan():
         return jsonify(car.loan_calc(25000, 3.75, 72))
 
-    @app.route("/loan/payments/<string:frequency>", methods=["GET", "POST"])
+    @app.route("/metadata/loan/payments/<string:frequency>", methods=["GET", "POST"])
     def get_loan_payments(frequency):
         return jsonify(core.loan_payments_calc_as_table(request.get_json(silent=True), frequency))
 
