@@ -91,5 +91,12 @@ class HelpersTestCase(unittest.TestCase):
 
 
 
+    def test_doubling_time_with_continuous_compounding_6_percent(self):
+        assert round(doubling_time_with_continuous_compounding(6), 2) == 11.55
+    def test_doubling_time_with_continuous_compounding_10_percent(self):
+        assert round(doubling_time_with_continuous_compounding(10), 2) == 6.93
+
+
+
 if __name__ == "__main__":
     unittest.main()
