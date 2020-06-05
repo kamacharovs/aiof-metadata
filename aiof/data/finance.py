@@ -35,6 +35,14 @@ class Finance():
         return total
 
 
+    def get_distinct_liabilities_types(self):
+        liabilities_types = []
+        for lt in self.liabilities:
+            if lt.type not in liabilities_types:
+                liabilities_types.append(lt.type)
+        return liabilities_types
+
+
     def get_total_balance_sheet(self):
         try:
             total_assets = self.get_total_assets_value()
@@ -49,5 +57,6 @@ class Finance():
             "assets": self.get_total_assets_value(),
             "assetsTypes": self.get_distinct_assets_types(),
             "liabilities": self.get_total_liabilities_value(),
+            "liabilitiesTypes": self.get_distinct_liabilities_types(),
             "balanceSheet": self.get_total_balance_sheet()
         }
