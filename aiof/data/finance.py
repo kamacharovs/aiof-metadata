@@ -1,4 +1,5 @@
 # Finance class that ties it all together
+from logzero import logger
 
 class Finance():
     def __init__(self, userId, assets, liabilities, goals):
@@ -35,6 +36,9 @@ class Finance():
 
 
     def get_total_balance_sheet(self):
-        total_assets = self.get_total_assets_value()
-        total_liabilities = self.get_total_liabilities_value()
-        return total_assets - total_liabilities
+        try:
+            total_assets = self.get_total_assets_value()
+            total_liabilities = self.get_total_liabilities_value()
+            return total_assets - total_liabilities
+        except Exception as e:
+            logger.error(e)
