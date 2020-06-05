@@ -25,7 +25,7 @@ class FinanceTestCase(unittest.TestCase):
             Goal("savings", "short-term")
         ]
 
-        finance = Finance(assets, liabilities, goals)
+        finance = Finance(assets, liabilities, goals, 1)
 
         assert finance.get_total_assets_value() == 264500
         assert finance.get_distinct_assets_types() == ["car", "house"]

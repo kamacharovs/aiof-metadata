@@ -1,10 +1,11 @@
 # Finance class that ties it all together
 
 class Finance():
-    def __init__(self, assets, liabilities, goals):
+    def __init__(self, assets, liabilities, goals, userId):
         self.assets = assets
         self.liabilities = liabilities
         self.goals = goals
+        self.userId = userId
 
 
     def get_total_assets_value(self):
