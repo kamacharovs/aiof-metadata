@@ -9,10 +9,13 @@ class Finance():
 
 
     def get_total_assets_value(self):
+        if not self.assets:
+            return 0
         total = 0
         for a in self.assets:
             total += a.value
         return total
+
 
     def get_distinct_assets_types(self):
         assets_types = []
@@ -23,6 +26,8 @@ class Finance():
 
 
     def get_total_liabilities_value(self):
+        if not self.liabilities:
+            return 0
         total = 0
         for l in self.liabilities:
             total += l.value
