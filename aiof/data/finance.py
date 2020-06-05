@@ -46,8 +46,8 @@ class Finance():
 
     def get_total_finance_stats(self):
         return {
-            "assets": get_total_assets_value(),
-            "assetsTypes": get_distinct_assets_types(),
-            "liabilities": get_total_liabilities_value(),
-            "balanceSheet": get_total_balance_sheet()
+            "assets": self.get_total_assets_value(),
+            "assetsTypes": self.get_distinct_assets_types(),
+            "liabilities": self.get_total_liabilities_value(),
+            "balanceSheet": self.get_total_balance_sheet()
         }
