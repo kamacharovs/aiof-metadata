@@ -78,6 +78,7 @@ def loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, 
 
 
 # gets detailed statistics from a payments_df
+# TODO: consider deleting, not really needed
 def loan_payments_calc_stats(loan_amount, number_of_years, rate_of_interest, frequency="monthly"):
     payments_df = loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency)
 
