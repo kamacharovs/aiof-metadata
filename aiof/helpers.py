@@ -232,3 +232,20 @@ def equated_monthly_installment_calc(principal_amount, rate_of_interest, number_
 def doubling_time_with_continuous_compounding(rate_of_interest, frequency="yearly"):
     interest = to_percentage(rate_of_interest)
     return (np.log(2) / interest)
+
+
+"""
+source: https://financeformulas.net/Future_Value_of_Annuity.html
+
+The future value of an annuity formula is used to calculate what the value at a future date would be for a series of periodic payments.
+
+The future value of an annuity formula assumes that
+
+1. The rate does not change
+2. The first payment is one period away
+3. The periodic payment does not change
+"""
+def future_value_of_annuity_calc(periodic_payment, rate_of_interest, number_of_years, frequency="yearly"):
+    interest = to_percentage(rate_of_interest)
+    frequency_int = number_of_years * convert_frequency(frequency, as_int=True)
+    return periodic_payment * ((pow(1 + interest, frequency_int) - 1) / interest)
