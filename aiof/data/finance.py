@@ -42,3 +42,12 @@ class Finance():
             return total_assets - total_liabilities
         except Exception as e:
             logger.error(e)
+
+
+    def get_total_finance_stats(self):
+        return {
+            "assets": get_total_assets_value(),
+            "assetsTypes": get_distinct_assets_types(),
+            "liabilities": get_total_liabilities_value(),
+            "balanceSheet": get_total_balance_sheet()
+        }
