@@ -245,7 +245,7 @@ The future value of an annuity formula assumes that
 2. The first payment is one period away
 3. The periodic payment does not change
 """
-def future_value_of_annuity_calc(periodic_payment, rate_of_interest, number_of_years, frequency="yearly"):
+def future_value_calc(periodic_payment, rate_of_interest, number_of_years, frequency="yearly"):
     interest = to_percentage(rate_of_interest)
     frequency_int = number_of_years * convert_frequency(frequency, as_int=True)
     return periodic_payment * ((pow(1 + interest, frequency_int) - 1) / interest)

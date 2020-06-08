@@ -98,8 +98,8 @@ class HelpersTestCase(unittest.TestCase):
 
 
 
-    def test_future_value_of_annuity_calc(self):
-        assert round(future_value_of_annuity_calc(1000, 2, 5), 2) == 5204.04
+    def test_future_value_calc_calc(self):
+        assert round(future_value_calc(1000, 2, 5), 2) == 5204.04
 
 
 if __name__ == "__main__":
