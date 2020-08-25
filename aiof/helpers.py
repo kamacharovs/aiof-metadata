@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 
 from logzero import logger
+from decimal import Decimal
 
 
 _frequency = {
@@ -21,23 +22,43 @@ _frequency_text = {
 }
 
 
-def convert_frequency(frequency, as_int=False):
+def convert_frequency(frequency, as_float=False, as_int=False):
     if frequency not in _frequency:
         raise Exception("frequency must be one of the following: " + ", ".join(_frequency))
-    if as_int:
+    if as_float:
+        return float(_frequency[frequency])
+    elif as_int:
         return int(_frequency[frequency])
-    return float(_frequency[frequency])
+    return Decimal(_frequency[frequency])
 
 
 def to_percentage(number):
     if number < 0 or number > 100:
         raise Exception("number can't be less than 0 or bigger than 100")
-    return float(number) / 100
+    return Decimal(number) / 100
 
 
 def compound_interest_calc(principal_amount, number_of_years, rate_of_interest, frequency="yearly"):
-    frequency_float = convert_frequency(frequency)
+    frequency_float = convert_frequency(frequency, as_float=True)
     return principal_amount * (pow(1 + ((rate_of_interest / 100) / frequency_float), frequency_float * number_of_years))
+
+def compound_interest_with_contributions_calc(
+    principal_amount,
+    number_of_years,
+    rate_of_interest,
+    contribution,
+    frequency="monthly"):
+    comp = compound_interest_calc(principal_amount, number_of_years, rate_of_interest, frequency)
+    frequency_int = convert_frequency(frequency, as_int=True)
+    r = rate_of_interest / 100
+    oneplus = (1 + (r / frequency_int))
+    raisedtopower2 = frequency_int * number_of_years
+    ratedividedbynumberoftimes = r / frequency_int
+
+    halfdone = (((oneplus ** raisedtopower2) -1) / ratedividedbynumberoftimes)
+    futurevaluewithdeposits = contribution * halfdone
+
+    return comp + futurevaluewithdeposits
 
 
 def loan_payments_calc(loan_amount, number_of_years, rate_of_interest, frequency="monthly"):
@@ -75,73 +96,6 @@ def loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, 
 
     with pd.option_context("display.max_rows", None, "display.max_columns", None):
         return loan_df
-
-
-# gets detailed statistics from a payments_df
-# TODO: consider deleting, not really needed
-def loan_payments_calc_stats(loan_amount, number_of_years, rate_of_interest, frequency="monthly"):
-    payments_df = loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency)
-
-    # if you were to half the years
-    half_number_of_years = math.ceil(number_of_years / 2)
-    payments_half_df = loan_payments_calc_as_table(loan_amount, half_number_of_years, rate_of_interest, frequency)
-
-    # if you were to reduce the years by 1
-    reduced_by_1_number_of_years = number_of_years - 1
-    payments_reduced_by_1_df = loan_payments_calc_as_table(loan_amount, reduced_by_1_number_of_years, rate_of_interest, frequency)
-
-    # if you were to reduce the years by 30%
-    reduced_by_30perc_number_of_years = math.ceil(number_of_years * 0.7)
-    payments_reduced_by_30perc_df = loan_payments_calc_as_table(loan_amount, reduced_by_30perc_number_of_years, rate_of_interest, frequency)
-
-    # if you were to reduce your rate of interest by 25%
-    reduced_by_25perc_rate_of_interest = rate_of_interest * 0.75
-    payments_roi_reduced_by_25perc_df = loan_payments_calc_as_table(loan_amount, number_of_years, reduced_by_25perc_rate_of_interest, frequency)
-
-    # if you were to reduce your loan amount by 25%
-    reduced_by_25perc_loan_amount = loan_amount * 0.75
-    payments_reduced_by_25perc_loan_amount_df = loan_payments_calc_as_table(reduced_by_25perc_loan_amount, number_of_years, rate_of_interest, frequency)
-
-    data = {
-        "loan": [loan_amount, loan_amount, loan_amount, loan_amount, loan_amount, reduced_by_25perc_loan_amount],
-        "interest": [rate_of_interest, rate_of_interest, rate_of_interest, rate_of_interest, reduced_by_25perc_rate_of_interest, rate_of_interest],
-        "years": [
-            number_of_years,
-            reduced_by_1_number_of_years,
-            half_number_of_years,
-            reduced_by_30perc_number_of_years,
-            number_of_years,
-            number_of_years
-        ],
-        "frequency": [frequency, frequency, frequency, frequency, frequency, frequency],
-        "totalInterest": [
-            payments_df["interest"].sum(),
-            payments_reduced_by_1_df["interest"].sum(),
-            payments_half_df["interest"].sum(),
-            payments_reduced_by_30perc_df["interest"].sum(),
-            payments_roi_reduced_by_25perc_df["interest"].sum(),
-            payments_reduced_by_25perc_loan_amount_df["interest"].sum()
-        ],
-        "totalPayments": [
-            payments_df["payment"].sum(),
-            payments_reduced_by_1_df["payment"].sum(),
-            payments_half_df["payment"].sum(),
-            payments_reduced_by_30perc_df["payment"].sum(),
-            payments_roi_reduced_by_25perc_df["payment"].sum(),
-            payments_reduced_by_25perc_loan_amount_df["payment"].sum()
-        ],
-        "description": [
-            "original loan payments",
-            "number of years reduced by 1",
-            "number of years reduced by half",
-            "number of years reduced by 30%",
-            "rate of interest reduced by 25%",
-            "loan amount reduced by 25%"
-        ]
-    }
-
-    data_df = pd.DataFrame(data, columns=["loan", "interest", "years", "frequency", "totalInterest", "totalPayments", "description"])
-    return data_df
 
 
 # calculates new loan payments based on the new_ input
@@ -249,3 +203,50 @@ def future_value_calc(periodic_payment, rate_of_interest, number_of_years, frequ
     interest = to_percentage(rate_of_interest)
     frequency_int = number_of_years * convert_frequency(frequency, as_int=True)
     return periodic_payment * ((pow(1 + interest, frequency_int) - 1) / interest)
+
+
+def compare_asset_to_market(
+    asset_value_str,
+    market_interest=7):
+    asset_value = float(asset_value_str)
+    # the asset value if it was invested in the market at defaulted 7%
+    comp_2_years = compound_interest_calc(asset_value, 2, market_interest)
+    comp_5_years = compound_interest_calc(asset_value, 5, market_interest)
+    comp_10_years = compound_interest_calc(asset_value, 10, market_interest)
+
+    comp_2_years_with_500_contributions = compound_interest_with_contributions_calc(
+        asset_value, 2, market_interest, 500)
+    comp_5_years_with_500_contributions = compound_interest_with_contributions_calc(
+        asset_value, 5, market_interest, 500)
+    comp_10_years_with_500_contributions = compound_interest_with_contributions_calc(
+        asset_value, 10, market_interest, 500)
+
+    return {
+        "value": asset_value,
+        "years": [
+            {
+                "year": 2,
+                "value": comp_2_years,
+                "contribution": {
+                    "contributionValue": 500,
+                    "value": comp_2_years_with_500_contributions
+                }
+            },
+            {
+                "year": 5,
+                "value": comp_5_years,
+                "contribution": {
+                    "contributionValue": 500,
+                    "value": comp_5_years_with_500_contributions
+                }
+            },
+            {
+                "year": 10,
+                "value": comp_10_years,
+                "contribution": {
+                    "contributionValue": 500,
+                    "value": comp_10_years_with_500_contributions
+                }
+            }
+        ]
+    }

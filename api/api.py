@@ -36,6 +36,10 @@ def create_app(test_config=None):
     def get_loan_payments(frequency):
         return jsonify(core.loan_payments_calc_as_table(request.get_json(silent=True), frequency))
 
+    @app.route("/metadata/compare/asset/<string:value>", methods=["GET"])
+    def compare_asset_value(value):
+        return jsonify(helpers.compare_asset_to_market(value))
+
     return app
 
     
