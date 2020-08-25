@@ -210,22 +210,24 @@ def compare_asset_to_market(
     asset_value_str,
     market_interest=7):
     asset_value = float(asset_value_str)
-    years = [ 2, 5, 10, 30 ]
+    years = [ 2, 5, 10, 20, 30 ]
     contribution = 500
+    contribution_double = contribution * 2
     contribution_frequency = "monthly"
     years_objs = []
 
     for year in years:
         comp_year = compound_interest_calc(asset_value, year, market_interest)
         comp_year_with_cont = compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution, contribution_frequency)
+        comp_year_with_double_cont = compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution_double, contribution_frequency)
 
         years_objs.append(
             {
                 "year": year,
                 "value": comp_year,
-                "valueWithContribution": comp_year_with_cont
-            }
-        )
+                "valueWithContribution": comp_year_with_cont,
+                "valueWithDoubleContribution": comp_year_with_double_cont
+            })
 
     return {
         "value": asset_value,
