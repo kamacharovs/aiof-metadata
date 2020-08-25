@@ -205,48 +205,31 @@ def future_value_calc(periodic_payment, rate_of_interest, number_of_years, frequ
     return periodic_payment * ((pow(1 + interest, frequency_int) - 1) / interest)
 
 
+# the asset value if it was invested in the market at defaulted 7%
 def compare_asset_to_market(
     asset_value_str,
     market_interest=7):
     asset_value = float(asset_value_str)
-    # the asset value if it was invested in the market at defaulted 7%
-    comp_2_years = compound_interest_calc(asset_value, 2, market_interest)
-    comp_5_years = compound_interest_calc(asset_value, 5, market_interest)
-    comp_10_years = compound_interest_calc(asset_value, 10, market_interest)
+    years = [ 2, 5, 10, 30 ]
+    contribution = 500
+    contribution_frequency = "monthly"
+    years_objs = []
 
-    comp_2_years_with_500_contributions = compound_interest_with_contributions_calc(
-        asset_value, 2, market_interest, 500)
-    comp_5_years_with_500_contributions = compound_interest_with_contributions_calc(
-        asset_value, 5, market_interest, 500)
-    comp_10_years_with_500_contributions = compound_interest_with_contributions_calc(
-        asset_value, 10, market_interest, 500)
+    for year in years:
+        comp_year = compound_interest_calc(asset_value, year, market_interest)
+        comp_year_with_cont = compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution, contribution_frequency)
+
+        years_objs.append(
+            {
+                "year": year,
+                "value": comp_year,
+                "valueWithContribution": comp_year_with_cont
+            }
+        )
 
     return {
         "value": asset_value,
-        "years": [
-            {
-                "year": 2,
-                "value": comp_2_years,
-                "contribution": {
-                    "contributionValue": 500,
-                    "value": comp_2_years_with_500_contributions
-                }
-            },
-            {
-                "year": 5,
-                "value": comp_5_years,
-                "contribution": {
-                    "contributionValue": 500,
-                    "value": comp_5_years_with_500_contributions
-                }
-            },
-            {
-                "year": 10,
-                "value": comp_10_years,
-                "contribution": {
-                    "contributionValue": 500,
-                    "value": comp_10_years_with_500_contributions
-                }
-            }
-        ]
+        "contribution": contribution,
+        "contributionFrequency": contribution_frequency,
+        "years": years_objs
     }
