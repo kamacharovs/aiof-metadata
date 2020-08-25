@@ -205,21 +205,26 @@ def future_value_calc(periodic_payment, rate_of_interest, number_of_years, frequ
     return periodic_payment * ((pow(1 + interest, frequency_int) - 1) / interest)
 
 
-# the asset value if it was invested in the market at defaulted 7%
+# Asset value comparison
+# - This is what your asset's value will look like if you let it sit for "n" number of years with compound interest (aka - invest into the market)
+# - Additional stats for 2, 5, 10, etc. years, also with regular contributions, double contributions, etc.
+# The market's rate is defaulted at 7%
 def compare_asset_to_market(
-    asset_value_str,
-    market_interest=7):
-    asset_value = float(asset_value_str)
-    years = [ 2, 5, 10, 20, 30 ]
-    contribution = 500
+    asset_value,
+    contribution=500,
+    market_interest=7,
+    round_digits=3):
+    asset_value = round(float(asset_value), round_digits)
+    contribution = round(float(contribution), round_digits)
     contribution_double = contribution * 2
+    years = [ 2, 5, 10, 20, 30 ]
     contribution_frequency = "monthly"
     years_objs = []
 
     for year in years:
-        comp_year = compound_interest_calc(asset_value, year, market_interest)
-        comp_year_with_cont = compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution, contribution_frequency)
-        comp_year_with_double_cont = compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution_double, contribution_frequency)
+        comp_year = round(compound_interest_calc(asset_value, year, market_interest), round_digits)
+        comp_year_with_cont = round(compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution, contribution_frequency), round_digits)
+        comp_year_with_double_cont = round(compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution_double, contribution_frequency), round_digits)
 
         years_objs.append(
             {
