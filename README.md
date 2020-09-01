@@ -11,6 +11,12 @@ Overall documentation
 - Install package: `python -m pip install <package-name>`
 - Uninstall package: `python -m pip uninstall <package-name>`
 
+### Libraries
+
+- [pandas](https://pandas.pydata.org/docs/reference/index.html)
+- [statistics](https://docs.python.org/3/library/statistics.html)
+- [list of py finance libraries](https://github.com/wilsonfreitas/awesome-quant#python)
+
 ## API
 
 ### How to run it
