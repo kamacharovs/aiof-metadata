@@ -51,11 +51,10 @@ def compound_interest_with_contributions_calc(
     comp = compound_interest_calc(principal_amount, number_of_years, rate_of_interest, frequency)
     frequency_int = convert_frequency(frequency, as_int=True)
     r = rate_of_interest / 100
-    oneplus = (1 + (r / frequency_int))
     raisedtopower2 = frequency_int * number_of_years
     ratedividedbynumberoftimes = r / frequency_int
 
-    halfdone = (((oneplus ** raisedtopower2) -1) / ratedividedbynumberoftimes)
+    halfdone = ((((1 + (r / frequency_int)) ** raisedtopower2) -1) / ratedividedbynumberoftimes)
     futurevaluewithdeposits = contribution * halfdone
 
     return comp + futurevaluewithdeposits
