@@ -2,6 +2,15 @@
 
 All in one finance data crunching backend
 
+## Documentation
+
+Overall documentation
+
+### Package management
+
+- Install package: `python -m pip install <package-name>`
+- Uninstall package: `python -m pip uninstall <package-name>`
+
 ## API
 
 ### How to run it
