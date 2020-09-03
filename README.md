@@ -2,6 +2,8 @@
 
 All in one finance data crunching backend
 
+[![Build Status](https://gkamacharov.visualstudio.com/gkama-cicd/_apis/build/status/kamacharovs.aiof-metadata?branchName=master)](https://gkamacharov.visualstudio.com/gkama-cicd/_build/latest?definitionId=19&branchName=master)
+
 ## Documentation
 
 Overall documentation
@@ -21,7 +23,13 @@ Overall documentation
 
 ### How to run it
 
-The application is setup as a Flask API. In order to start the application, you must `cd` into the correct directory `../api`. Once there, simply run the `flask run` command. Sometimes, you would have to setup the `FLASK_APP` environment variable. In order to do that in powershell, run `$env:FLASK_APP="api"`
+The application is setup as a Flask API. In order to start the application, you must `cd` into the correct directory `../api`. Once there, simply run the `flask run` command. Sometimes, you would have to setup the `FLASK_APP` environment variable. In order to do that in powershell, run `$env:FLASK_APP="api"`. The complete steps are:
+
+```powershell
+$env:FLASK_APP="api"
+cd .\api\
+flask run
+```
 
 ## Tests
 
