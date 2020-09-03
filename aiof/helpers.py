@@ -5,6 +5,12 @@ import numpy as np
 from logzero import logger
 from decimal import Decimal
 
+# Default settings (TODO move to config)
+app_settings = {
+    "rounding_digits": 3,
+    "hys_average_interest": 1.75
+}
+
 
 _frequency = {
     "daily": 365,
@@ -218,19 +224,26 @@ def compare_asset_to_market(
     contribution_double = contribution * 2
     years = [ 2, 5, 10, 20, 30 ]
     contribution_frequency = "monthly"
+    hys_interest = app_settings["hys_average_interest"]
     years_objs = []
 
     for year in years:
         comp_year = round(compound_interest_calc(asset_value, year, market_interest), round_digits)
         comp_year_with_cont = round(compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution, contribution_frequency), round_digits)
         comp_year_with_double_cont = round(compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution_double, contribution_frequency), round_digits)
+        hys = round(compound_interest_calc(asset_value, year, hys_interest, contribution_frequency), round_digits)
+        hys_with_cont = round(compound_interest_with_contributions_calc(asset_value, year, hys_interest, contribution, contribution_frequency), round_digits)
 
+        # hys: if the asset value was left in a HYS (High Yield Savings) account with default interest
+        # hysWithContribution: if the asset value was left in a HYS (High Yield Savings) account with default interest and a contribution was done
         years_objs.append(
             {
                 "year": year,
                 "value": comp_year,
                 "valueWithContribution": comp_year_with_cont,
-                "valueWithDoubleContribution": comp_year_with_double_cont
+                "valueWithDoubleContribution": comp_year_with_double_cont,
+                "hys": hys,
+                "hysWithContribution": hys_with_cont,
             })
 
     return {
