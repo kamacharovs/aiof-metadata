@@ -10,6 +10,7 @@ RUN python3 -m venv venv
 RUN . venv/bin/activate
 ENV FLASK_APP=api
 RUN pip install numpy
+RUN pip install numpy-financial
 RUN pip install -r requirements.txt
 RUN python ./setup.py test
 
