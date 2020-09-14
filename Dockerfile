@@ -10,8 +10,6 @@ RUN python3 -m venv venv
 RUN . venv/bin/activate
 ENV FLASK_APP=api
 RUN pip install -r requirements.txt
-RUN \
-    apt-get install python3-numpy-financial
 RUN python ./setup.py test
 
 EXPOSE 8080
