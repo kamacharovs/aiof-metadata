@@ -1,5 +1,5 @@
 numpy
-numpy-financial
+numpy-financial==1.0.0
 pandas
 statistics
 Flask
