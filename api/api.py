@@ -2,6 +2,7 @@ import os
 import aiof.core as core
 import aiof.helpers as helpers
 import aiof.car.core as car
+import aiof.fi.core as fi
 
 from flask import Flask
 from flask import request
@@ -44,6 +45,10 @@ def create_app(test_config=None):
         if "contribution" in args:
             contribution = args["contribution"]
         return jsonify(helpers.compare_asset_to_market(value, contribution))
+
+    @app.route("/metadata/fi/time/to/fi", methods=["GET"])
+    def time_to_fi():
+        return jsonify(fi.time_to_fi())
 
     return app
 
