@@ -3,4 +3,3 @@ pandas
 statistics
 Flask
 logzero
-numpy-financial
