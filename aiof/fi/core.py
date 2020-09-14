@@ -40,6 +40,8 @@ def time_to_fi(
         "monthlyInvestment": monthly_investment,
         "desiredYearsExpensesForFi": desired_years_expenses_for_fi,
         "desiredAnnualSpending": desired_annual_spending,
+        "desiredRetirementSavingsForFi": desired_retirement_savings_for_fi,
+        "currentDeficit": current_deficit,
         "years": years_to_goal_obj
     }
 
