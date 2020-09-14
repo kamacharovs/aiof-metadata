@@ -46,9 +46,9 @@ def create_app(test_config=None):
             contribution = args["contribution"]
         return jsonify(helpers.compare_asset_to_market(value, contribution))
 
-    @app.route("/metadata/fi/time/to/fi", methods=["GET"])
+    @app.route("/metadata/fi/time/to/fi", methods=["POST"])
     def time_to_fi():
-        return jsonify(fi.time_to_fi())
+        return jsonify(fi.time_to_fi_req(request.get_json(silent=True)))
 
     return app
 

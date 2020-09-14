@@ -7,10 +7,10 @@ import pandas as pd
 # Based on Physician on FIRE calculator
 # https://www.physicianonfire.com/timetofi/
 def time_to_fi(
-    starting_amount=800000,
-    monthly_investment=5000,
-    desired_years_expenses_for_fi=25,
-    desired_annual_spending=100000):
+    starting_amount,
+    monthly_investment,
+    desired_years_expenses_for_fi,
+    desired_annual_spending):
     desired_retirement_savings_for_fi = desired_years_expenses_for_fi * desired_annual_spending
     current_deficit = desired_retirement_savings_for_fi - starting_amount
 
@@ -32,7 +32,24 @@ def time_to_fi(
         years_to_goal_obj.append(
             {
                 "interest": interest * 100,
-                "years": years_to_goal,
+                "years": round(years_to_goal, 1),
             })
 
-    return years_to_goal_obj
+    return {
+        "startingAmount": starting_amount,
+        "monthlyInvestment": monthly_investment,
+        "desiredYearsExpensesForFi": desired_years_expenses_for_fi,
+        "desiredAnnualSpending": desired_annual_spending,
+        "years": years_to_goal_obj
+    }
+
+def time_to_fi_req(req):
+    starting_amount = req["startingAmount"] if "startingAmount" in req else 800000
+    monthly_investment = req["monthlyInvestment"] if "monthlyInvestment" in req else 5000
+    desired_years_expenses_for_fi = req["desiredYearsExpensesForFi"] if "desiredYearsExpensesForFi" in req else 25
+    desired_annual_spending = req["desiredAnnualSpending"] if "desiredAnnualSpending" in req else 100000
+    return time_to_fi(
+        starting_amount,
+        monthly_investment,
+        desired_years_expenses_for_fi,
+        desired_annual_spending)
