@@ -15,9 +15,9 @@ def time_to_fi(
     current_deficit = desired_retirement_savings_for_fi - starting_amount
 
     interests = [ 
-        0.02, 
-        0.04, 
-        0.06, 
+        0.02,
+        0.04,
+        0.06,
         0.08
     ]
 
@@ -53,3 +53,26 @@ def time_to_fi_req(req):
         monthly_investment,
         desired_years_expenses_for_fi,
         desired_annual_spending)
+
+
+
+# Rule of 72
+# Based on Physician on FIRE calculator
+# https://www.physicianonfire.com/calculators/72calculator/
+def rule_of_72(
+    starting_amount,
+    interest):
+    double_value = starting_amount * 2
+    return {
+        "startingAmount": starting_amount,
+        "interest": interest,
+        "double": double_value,
+        "years": round(72/interest, 1),
+    }
+
+def rule_of_72_req(req):
+    starting_amount = req["startingAmount"] if "startingAmount" in req else 100000
+    interest = req["interest"] if "interest" in req else 8
+    return rule_of_72(
+        starting_amount,
+        interest)
