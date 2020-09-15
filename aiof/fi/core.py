@@ -1,6 +1,16 @@
 import numpy_financial as npf
 import pandas as pd
 
+
+# Global
+_interests = [ 
+    0.02,
+    0.04,
+    0.06,
+    0.08
+]
+
+
 # Financial Indepdence (FI) core
 
 
@@ -91,3 +101,39 @@ def rule_of_72_req(req):
     return rule_of_72(
         starting_amount,
         interest)
+
+
+
+# Added time to FI
+# This calculator was designed to help you determine how much an additional expense (such as having children) can add to your FI timeline.
+# Plug in the grand total of the additional expense and the amount you invest monthly to cover it
+def added_time_to_fi(
+    monthly_investment,
+    total_additional_expense):
+    years_added_to_fi_obj = []
+
+    for interest in _interests:
+        years_added = npf.nper(
+            interest/12, 
+            monthly_investment * -1,
+            0,
+            total_additional_expense) / 12
+
+        years_added_to_fi_obj.append(
+            {
+                "interest": interest * 100,
+                "years": round(years_added, 1),
+            })
+
+    return {
+        "monthlyInvestment": monthly_investment,
+        "totalAdditionalExpense": total_additional_expense,
+        "years": years_added_to_fi_obj
+    }
+
+def added_time_to_fi_req(req):
+    monthly_investment = req["monthlyInvestment"] if "monthlyInvestment" in req else 10000
+    total_additional_expense = req["totalAdditionalExpense"] if "totalAdditionalExpense" in req else 422000
+    return added_time_to_fi(
+        monthly_investment,
+        total_additional_expense)
