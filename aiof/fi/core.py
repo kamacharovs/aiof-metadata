@@ -64,13 +64,26 @@ def time_to_fi_req(req):
 def rule_of_72(
     starting_amount,
     interest):
-    double_value = starting_amount * 2
-    return {
-        "startingAmount": starting_amount,
-        "interest": interest,
-        "double": double_value,
-        "years": round(72/interest, 1),
-    }
+    rules = dict({ 
+        72: 2,
+        114: 3,
+        144: 4
+    })
+    years_obj = []
+
+    for key in rules:
+        modified_value = starting_amount * rules[key]
+        years = round(key/interest, 1)
+        years_obj.append(
+            {
+                "startingAmount": starting_amount,
+                "interest": interest,
+                "modifier": rules[key],
+                "endingAmount": modified_value,
+                "years": years,
+            })
+
+    return years_obj
 
 def rule_of_72_req(req):
     starting_amount = req["startingAmount"] if "startingAmount" in req else 100000
