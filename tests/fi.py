@@ -135,3 +135,15 @@ class FiTestCase(unittest.TestCase):
         for resp_year in resp["years"]:
             assert resp_year["interest"] > 0
             assert resp_year["years"] > 0
+
+
+
+    def test_fi_ten_million_dream(self):
+        resp = ten_million_dream(self._monthly_investment)
+
+        assert len(resp) > 0
+        for million in resp:
+            assert million["million"] > 0
+            for year in million["years"]:
+                assert year["interest"] >= 0
+                assert year["years"] > 0
