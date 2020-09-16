@@ -10,6 +10,33 @@ _interests = [
     0.08
 ]
 
+_ten_million = [
+    1000000,
+    2000000,
+    3000000,
+    4000000,
+    5000000,
+    6000000,
+    7000000,
+    8000000,
+    9000000,
+    10000000,
+    100000000,
+]
+_ten_million_interests = [
+    0,
+    0.01,
+    0.02,
+    0.03,
+    0.04,
+    0.05,
+    0.06,
+    0.07,
+    0.08,
+    0.09,
+    0.10
+]
+
 
 # Financial Indepdence (FI) core
 
@@ -137,3 +164,29 @@ def added_time_to_fi_req(req):
     return added_time_to_fi(
         monthly_investment,
         total_additional_expense)
+
+
+
+# $10m dream
+# This calculator, developed in the post about Dr. F’s $10 Million dream, will determine the number of years to reach a savings goal based on a variety of market returns
+# https://www.physicianonfire.com/calculators/10-million-dream/
+def ten_million_dream(monthly_investment):
+    ten_million_obj = []
+    for million in _ten_million:
+        million_interests_obj = []
+        for interest in _ten_million_interests:
+            years = npf.nper(
+                interest/12, 
+                monthly_investment * -1,
+                million * -1,
+                0,
+                when='begin') / 12
+            million_interests_obj.append({
+                    "interest": interest * 100,
+                    "years": years
+                })
+        ten_million_obj.append({
+            "million": million,
+            "years": million_interests_obj
+        })
+    return ten_million_obj

@@ -60,6 +60,11 @@ def create_app(test_config=None):
     def rule_of_72():
         return jsonify(fi.rule_of_72_req(request.get_json(silent=True)))
 
+    @app.route("/metadata/fi/ten/million/dream/<int:monthlyInvestment>", methods=["GET"])
+    def ten_million_dream(monthlyInvestment):
+        return jsonify(fi.ten_million_dream(monthlyInvestment))
+
+
     return app
 
     
