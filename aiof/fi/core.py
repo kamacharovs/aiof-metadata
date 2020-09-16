@@ -178,12 +178,12 @@ def ten_million_dream(monthly_investment):
             years = npf.nper(
                 interest/12, 
                 monthly_investment * -1,
-                million * -1,
                 0,
+                million,
                 when='begin') / 12
             million_interests_obj.append({
-                    "interest": interest * 100,
-                    "years": years
+                    "interest": round(interest * 100, 1),
+                    "years": round(years, 1)
                 })
         ten_million_obj.append({
             "million": million,
