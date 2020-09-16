@@ -1,6 +1,7 @@
 import math
 import pandas as pd
 import numpy as np
+import numpy_financial as npf
 
 from logzero import logger
 from decimal import Decimal
@@ -41,7 +42,7 @@ def convert_frequency(frequency, as_float=False, as_int=False):
 def to_percentage(number):
     if number < 0 or number > 100:
         raise Exception("number can't be less than 0 or bigger than 100")
-    return Decimal(number) / 100
+    return float(number) / 100
 
 
 def compound_interest_calc(principal_amount, number_of_years, rate_of_interest, frequency="yearly"):
@@ -68,7 +69,7 @@ def compound_interest_with_contributions_calc(
 
 def loan_payments_calc(loan_amount, number_of_years, rate_of_interest, frequency="monthly"):
     frequency_int = convert_frequency(frequency, as_int=True)
-    return np.pmt(rate = (to_percentage(rate_of_interest) / frequency_int), nper = number_of_years * frequency_int, pv = -loan_amount)
+    return npf.pmt(rate = (to_percentage(rate_of_interest) / frequency_int), nper = number_of_years * frequency_int, pv = -loan_amount)
 
 
 def loan_payments_calc_as_table(loan_amount, number_of_years, rate_of_interest, frequency="monthly"):
