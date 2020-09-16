@@ -13,6 +13,7 @@ class FiTestCase(unittest.TestCase):
     _interest = 8
     _modifier = [ 2, 3, 4 ]
     _additional_amount = 450000
+    _number_of_years = 25
 
     def test_fi_time_to_fi_req_defaults(self):
         req = {
@@ -147,3 +148,62 @@ class FiTestCase(unittest.TestCase):
             for year in million["years"]:
                 assert year["interest"] >= 0
                 assert year["years"] > 0
+
+
+
+    def test_fi_compounded_interest_req_defaults(self):
+        resp = compound_interest_req({})
+
+        assert len(resp) > 0
+        for r in resp:
+            assert r["compoundedBeginning"] > 0
+            assert r["compoundedEnd"] > 0
+            assert r["frequency"] > 0
+            assert r["interest"] > 0
+            assert r["monthlyInvestment"] > 0
+            assert r["numberOfYears"] > 0
+            assert r["startingAmount"] >= 0
+            assert r["taxDrag"] >= 0
+            assert r["investmentFees"] >= 0
+    def test_fi_compounded_interest_req(self):
+        req = {
+            "startingAmount": 0,
+            "monthlyInvestment": self._monthly_investment,
+            "interest": self._interest,
+            "numberOfYears": self._number_of_years,
+            "investmentFees": 0.50,
+            "taxDrag": 0.50
+        }
+        resp = compound_interest_req(req)
+
+        assert len(resp) > 0
+        for r in resp:
+            assert r["compoundedBeginning"] > 0
+            assert r["compoundedEnd"] > 0
+            assert r["frequency"] > 0
+            assert r["interest"] == self._interest
+            assert r["monthlyInvestment"] == self._monthly_investment
+            assert r["numberOfYears"] == self._number_of_years
+            assert r["startingAmount"] >= 0
+            assert r["taxDrag"] >= 0
+            assert r["investmentFees"] >= 0
+    def test_fi_compounded_interest(self):
+        resp = compound_interest(
+            starting_amount=0,
+            monthly_investment=self._monthly_investment,
+            interest_rate=self._interest,
+            number_of_years=self._number_of_years,
+            investment_fees=0.50,
+            tax_drag=0.50)
+
+        assert len(resp) > 0
+        for r in resp:
+            assert r["compoundedBeginning"] > 0
+            assert r["compoundedEnd"] > 0
+            assert r["frequency"] > 0
+            assert r["interest"] == self._interest
+            assert r["monthlyInvestment"] == self._monthly_investment
+            assert r["numberOfYears"] == self._number_of_years
+            assert r["startingAmount"] >= 0
+            assert r["taxDrag"] >= 0
+            assert r["investmentFees"] >= 0
