@@ -64,6 +64,10 @@ def create_app(test_config=None):
     def ten_million_dream(monthlyInvestment):
         return jsonify(fi.ten_million_dream(monthlyInvestment))
 
+    @app.route("/metadata/fi/compound/interest", methods=["POST"])
+    def compound_interest():
+        return jsonify(fi.compound_interest_req(request.get_json(silent=True)))
+
 
     return app
 

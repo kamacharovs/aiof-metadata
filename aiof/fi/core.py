@@ -1,5 +1,6 @@
 import numpy_financial as npf
 import pandas as pd
+import math
 
 
 # Global
@@ -35,6 +36,12 @@ _ten_million_interests = [
     0.08,
     0.09,
     0.10
+]
+
+_frequencies = [
+    365,
+    12,
+    1        
 ]
 
 
@@ -177,7 +184,7 @@ def ten_million_dream(monthly_investment):
         for interest in _ten_million_interests:
             years = npf.nper(
                 interest/12, 
-                monthly_investment * -1,
+                -monthly_investment,
                 0,
                 million,
                 when='begin') / 12
@@ -190,3 +197,53 @@ def ten_million_dream(monthly_investment):
             "years": million_interests_obj
         })
     return ten_million_obj
+
+
+
+# Compound
+# Enter your data in the white cells. Six results are displayed representing daily, monthly, and annual compounding, with additions made at the beginning or end of the day, month or year
+# https://www.physicianonfire.com/calculators/compound/
+#
+# investment_fees : Including expense ratios, fund loads, AUM fees, etc… (0.1% to 3%)
+# tax_drag        : For taxable account only (typical range of 0.3% to 1%)
+def compound_interest(
+    starting_amount,
+    monthly_investment,
+    interest_rate,
+    number_of_years,
+    investment_fees=0,
+    tax_drag=0):
+    compound_interest_obj = []
+    for frequency in _frequencies:
+        fv = -npf.fv(
+            ((interest_rate - investment_fees - tax_drag) / 100) / frequency,
+            number_of_years * frequency,
+            (monthly_investment * 12) / frequency,
+            starting_amount,
+            when='begin')
+        compound_interest_obj.append({
+            "startingAmount": starting_amount,
+            "monthlyInvestment": monthly_investment,
+            "interest": interest_rate,
+            "numberOfYears": number_of_years,
+            "investmentFees": investment_fees,
+            "taxDrag": tax_drag,
+            "frequency": frequency,
+            "compounded": math.ceil(fv)
+        })
+    return compound_interest_obj
+
+def compound_interest_req(req):
+    starting_amount = req["startingAmount"] if "startingAmount" in req else 0
+    monthly_investment = req["monthlyInvestment"] if "monthlyInvestment" in req else 5000
+    interest_rate = req["interest"] if "interest" in req else 7
+    number_of_years = req["numberOfYears"] if "numberOfYears" in req else 25
+    investment_fees = req["investmentFees"] if "investmentFees" in req else 0.50
+    tax_drag = req["taxDrag"] if "taxDrag" in req else 0.50
+    return compound_interest(
+        starting_amount,
+        monthly_investment,
+        interest_rate,
+        number_of_years,
+        investment_fees,
+        tax_drag)
