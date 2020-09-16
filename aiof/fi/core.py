@@ -215,18 +215,11 @@ def compound_interest(
     tax_drag=0):
     compound_interest_obj = []
     for frequency in _frequencies:
-        fv_begin = -npf.fv(
-            ((interest_rate - investment_fees - tax_drag) / 100) / frequency,
-            number_of_years * frequency,
-            (monthly_investment * 12) / frequency,
-            starting_amount,
-            when='begin')
-        fv_end = -npf.fv(
-            ((interest_rate - investment_fees - tax_drag) / 100) / frequency,
-            number_of_years * frequency,
-            (monthly_investment * 12) / frequency,
-            starting_amount,
-            when='end')
+        rate = ((interest_rate - investment_fees - tax_drag) / 100) / frequency
+        nper = number_of_years * frequency
+        pmt = (monthly_investment * 12) / frequency
+        fv_begin = -npf.fv(rate, nper, pmt, starting_amount, when='begin')
+        fv_end = -npf.fv(rate, nper, pmt, starting_amount, when='end')
         compound_interest_obj.append({
             "startingAmount": starting_amount,
             "monthlyInvestment": monthly_investment,
