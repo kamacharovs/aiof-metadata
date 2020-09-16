@@ -12,6 +12,7 @@ class FiTestCase(unittest.TestCase):
     _desired_annual_spending = 100000
     _interest = 8
     _modifier = [ 2, 3, 4 ]
+    _additional_amount = 450000
 
     def test_fi_time_to_fi_req_defaults(self):
         req = {
@@ -92,3 +93,45 @@ class FiTestCase(unittest.TestCase):
             assert resp["modifier"] in self._modifier
             assert resp["endingAmount"] == resp["startingAmount"] * resp["modifier"]
             assert resp["years"] > 0
+
+
+
+    def test_fi_added_time_to_fi_req_defaults(self):
+        req = {
+            "monthlyInvestment": self._monthly_investment,
+        }
+        resp = added_time_to_fi_req(req)
+
+        assert resp["monthlyInvestment"] == self._monthly_investment
+        assert resp["totalAdditionalExpense"] > 0
+        assert len(resp["years"]) > 0
+
+        for resp_year in resp["years"]:
+            assert resp_year["interest"] > 0
+            assert resp_year["years"] > 0
+    def test_fi_added_time_to_fi_req(self):
+        req = {
+            "monthlyInvestment": self._monthly_investment,
+            "totalAdditionalExpense": self._additional_amount
+        }
+        resp = added_time_to_fi_req(req)
+
+        assert resp["monthlyInvestment"] == self._monthly_investment
+        assert resp["totalAdditionalExpense"] == self._additional_amount
+        assert len(resp["years"]) > 0
+
+        for resp_year in resp["years"]:
+            assert resp_year["interest"] > 0
+            assert resp_year["years"] > 0
+    def test_fi_added_time_to_fi(self):
+        resp = added_time_to_fi(
+            self._monthly_investment,
+            self._additional_amount)
+
+        assert resp["monthlyInvestment"] == self._monthly_investment
+        assert resp["totalAdditionalExpense"] == self._additional_amount
+        assert len(resp["years"]) > 0
+
+        for resp_year in resp["years"]:
+            assert resp_year["interest"] > 0
+            assert resp_year["years"] > 0
