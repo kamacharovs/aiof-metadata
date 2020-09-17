@@ -7,6 +7,7 @@ import aiof.fi.core as fi
 from flask import Flask
 from flask import request
 from flask import jsonify
+from flask_cors import CORS
 
 
 def create_app(test_config=None):
@@ -14,6 +15,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY="dev",
     )
+    CORS(app)
 
     if test_config is None:
         app.config.from_pyfile("config.py", silent=True)
