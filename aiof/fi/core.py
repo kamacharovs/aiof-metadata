@@ -5,10 +5,10 @@ import math
 
 # Global
 _interests = [ 
-    0.02,
-    0.04,
-    0.06,
-    0.08
+    2,
+    4,
+    6,
+    8
 ]
 
 _ten_million = [
@@ -26,16 +26,16 @@ _ten_million = [
 ]
 _ten_million_interests = [
     0,
-    0.01,
-    0.02,
-    0.03,
-    0.04,
-    0.05,
-    0.06,
-    0.07,
-    0.08,
-    0.09,
-    0.10
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
 ]
 
 _frequencies = [
@@ -158,14 +158,14 @@ def added_time_to_fi(
 
     for interest in _interests:
         years_added = npf.nper(
-            interest/12, 
+            (interest / 100)/12, 
             monthly_investment * -1,
             0,
             total_additional_expense) / 12
 
         years_added_to_fi_obj.append(
             {
-                "interest": interest * 100,
+                "interest": interest,
                 "years": round(years_added, 1),
             })
 
@@ -193,13 +193,13 @@ def ten_million_dream(monthly_investment):
         million_interests_obj = []
         for interest in _ten_million_interests:
             years = npf.nper(
-                interest/12, 
+                (interest / 100)/12, 
                 -monthly_investment,
                 0,
                 million,
                 when='begin') / 12
             million_interests_obj.append({
-                    "interest": round(interest * 100, 1),
+                    "interest": interest,
                     "years": round(years, 1)
                 })
         ten_million_obj.append({
