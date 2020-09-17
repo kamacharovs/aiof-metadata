@@ -44,6 +44,16 @@ _frequencies = [
     1        
 ]
 
+_fees = [
+    0.001,
+    0.005,
+    0.010,
+    0.015,
+    0.020,
+    0.025,
+    0.030,
+]
+
 
 # Financial Indepdence (FI) core
 
@@ -200,7 +210,7 @@ def ten_million_dream(monthly_investment):
 
 
 
-# Compound
+# Compound interest
 # Enter your data in the white cells. Six results are displayed representing daily, monthly, and annual compounding, with additions made at the beginning or end of the day, month or year
 # https://www.physicianonfire.com/calculators/compound/
 #
@@ -247,3 +257,139 @@ def compound_interest_req(req):
         number_of_years,
         investment_fees,
         tax_drag)
+
+
+
+# Investment Fees effect
+# Enter your data in the gray boxes. If you enter your withdrawal (spending) for the initial decade, the calculator will assume 25% increases for the two decades that follow, 
+# then spending is held steady. You may enter your own assumptions for each decade if you prefer
+# https://www.physicianonfire.com/calculators/fees-effect-calculator/
+def investment_fees_effect(
+    age_at_career_start,
+    interest_return_while_working,
+    interest_return_while_retired,
+    tax_drag,
+    annual_savings_1_decade,
+    annual_savings_2_decade,
+    annual_withdrawal_3_decade):
+    annual_withdrawal_4_decade = 1.25 * annual_withdrawal_3_decade
+    annual_withdrawal_5_decade = 1.25 * annual_withdrawal_4_decade
+    annual_withdrawal_6_decade = annual_withdrawal_5_decade
+    annual_withdrawal_7_decade = annual_withdrawal_5_decade
+
+    fees_obj = []
+    for fee in _fees:
+        work_interest_return = interest_return_while_working - tax_drag - fee
+        retired_interest_return = interest_return_while_retired - tax_drag - fee
+        value_obj = []
+
+        fv_after_10_years = npf.fv(
+            work_interest_return / 12,
+            120,
+            annual_savings_1_decade / 12,
+            0,
+            when='begin')
+
+        fv_after_20_years = npf.fv(
+            work_interest_return / 12,
+            120,
+            annual_savings_2_decade / 12,
+            fv_after_10_years,
+            when='begin')
+
+        retired_fv_30_years = npf.fv(
+            retired_interest_return / 12,
+            120,
+            annual_withdrawal_3_decade / 12,
+            -fv_after_20_years,
+            when='begin'
+        )
+        retired_fv_40_years = npf.fv(
+            retired_interest_return / 12,
+            240,
+            annual_withdrawal_4_decade / 12,
+            -fv_after_20_years,
+            when='begin'
+        )
+        retired_fv_50_years = npf.fv(
+            retired_interest_return / 12,
+            360,
+            annual_withdrawal_5_decade / 12,
+            -fv_after_20_years,
+            when='begin'
+        )
+        retired_fv_60_years = npf.fv(
+            retired_interest_return / 12,
+            480,
+            annual_withdrawal_6_decade / 12,
+            -fv_after_20_years,
+            when='begin'
+        )
+        retired_fv_70_years = npf.fv(
+            retired_interest_return / 12,
+            600,
+            annual_withdrawal_7_decade / 12,
+            -fv_after_20_years,
+            when='begin'
+        )
+
+        value_obj.append({
+            "age": age_at_career_start + 10, 
+            "value": fv_after_10_years 
+        })
+        value_obj.append({
+            "age": age_at_career_start + 20, 
+            "value": fv_after_20_years 
+        })
+        value_obj.append({
+            "age": age_at_career_start + 30, 
+            "value": retired_fv_30_years 
+        })
+        value_obj.append({
+            "age": age_at_career_start + 40, 
+            "value": retired_fv_40_years 
+        })
+        value_obj.append({
+            "age": age_at_career_start + 50, 
+            "value": retired_fv_50_years 
+        })
+        value_obj.append({
+            "age": age_at_career_start + 60, 
+            "value": retired_fv_60_years 
+        })
+        value_obj.append({
+            "age": age_at_career_start + 70, 
+            "value": retired_fv_70_years 
+        })
+        fees_obj.append({
+            "fee": fee,
+            "values": value_obj
+        })
+        
+    return {
+        "ageAtCareerStart": age_at_career_start,
+        "interestReturnWhileWorking": interest_return_while_working,
+        "interestReturnWhileRetired": interest_return_while_retired,
+        "taxDrag": tax_drag,
+        "annualSavingsFirstDecade": annual_savings_1_decade,
+        "annualSavingsSecondDecade": annual_savings_2_decade,
+        "annualWithdrawalThirdDecade": annual_withdrawal_3_decade,
+        "fees": fees_obj
+    }
+
+def investment_fees_effect_req(req):
+    age_at_career_start = req["ageAtCareerStart"] if "ageAtCareerStart" in req else 32
+    interest_return_while_working = req["interestReturnWhileWorking"] if "interestReturnWhileWorking" in req else 8
+    interest_return_while_retired = req["interestReturnWhileRetired"] if "interestReturnWhileRetired" in req else 5
+    tax_drag = req["taxDrag"] if "taxDrag" in req else 0.3
+    annual_savings_1_decade = req["annualSavingsFirstDecade"] if "annualSavingsFirstDecade" in req else 50000
+    annual_savings_2_decade = req["annualSavingsSecondDecade"] if "annualSavingsSecondDecade" in req else 100000
+    annual_withdrawal_3_decade = req["annualWithdrawalThirdDecade"] if "annualWithdrawalThirdDecade" in req else 70000
+    return investment_fees_effect(
+        age_at_career_start,
+        interest_return_while_working,
+        interest_return_while_retired,
+        tax_drag,
+        annual_savings_1_decade,
+        annual_savings_2_decade,
+        annual_withdrawal_3_decade)
