@@ -11,9 +11,16 @@ class FiTestCase(unittest.TestCase):
     _desired_years_expenses_for_fi = 30
     _desired_annual_spending = 100000
     _interest = 8
+    _interest_retired = 5
     _modifier = [ 2, 3, 4 ]
     _additional_amount = 450000
     _number_of_years = 25
+    _age = 32
+    _tax_drag = 0.3
+    _savings_first_decade = 50000
+    _withdrawal = 70000
+
+
 
     def test_fi_time_to_fi_req_defaults(self):
         req = {
@@ -98,28 +105,14 @@ class FiTestCase(unittest.TestCase):
 
 
     def test_fi_added_time_to_fi_req_defaults(self):
-        req = {
-            "monthlyInvestment": self._monthly_investment,
-        }
-        resp = added_time_to_fi_req(req)
-
-        assert resp["monthlyInvestment"] == self._monthly_investment
-        assert resp["totalAdditionalExpense"] > 0
-        assert len(resp["years"]) > 0
-
-        for resp_year in resp["years"]:
-            assert resp_year["interest"] > 0
-            assert resp_year["years"] > 0
+        resp = added_time_to_fi_req({})
+        self.assert_fi_added_time_to_fi(resp)
     def test_fi_added_time_to_fi_req(self):
-        req = {
+        resp = added_time_to_fi_req({
             "monthlyInvestment": self._monthly_investment,
             "totalAdditionalExpense": self._additional_amount
-        }
-        resp = added_time_to_fi_req(req)
-
-        assert resp["monthlyInvestment"] == self._monthly_investment
-        assert resp["totalAdditionalExpense"] == self._additional_amount
-        assert len(resp["years"]) > 0
+        })
+        self.assert_fi_added_time_to_fi(resp)
 
         for resp_year in resp["years"]:
             assert resp_year["interest"] > 0
@@ -128,11 +121,12 @@ class FiTestCase(unittest.TestCase):
         resp = added_time_to_fi(
             self._monthly_investment,
             self._additional_amount)
+        self.assert_fi_added_time_to_fi(resp)
 
-        assert resp["monthlyInvestment"] == self._monthly_investment
-        assert resp["totalAdditionalExpense"] == self._additional_amount
+    def assert_fi_added_time_to_fi(self, resp):
+        assert resp["monthlyInvestment"] > 0
+        assert resp["totalAdditionalExpense"] > 0
         assert len(resp["years"]) > 0
-
         for resp_year in resp["years"]:
             assert resp_year["interest"] > 0
             assert resp_year["years"] > 0
@@ -153,40 +147,17 @@ class FiTestCase(unittest.TestCase):
 
     def test_fi_compounded_interest_req_defaults(self):
         resp = compound_interest_req({})
-
-        assert len(resp) > 0
-        for r in resp:
-            assert r["compoundedBeginning"] > 0
-            assert r["compoundedEnd"] > 0
-            assert r["frequency"] > 0
-            assert r["interest"] > 0
-            assert r["monthlyInvestment"] > 0
-            assert r["numberOfYears"] > 0
-            assert r["startingAmount"] >= 0
-            assert r["taxDrag"] >= 0
-            assert r["investmentFees"] >= 0
+        self.assert_fi_compound_interest(resp)
     def test_fi_compounded_interest_req(self):
-        req = {
+        resp = compound_interest_req({
             "startingAmount": 0,
             "monthlyInvestment": self._monthly_investment,
             "interest": self._interest,
             "numberOfYears": self._number_of_years,
             "investmentFees": 0.50,
             "taxDrag": 0.50
-        }
-        resp = compound_interest_req(req)
-
-        assert len(resp) > 0
-        for r in resp:
-            assert r["compoundedBeginning"] > 0
-            assert r["compoundedEnd"] > 0
-            assert r["frequency"] > 0
-            assert r["interest"] == self._interest
-            assert r["monthlyInvestment"] == self._monthly_investment
-            assert r["numberOfYears"] == self._number_of_years
-            assert r["startingAmount"] >= 0
-            assert r["taxDrag"] >= 0
-            assert r["investmentFees"] >= 0
+        })
+        self.assert_fi_compound_interest(resp)
     def test_fi_compounded_interest(self):
         resp = compound_interest(
             starting_amount=0,
@@ -195,15 +166,64 @@ class FiTestCase(unittest.TestCase):
             number_of_years=self._number_of_years,
             investment_fees=0.50,
             tax_drag=0.50)
+        self.assert_fi_compound_interest(resp)
 
+    def assert_fi_compound_interest(self, resp):
         assert len(resp) > 0
         for r in resp:
             assert r["compoundedBeginning"] > 0
             assert r["compoundedEnd"] > 0
             assert r["frequency"] > 0
-            assert r["interest"] == self._interest
-            assert r["monthlyInvestment"] == self._monthly_investment
+            assert r["interest"] == self._interest or r["interest"] >= self._interest - 1
+            assert r["monthlyInvestment"] == self._monthly_investment or r["monthlyInvestment"] >= self._monthly_investment - 2000
             assert r["numberOfYears"] == self._number_of_years
             assert r["startingAmount"] >= 0
             assert r["taxDrag"] >= 0
             assert r["investmentFees"] >= 0
+
+
+
+    def test_fi_investment_fees_effect_req_defaults(self):
+        resp = investment_fees_effect_req({})
+        self.assert_fi_investment_fees_effect(resp)
+    def test_fi_investment_fees_effect_req(self):
+        resp = investment_fees_effect_req({
+            "ageAtCareerStart": self._age,
+            "interestReturnWhileWorking": self._interest,
+            "interestReturnWhileRetired": self._interest_retired,
+            "taxDrag": self._tax_drag,
+            "annualSavingsFirstDecade": self._savings_first_decade,
+            "annualSavingsSecondDecade": 2 * self._savings_first_decade,
+            "annualWithdrawalThirdDecade": self._withdrawal
+        })
+        self.assert_fi_investment_fees_effect(resp)
+    def test_fi_investment_fees_effect(self):
+        resp = investment_fees_effect(
+            age_at_career_start=self._age,
+            interest_return_while_working=self._interest,
+            interest_return_while_retired=self._interest_retired,
+            tax_drag=self._tax_drag,
+            annual_savings_1_decade=self._savings_first_decade,
+            annual_savings_2_decade=2 * self._savings_first_decade,
+            annual_withdrawal_3_decade=self._withdrawal)
+        self.assert_fi_investment_fees_effect(resp)
+
+    def assert_fi_investment_fees_effect(self, resp):
+        assert resp["ageAtCareerStart"] == self._age
+        assert resp["interestReturnWhileWorking"] == self._interest
+        assert resp["interestReturnWhileRetired"] == self._interest_retired
+        assert resp["taxDrag"] == self._tax_drag
+        assert resp["annualSavingsFirstDecade"] == self._savings_first_decade
+        assert resp["annualSavingsSecondDecade"] == 2 * self._savings_first_decade
+        assert resp["annualSavingsFourthDecade"] > self._savings_first_decade
+        assert resp["annualSavingsFifthDecade"] > self._savings_first_decade
+        assert resp["annualSavingsSixthDecade"] > self._savings_first_decade
+        assert resp["annualSavingsSeventhDecade"] > self._savings_first_decade
+        assert resp["annualWithdrawalThirdDecade"] == self._withdrawal
+        assert len(resp["fees"]) > 0
+        for fee in resp["fees"]:
+            assert fee["fee"] > 0
+            for v in fee["values"]:
+                assert v["age"] >= self._age
+                assert v["interest"] > 0
+                assert v["value"] != 0
