@@ -68,24 +68,17 @@ def time_to_fi(
     desired_retirement_savings_for_fi = desired_years_expenses_for_fi * desired_annual_spending
     current_deficit = desired_retirement_savings_for_fi - starting_amount
 
-    interests = [ 
-        0.02,
-        0.04,
-        0.06,
-        0.08
-    ]
-
     years_to_goal_obj = []
-    for interest in interests:
+    for interest in _interests:
         years_to_goal = npf.nper(
-            interest/12, 
+            (interest / 100)/12, 
             monthly_investment * -1,
             starting_amount * -1,
             desired_retirement_savings_for_fi) / 12
 
         years_to_goal_obj.append(
             {
-                "interest": interest * 100,
+                "interest": interest,
                 "years": round(years_to_goal, 1),
             })
 
@@ -272,15 +265,15 @@ def investment_fees_effect(
     annual_savings_1_decade,
     annual_savings_2_decade,
     annual_withdrawal_3_decade):
-    annual_withdrawal_4_decade = 1.25 * annual_withdrawal_3_decade
-    annual_withdrawal_5_decade = 1.25 * annual_withdrawal_4_decade
+    annual_withdrawal_4_decade = math.ceil(1.25 * annual_withdrawal_3_decade)
+    annual_withdrawal_5_decade = math.ceil(1.25 * annual_withdrawal_4_decade)
     annual_withdrawal_6_decade = annual_withdrawal_5_decade
     annual_withdrawal_7_decade = annual_withdrawal_5_decade
 
     fees_obj = []
     for fee in _fees:
         work_interest_return = (interest_return_while_working - tax_drag - fee) / 100
-        retired_interest_return = (interest_return_while_retired - tax_drag - fee) / 100
+        retired_interest_return =  (interest_return_while_retired - tax_drag - fee) / 100
         value_obj = []
 
         fv_after_10_years = -npf.fv(
@@ -333,33 +326,42 @@ def investment_fees_effect(
             when='begin'
         )
 
+        return_work_interest_return = round(work_interest_return * 100, 1)
+        return_retired_interest_return = round(retired_interest_return * 100, 1)
         value_obj.append({
             "age": age_at_career_start + 10, 
-            "value": math.ceil(fv_after_10_years) 
+            "value": math.ceil(fv_after_10_years),
+            "interest": return_work_interest_return
         })
         value_obj.append({
             "age": age_at_career_start + 20, 
-            "value": math.ceil(fv_after_20_years) 
+            "value": math.ceil(fv_after_20_years),
+            "interest": return_work_interest_return
         })
         value_obj.append({
             "age": age_at_career_start + 30, 
-            "value": math.ceil(retired_fv_30_years) 
+            "value": math.ceil(retired_fv_30_years),
+            "interest": return_retired_interest_return
         })
         value_obj.append({
             "age": age_at_career_start + 40, 
-            "value": math.ceil(retired_fv_40_years) 
+            "value": math.ceil(retired_fv_40_years),
+            "interest": return_retired_interest_return
         })
         value_obj.append({
             "age": age_at_career_start + 50, 
-            "value": math.ceil(retired_fv_50_years) 
+            "value": math.ceil(retired_fv_50_years),
+            "interest": return_retired_interest_return
         })
         value_obj.append({
             "age": age_at_career_start + 60, 
-            "value": math.ceil(retired_fv_60_years) 
+            "value": math.ceil(retired_fv_60_years),
+            "interest": return_retired_interest_return
         })
         value_obj.append({
             "age": age_at_career_start + 70, 
-            "value": math.ceil(retired_fv_70_years)
+            "value": math.ceil(retired_fv_70_years),
+            "interest": return_retired_interest_return
         })
         fees_obj.append({
             "fee": fee,
