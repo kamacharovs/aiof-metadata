@@ -22,6 +22,21 @@ Overall documentation
 
 ## API
 
+### Financial independence (FI)
+
+Financial Independence is based on the FIRE movement. Financial Independence, Retire Early (FIRE) is a movement dedicated to a program of extreme savings and investment that allows proponents to retire far earlier than traditional budgets and retirement plans would allow. By dedicating up to 70% of income to savings, followers of the FIRE movement may eventually be able to quit their jobs and live solely off small withdrawals from their portfolios decades before the conventional retirement age of 65. More information can be found [here](https://www.investopedia.com/terms/f/financial-independence-retire-early-fire.asp)
+
+API endpoinds available are
+
+```text
+/metadata/fi/time/to/fi
+/metadata/fi/added/time
+/metadata/fi/rule/of/72
+/metadata/fi/ten/million/dream/<int:monthlyInvestment>
+/metadata/fi/compound/interest
+/metadata/fi/investment/fees/effect
+```
+
 ### How to run it
 
 The application is setup as a Flask API. In order to start the application, you must `cd` into the correct directory `../api`. Once there, simply run the `flask run` command. Sometimes, you would have to setup the `FLASK_APP` environment variable. In order to do that in powershell, run `$env:FLASK_APP="api"`. The complete steps are:
