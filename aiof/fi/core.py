@@ -93,7 +93,6 @@ def time_to_fi(
     }
 
 def time_to_fi_req(req):
-    print(req)
     starting_amount = req["startingAmount"] if ("startingAmount" in req) and (req["startingAmount"] is not None) else 800000
     monthly_investment = req["monthlyInvestment"] if ("monthlyInvestment" in req) and (req["monthlyInvestment"] is not None) else 5000
     desired_years_expenses_for_fi = req["desiredYearsExpensesForFi"] if ("desiredYearsExpensesForFi" in req) and (req["desiredYearsExpensesForFi"] is not None) else 25
