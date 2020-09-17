@@ -2,4 +2,5 @@ numpy
 pandas
 statistics
 Flask
+flask-cors
 logzero
