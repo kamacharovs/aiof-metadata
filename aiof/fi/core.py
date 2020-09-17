@@ -45,13 +45,13 @@ _frequencies = [
 ]
 
 _fees = [
-    0.001,
-    0.005,
-    0.010,
-    0.015,
-    0.020,
-    0.025,
-    0.030,
+    0.10,
+    0.50,
+    1.00,
+    1.50,
+    2.00,
+    2.50,
+    3.00,
 ]
 
 
@@ -279,18 +279,18 @@ def investment_fees_effect(
 
     fees_obj = []
     for fee in _fees:
-        work_interest_return = interest_return_while_working - tax_drag - fee
-        retired_interest_return = interest_return_while_retired - tax_drag - fee
+        work_interest_return = (interest_return_while_working - tax_drag - fee) / 100
+        retired_interest_return = (interest_return_while_retired - tax_drag - fee) / 100
         value_obj = []
 
-        fv_after_10_years = npf.fv(
+        fv_after_10_years = -npf.fv(
             work_interest_return / 12,
             120,
             annual_savings_1_decade / 12,
             0,
             when='begin')
 
-        fv_after_20_years = npf.fv(
+        fv_after_20_years = -npf.fv(
             work_interest_return / 12,
             120,
             annual_savings_2_decade / 12,
@@ -335,37 +335,37 @@ def investment_fees_effect(
 
         value_obj.append({
             "age": age_at_career_start + 10, 
-            "value": fv_after_10_years 
+            "value": math.ceil(fv_after_10_years) 
         })
         value_obj.append({
             "age": age_at_career_start + 20, 
-            "value": fv_after_20_years 
+            "value": math.ceil(fv_after_20_years) 
         })
         value_obj.append({
             "age": age_at_career_start + 30, 
-            "value": retired_fv_30_years 
+            "value": math.ceil(retired_fv_30_years) 
         })
         value_obj.append({
             "age": age_at_career_start + 40, 
-            "value": retired_fv_40_years 
+            "value": math.ceil(retired_fv_40_years) 
         })
         value_obj.append({
             "age": age_at_career_start + 50, 
-            "value": retired_fv_50_years 
+            "value": math.ceil(retired_fv_50_years) 
         })
         value_obj.append({
             "age": age_at_career_start + 60, 
-            "value": retired_fv_60_years 
+            "value": math.ceil(retired_fv_60_years) 
         })
         value_obj.append({
             "age": age_at_career_start + 70, 
-            "value": retired_fv_70_years 
+            "value": math.ceil(retired_fv_70_years)
         })
         fees_obj.append({
             "fee": fee,
             "values": value_obj
         })
-        
+
     return {
         "ageAtCareerStart": age_at_career_start,
         "interestReturnWhileWorking": interest_return_while_working,
@@ -373,6 +373,10 @@ def investment_fees_effect(
         "taxDrag": tax_drag,
         "annualSavingsFirstDecade": annual_savings_1_decade,
         "annualSavingsSecondDecade": annual_savings_2_decade,
+        "annualSavingsFourthDecade": annual_withdrawal_4_decade,
+        "annualSavingsFifthDecade": annual_withdrawal_5_decade,
+        "annualSavingsSixthDecade": annual_withdrawal_6_decade,
+        "annualSavingsSeventhDecade": annual_withdrawal_7_decade,
         "annualWithdrawalThirdDecade": annual_withdrawal_3_decade,
         "fees": fees_obj
     }
