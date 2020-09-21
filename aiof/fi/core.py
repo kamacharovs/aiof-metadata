@@ -245,12 +245,12 @@ def compound_interest(
     return compound_interest_obj
 
 def compound_interest_req(req):
-    starting_amount = req["startingAmount"] if "startingAmount" in req else 0
-    monthly_investment = req["monthlyInvestment"] if "monthlyInvestment" in req else 5000
-    interest_rate = req["interest"] if "interest" in req else 7
-    number_of_years = req["numberOfYears"] if "numberOfYears" in req else 25
-    investment_fees = req["investmentFees"] if "investmentFees" in req else 0.50
-    tax_drag = req["taxDrag"] if "taxDrag" in req else 0.50
+    starting_amount = req["startingAmount"] if ("startingAmount" in req) and (req["startingAmount"] is not None) else 0
+    monthly_investment = req["monthlyInvestment"] if ("monthlyInvestment" in req) and (req["monthlyInvestment"] is not None) else 5000
+    interest_rate = req["interest"] if ("interest" in req) and (req["interest"] is not None) else 7
+    number_of_years = req["numberOfYears"] if ("numberOfYears" in req) and (req["numberOfYears"] is not None) else 25
+    investment_fees = req["investmentFees"] if ("investmentFees" in req) and (req["investmentFees"] is not None) else 0.50
+    tax_drag = req["taxDrag"] if ("taxDrag" in req) and (req["taxDrag"] is not None) else 0.50
     return compound_interest(
         starting_amount,
         monthly_investment,
