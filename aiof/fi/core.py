@@ -460,6 +460,27 @@ def cost_of_raising_children_faimilies():
             "annualExpensesIncrement": 4000,
             "children": _children,
             "interests": _interests
+        },
+        {
+            "name": "The Moderate Sepnders",
+            "annualExpensesStart": 9000,
+            "annualExpensesIncrement": 5000,
+            "children": _children,
+            "interests": _interests
+        },
+        {
+            "name": "The Department of Agriculture Estimate",
+            "annualExpensesStart": 13000,
+            "annualExpensesIncrement": 10000,
+            "children": _children,
+            "interests": _interests
+        },
+        {
+            "name": "The Upper Crust",
+            "annualExpensesStart": 30000,
+            "annualExpensesIncrement": 30000,
+            "children": _children,
+            "interests": _interests
         }
     ]
 
