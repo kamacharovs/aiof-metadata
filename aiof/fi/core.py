@@ -496,3 +496,14 @@ def cost_of_raising_children_faimilies():
             "children": children_obj
         })
     return families_obj
+
+def cost_of_raising_children_req(req):
+    annual_expenses_start = req["annualExpensesStart"] if ("annualExpensesStart" in req) and (req["annualExpensesStart"] is not None) else 5000
+    annual_expenses_increment = req["annualExpensesIncrement"] if ("annualExpensesIncrement" in req) and (req["annualExpensesIncrement"] is not None) else 4000
+    children = req["children"] if ("children" in req) and (req["children"] is not None) else _children
+    interests = req["interests"] if ("interests" in req) and (req["interests"] is not None) else _interests
+    return cost_of_raising_children(
+        annual_expenses_start,
+        annual_expenses_increment,
+        children,
+        interests)
