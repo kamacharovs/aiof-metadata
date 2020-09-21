@@ -227,3 +227,49 @@ class FiTestCase(unittest.TestCase):
                 assert v["age"] >= self._age
                 assert v["interest"] > 0
                 assert v["value"] != 0
+
+
+
+    def test_fi_cost_of_raising_children_req_defaults(self):
+        resp = cost_of_raising_children_req({})
+        self.assert_fi_cost_of_raising_children(resp)
+    def test_fi_cost_of_raising_children_req(self):
+        resp = cost_of_raising_children_req({
+            "annualExpensesStart": 10000,
+            "annualExpensesIncrement": 5000,
+            "children": [
+                1,
+                3,
+                5
+            ],
+            "interests": [
+                2,
+                4
+            ]
+        })
+        self.assert_fi_cost_of_raising_children(resp)
+    def test_fi_cost_of_raising_children(self):
+        resp = cost_of_raising_children(
+            annual_expenses_start=10000,
+            annual_expenses_increment=5000,
+            children=[
+                1,
+                3,
+                5
+            ],
+            interests=[
+                2,
+                8
+            ])
+        self.assert_fi_cost_of_raising_children(resp)
+
+    def assert_fi_cost_of_raising_children(self, resp):
+        assert len(resp) > 0
+        for cost in resp:
+            assert cost["annualExpenses"] > 0
+            assert cost["totalExpenses"] > 0
+            assert cost["children"] >= 1
+            for c in cost["cost"]:
+                c["interest"] > 0
+                c["value"] > 0
+
