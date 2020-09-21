@@ -413,7 +413,7 @@ def investment_fees_effect_req(req):
 # This calculator was designed to give you a rough idea of the financial implications of raising children. 
 # It is loosely based on the Department of Agriculture’s estimates of raising a child to age 18
 # https://www.physicianonfire.com/calculators/cost-of-raising-children/
-def cost_of_raising_children():
+def cost_of_raising_children_faimilies():
     families = [
         {
             "name": "Frugal",
@@ -426,43 +426,50 @@ def cost_of_raising_children():
 
     families_obj = []
     for family in families:
-        annual_expenses_start = family["annualExpensesStart"]
-        annual_expenses_increment = family["annualExpensesIncrement"]
-
-        children_obj = []
-        for child in family["children"]:
-            annual_expenses = 0
-            total_expenses = 0
-            if child == 1:
-                annual_expenses = annual_expenses_start
-                total_expenses = annual_expenses_start * 18
-            else:
-                annual_expenses = annual_expenses_start + (annual_expenses_increment * (child - 1))
-                total_expenses = annual_expenses * 18
-        
-            interests_obj = []
-            for interest in family["interests"]:
-                frugal_family_fv = npf.fv(
-                    interest / 12,
-                    216,
-                    annual_expenses / 12,
-                    0,
-                    when='begin'
-                )
-                interests_obj.append({
-                    "interest": interest,
-                    "value": frugal_family_fv
-                })
-
-            children_obj.append({
-                "child": child,
-                "annualExpenses": annual_expenses,
-                "totalExpenses": total_expenses,
-                "interests": interests_obj
-            })
-
+        children_obj = cost_of_raising_children(
+            family["annualExpensesStart"],
+            family["annualExpensesIncrement"],
+            family["children"],
+            family["interests"])
         families_obj.append({
             "name": family["name"],
             "children": children_obj
         })
     return families_obj
+
+def cost_of_raising_children(
+    annual_expenses_start,
+    annual_expenses_increment,
+    children,
+    interests):
+    children_obj = []
+    for child in children:
+        annual_expenses = 0
+        total_expenses = 0
+        if child == 1:
+            annual_expenses = annual_expenses_start
+            total_expenses = annual_expenses_start * 18
+        else:
+            annual_expenses = annual_expenses_start + (annual_expenses_increment * (child - 1))
+            total_expenses = annual_expenses * 18
+        
+        cost_obj = []
+        for interest in interests:
+            fv = -npf.fv(
+                interest / 12,
+                216,
+                annual_expenses / 12,
+                0,
+                when='begin')
+            cost_obj.append({
+                "interest": interest,
+                "value": math.ceil(fv)
+            })
+
+        children_obj.append({
+            "children": child,
+            "annualExpenses": annual_expenses,
+            "totalExpenses": total_expenses,
+            "cost": cost_obj
+        })
+    return children_obj

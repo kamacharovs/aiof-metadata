@@ -74,6 +74,10 @@ def create_app(test_config=None):
     def investment_fees_effect():
         return jsonify(fi.investment_fees_effect_req(request.get_json(silent=True)))
 
+    @app.route("/metadata/fi/cost/of/raising/children", methods=["GET"])
+    def cost_of_raising_children():
+        return jsonify(fi.cost_of_raising_children_faimilies())
+
 
     return app
 
