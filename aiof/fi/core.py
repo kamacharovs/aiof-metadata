@@ -54,6 +54,13 @@ _fees = [
     3.00,
 ]
 
+_children = [
+    1,
+    2,
+    3,
+    4
+]
+
 
 # Financial Indepdence (FI) core
 
@@ -399,3 +406,63 @@ def investment_fees_effect_req(req):
         annual_savings_1_decade,
         annual_savings_2_decade,
         annual_withdrawal_3_decade)
+
+
+
+# Cost of raising children
+# This calculator was designed to give you a rough idea of the financial implications of raising children. 
+# It is loosely based on the Department of Agriculture’s estimates of raising a child to age 18
+# https://www.physicianonfire.com/calculators/cost-of-raising-children/
+def cost_of_raising_children():
+    families = [
+        {
+            "name": "Frugal",
+            "annualExpensesStart": 5000,
+            "annualExpensesIncrement": 4000,
+            "children": _children,
+            "interests": _interests
+        }
+    ]
+
+    families_obj = []
+    for family in families:
+        annual_expenses_start = family["annualExpensesStart"]
+        annual_expenses_increment = family["annualExpensesIncrement"]
+
+        children_obj = []
+        for child in family["children"]:
+            annual_expenses = 0
+            total_expenses = 0
+            if child == 1:
+                annual_expenses = annual_expenses_start
+                total_expenses = annual_expenses_start * 18
+            else:
+                annual_expenses = annual_expenses_start + (annual_expenses_increment * (child - 1))
+                total_expenses = annual_expenses * 18
+        
+            interests_obj = []
+            for interest in family["interests"]:
+                frugal_family_fv = npf.fv(
+                    interest / 12,
+                    216,
+                    annual_expenses / 12,
+                    0,
+                    when='begin'
+                )
+                interests_obj.append({
+                    "interest": interest,
+                    "value": frugal_family_fv
+                })
+
+            children_obj.append({
+                "child": child,
+                "annualExpenses": annual_expenses,
+                "totalExpenses": total_expenses,
+                "interests": interests_obj
+            })
+
+        families_obj.append({
+            "name": family["name"],
+            "children": children_obj
+        })
+    return families_obj
