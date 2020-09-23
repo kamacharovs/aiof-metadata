@@ -1,5 +1,6 @@
 numpy
 numpy_financial
+Werkzeug
 pandas
 statistics
 Flask

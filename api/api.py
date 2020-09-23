@@ -8,6 +8,7 @@ from flask import Flask
 from flask import request
 from flask import jsonify
 from flask_cors import CORS
+from werkzeug.exceptions import HTTPException, NotFound
 
 
 def create_app(test_config=None):
@@ -26,6 +27,11 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    @app.errorhandler(NotFound)
+    def page_not_found_handler(e: HTTPException):
+        return 'Not found', 404
+
 
     @app.route("/metadata/frequencies", methods=["GET"])
     def get_frequencies():
