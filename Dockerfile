@@ -17,6 +17,6 @@ ENV LANG=C.UTF-8
 RUN pip3 install -r requirements.txt
 RUN python3 ./setup.py test
 
-EXPOSE 8080
+EXPOSE 80
 WORKDIR /app/api
-ENTRYPOINT ["flask", "run", "-p", "8080"]
+ENTRYPOINT ["flask", "run", "-p", "80"]
