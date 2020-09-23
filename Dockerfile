@@ -11,8 +11,8 @@ RUN python3 -m venv venv
 RUN . venv/bin/activate
 ENV FLASK_APP=api
 
-RUN export LANG=en_US.UTF-8
-RUN export LC_ALL=en_US.UTF-8
+RUN export LC_ALL=en_US.utf-8
+RUN export LANG=en_US.utf-8
 
 RUN pip3 install -r requirements.txt
 RUN python3 ./setup.py test
