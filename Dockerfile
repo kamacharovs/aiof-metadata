@@ -12,4 +12,4 @@ RUN python ./setup.py test
 
 EXPOSE 8000
 WORKDIR /app/api
-ENTRYPOINT ["flask", "run", "p", "8000"]
+ENTRYPOINT ["flask", "run", "-p", "8000"]
