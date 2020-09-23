@@ -10,6 +10,6 @@ ENV FLASK_APP=api
 RUN pip install -r requirements.txt
 RUN python ./setup.py test
 
-EXPOSE 80
+EXPOSE 8080
 WORKDIR /app/api
 ENTRYPOINT ["flask", "run"]
