@@ -9,10 +9,10 @@ WORKDIR /app
 COPY . /app/
 RUN python3 -m venv venv
 RUN . venv/bin/activate
-ENV FLASK_APP=api
 
-RUN export LC_ALL=en_US.utf-8
-RUN export LANG=en_US.utf-8
+ENV FLASK_APP=api
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
 
 RUN pip3 install -r requirements.txt
 RUN python3 ./setup.py test
