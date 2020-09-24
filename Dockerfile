@@ -6,6 +6,9 @@ COPY . /app/
 RUN pip install -r requirements.txt
 RUN python setup.py develop
 
+WORKDIR /app/tests
+RUN pytest
+
 ENV LISTEN_PORT=80
 EXPOSE 80
 WORKDIR /app/api
