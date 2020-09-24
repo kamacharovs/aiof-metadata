@@ -47,6 +47,14 @@ cd .\api
 uvicorn api:app
 ```
 
+Local Docker run
+
+```powershell
+docker build -t aiof-metadata .
+docker rmi $(docker images -f “dangling=true” -q)
+docker run -p 8080:80 aiof-metadata
+```
+
 The application is setup as a Flask API. In order to start the application, you must `cd` into the correct directory `../api`. Once there, simply run the `flask run` command. Sometimes, you would have to setup the `FLASK_APP` environment variable. In order to do that in powershell, run `$env:FLASK_APP="api"`. The complete steps are:
 
 ```powershell

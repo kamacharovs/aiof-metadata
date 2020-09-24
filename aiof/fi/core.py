@@ -73,6 +73,11 @@ def time_to_fi(
     monthly_investment,
     desired_years_expenses_for_fi,
     desired_annual_spending):
+    starting_amount = starting_amount if starting_amount is not None else 800000
+    monthly_investment = monthly_investment if monthly_investment is not None else 5000
+    desired_years_expenses_for_fi = desired_years_expenses_for_fi if desired_years_expenses_for_fi is not None else 25
+    desired_annual_spending = desired_annual_spending if desired_annual_spending is not None else 100000
+
     desired_retirement_savings_for_fi = desired_years_expenses_for_fi * desired_annual_spending
     current_deficit = desired_retirement_savings_for_fi - starting_amount
 
