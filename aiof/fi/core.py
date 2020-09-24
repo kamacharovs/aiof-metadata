@@ -105,17 +105,6 @@ def time_to_fi(
         "years": years_to_goal_obj
     }
 
-def time_to_fi_req(req):
-    starting_amount = req["startingAmount"] if ("startingAmount" in req) and (req["startingAmount"] is not None) else 800000
-    monthly_investment = req["monthlyInvestment"] if ("monthlyInvestment" in req) and (req["monthlyInvestment"] is not None) else 5000
-    desired_years_expenses_for_fi = req["desiredYearsExpensesForFi"] if ("desiredYearsExpensesForFi" in req) and (req["desiredYearsExpensesForFi"] is not None) else 25
-    desired_annual_spending = req["desiredAnnualSpending"] if ("desiredAnnualSpending" in req) and (req["desiredAnnualSpending"] is not None) else 100000
-    return time_to_fi(
-        starting_amount,
-        monthly_investment,
-        desired_years_expenses_for_fi,
-        desired_annual_spending)
-
 
 
 # Rule of 72
@@ -124,6 +113,9 @@ def time_to_fi_req(req):
 def rule_of_72(
     starting_amount,
     interest):
+    starting_amount = round(starting_amount) if starting_amount is not None else 100000
+    interest = interest if interest is not None else 8
+
     rules = dict({ 
         72: 2,
         114: 3,
@@ -145,13 +137,6 @@ def rule_of_72(
 
     return years_obj
 
-def rule_of_72_req(req):
-    starting_amount = req["startingAmount"] if "startingAmount" in req else 100000
-    interest = req["interest"] if "interest" in req else 8
-    return rule_of_72(
-        starting_amount,
-        interest)
-
 
 
 # Added time to FI
@@ -160,6 +145,9 @@ def rule_of_72_req(req):
 def added_time_to_fi(
     monthly_investment,
     total_additional_expense):
+    monthly_investment = round(monthly_investment) if monthly_investment is not None else 10000
+    total_additional_expense = round(total_additional_expense) if total_additional_expense is not None else 422000
+
     years_added_to_fi_obj = []
 
     for interest in _interests:
@@ -180,13 +168,6 @@ def added_time_to_fi(
         "totalAdditionalExpense": total_additional_expense,
         "years": years_added_to_fi_obj
     }
-
-def added_time_to_fi_req(req):
-    monthly_investment = req["monthlyInvestment"] if "monthlyInvestment" in req else 10000
-    total_additional_expense = req["totalAdditionalExpense"] if "totalAdditionalExpense" in req else 422000
-    return added_time_to_fi(
-        monthly_investment,
-        total_additional_expense)
 
 
 
@@ -227,8 +208,15 @@ def compound_interest(
     monthly_investment,
     interest_rate,
     number_of_years,
-    investment_fees=0,
-    tax_drag=0):
+    investment_fees,
+    tax_drag):
+    starting_amount = starting_amount if starting_amount is not None else 0
+    monthly_investment = monthly_investment if monthly_investment is not None else 5000
+    interest_rate = interest_rate if interest_rate is not None else 7
+    number_of_years = number_of_years if number_of_years is not None else 25
+    investment_fees = investment_fees if investment_fees is not None else 0.50
+    tax_drag = tax_drag if tax_drag is not None else 0.50
+
     compound_interest_obj = []
     for frequency in _frequencies:
         rate = ((interest_rate - investment_fees - tax_drag) / 100) / frequency
@@ -249,21 +237,6 @@ def compound_interest(
         })
     return compound_interest_obj
 
-def compound_interest_req(req):
-    starting_amount = req["startingAmount"] if ("startingAmount" in req) and (req["startingAmount"] is not None) else 0
-    monthly_investment = req["monthlyInvestment"] if ("monthlyInvestment" in req) and (req["monthlyInvestment"] is not None) else 5000
-    interest_rate = req["interest"] if ("interest" in req) and (req["interest"] is not None) else 7
-    number_of_years = req["numberOfYears"] if ("numberOfYears" in req) and (req["numberOfYears"] is not None) else 25
-    investment_fees = req["investmentFees"] if ("investmentFees" in req) and (req["investmentFees"] is not None) else 0.50
-    tax_drag = req["taxDrag"] if ("taxDrag" in req) and (req["taxDrag"] is not None) else 0.50
-    return compound_interest(
-        starting_amount,
-        monthly_investment,
-        interest_rate,
-        number_of_years,
-        investment_fees,
-        tax_drag)
-
 
 
 # Investment Fees effect
@@ -278,6 +251,14 @@ def investment_fees_effect(
     annual_savings_1_decade,
     annual_savings_2_decade,
     annual_withdrawal_3_decade):
+    age_at_career_start = age_at_career_start if age_at_career_start is not None else 32
+    interest_return_while_working = interest_return_while_working if interest_return_while_working is not None else 8
+    interest_return_while_retired = interest_return_while_retired if interest_return_while_retired is not None else 5
+    tax_drag = tax_drag if tax_drag is not None else 0.3
+    annual_savings_1_decade = annual_savings_1_decade if annual_savings_1_decade is not None else 50000
+    annual_savings_2_decade = annual_savings_2_decade if annual_savings_2_decade is not None else 100000
+    annual_withdrawal_3_decade = annual_withdrawal_3_decade if annual_withdrawal_3_decade is not None else 70000
+
     annual_withdrawal_4_decade = math.ceil(1.25 * annual_withdrawal_3_decade)
     annual_withdrawal_5_decade = math.ceil(1.25 * annual_withdrawal_4_decade)
     annual_withdrawal_6_decade = annual_withdrawal_5_decade
@@ -396,23 +377,6 @@ def investment_fees_effect(
         "fees": fees_obj
     }
 
-def investment_fees_effect_req(req):
-    age_at_career_start = req["ageAtCareerStart"] if "ageAtCareerStart" in req else 32
-    interest_return_while_working = req["interestReturnWhileWorking"] if "interestReturnWhileWorking" in req else 8
-    interest_return_while_retired = req["interestReturnWhileRetired"] if "interestReturnWhileRetired" in req else 5
-    tax_drag = req["taxDrag"] if "taxDrag" in req else 0.3
-    annual_savings_1_decade = req["annualSavingsFirstDecade"] if "annualSavingsFirstDecade" in req else 50000
-    annual_savings_2_decade = req["annualSavingsSecondDecade"] if "annualSavingsSecondDecade" in req else 100000
-    annual_withdrawal_3_decade = req["annualWithdrawalThirdDecade"] if "annualWithdrawalThirdDecade" in req else 70000
-    return investment_fees_effect(
-        age_at_career_start,
-        interest_return_while_working,
-        interest_return_while_retired,
-        tax_drag,
-        annual_savings_1_decade,
-        annual_savings_2_decade,
-        annual_withdrawal_3_decade)
-
 
 
 # Cost of raising children
@@ -424,6 +388,11 @@ def cost_of_raising_children(
     annual_expenses_increment,
     children,
     interests):
+    annual_expenses_start = annual_expenses_start if annual_expenses_start is not None else 5000
+    annual_expenses_increment = annual_expenses_increment if annual_expenses_increment is not None else 4000
+    children = children if children is not None else _children
+    interests = interests if interests is not None else _interests
+
     children_obj = []
     for child in children:
         annual_expenses = 0
@@ -501,14 +470,3 @@ def cost_of_raising_children_faimilies():
             "children": children_obj
         })
     return families_obj
-
-def cost_of_raising_children_req(req):
-    annual_expenses_start = req["annualExpensesStart"] if ("annualExpensesStart" in req) and (req["annualExpensesStart"] is not None) else 5000
-    annual_expenses_increment = req["annualExpensesIncrement"] if ("annualExpensesIncrement" in req) and (req["annualExpensesIncrement"] is not None) else 4000
-    children = req["children"] if ("children" in req) and (req["children"] is not None) else _children
-    interests = req["interests"] if ("interests" in req) and (req["interests"] is not None) else _interests
-    return cost_of_raising_children(
-        annual_expenses_start,
-        annual_expenses_increment,
-        children,
-        interests)
