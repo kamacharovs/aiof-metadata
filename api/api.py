@@ -71,12 +71,12 @@ def time_to_fi(req: FiTime):
         req.desiredAnnualSpending)
 
 @app.post("/api/fi/rule/of/72")
-def time_to_fi(req: FiRuleOf72):
+def rule_of_72(req: FiRuleOf72):
     return fi.rule_of_72(req.startingAmount,
         req.interest)
 
 @app.post("/api/fi/added/time")
-def time_to_fi(req: FiAddedTime):
+def added_time(req: FiAddedTime):
     return fi.added_time_to_fi(req.monthlyInvestment,
         req.totalAdditionalExpense)
 
