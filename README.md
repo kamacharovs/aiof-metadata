@@ -32,12 +32,12 @@ Financial Independence is based on the FIRE movement. Financial Independence, Re
 API endpoinds available are
 
 ```text
-/metadata/fi/time/to/fi
-/metadata/fi/added/time
-/metadata/fi/rule/of/72
-/metadata/fi/ten/million/dream/<int:monthlyInvestment>
-/metadata/fi/compound/interest
-/metadata/fi/investment/fees/effect
+/api/fi/time
+/api/fi/added/time
+/api/fi/compound/interest
+/api/fi/rule/of/72
+/api/fi/ten/million/dream/{monthlyInvestment}
+/api/fi/investment/fees/effect
 ```
 
 ### How to run it
