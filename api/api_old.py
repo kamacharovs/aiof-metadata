@@ -1,5 +1,4 @@
 import os
-import aiof.core as core
 import aiof.helpers as helpers
 import aiof.car.core as car
 import aiof.fi.core as fi
@@ -40,10 +39,6 @@ def create_app(test_config=None):
     @app.route("/metadata/car/loan", methods=["POST"])
     def get_car_loan():
         return jsonify(car.loan_calc(request.get_json(silent=True)))
-
-    @app.route("/metadata/loan/payments/<string:frequency>", methods=["GET", "POST"])
-    def get_loan_payments(frequency):
-        return jsonify(core.loan_payments_calc_as_table(request.get_json(silent=True), frequency))
 
     @app.route("/metadata/compare/asset", methods=["GET"])
     def compare_asset_value():
@@ -91,5 +86,5 @@ def create_app(test_config=None):
     return app
 
     
-if __name__ == "__main__":
-    create_app().run()
+#if __name__ == "__main__":
+#    create_app().run()

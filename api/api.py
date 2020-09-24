@@ -1,4 +1,5 @@
 import os
+import aiof.helpers as helpers
 import aiof.fi.core as fi
 
 from typing import Optional
@@ -18,12 +19,16 @@ app = FastAPI()
 
 
 # FI
-@app.post("/metadata/fi/time/to/fi")
+@app.post("/api/fi/time")
 def time_to_fi(req: FiTime):
     return fi.time_to_fi(req.startingAmount,
         req.monthlyInvestment,
         req.desiredYearsExpensesForFi,
         req.desiredAnnualSpending)
+
+@app.get("/api/frequencies")
+def frequencies():
+    return helpers._frequency
 
 @app.get("/")
 def read_root():

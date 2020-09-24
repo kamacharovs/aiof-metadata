@@ -41,6 +41,12 @@ API endpoinds available are
 
 ### How to run it
 
+```powershell
+python .\setup.py develop
+cd .\api
+uvicorn api:app
+```
+
 The application is setup as a Flask API. In order to start the application, you must `cd` into the correct directory `../api`. Once there, simply run the `flask run` command. Sometimes, you would have to setup the `FLASK_APP` environment variable. In order to do that in powershell, run `$env:FLASK_APP="api"`. The complete steps are:
 
 ```powershell
