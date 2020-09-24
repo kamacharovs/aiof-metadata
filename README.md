@@ -19,6 +19,7 @@ Overall documentation
 - [statistics](https://docs.python.org/3/library/statistics.html)
 - [list of py finance libraries](https://github.com/wilsonfreitas/awesome-quant#python)
 - [numpy-financial](https://numpy.org/numpy-financial/latest/)
+- [pytest](https://docs.pytest.org/en/stable/)
 
 ## API
 
