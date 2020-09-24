@@ -1,7 +1,7 @@
 # To ensure app dependencies are ported from your virtual environment/host machine into your container, run 'pip freeze > requirements.txt' in the terminal to overwrite this file
 fastapi==0.61.1
 uvicorn==0.11.8
-pytest==1.8.2
+pytest==6.0.2
 numpy
 numpy_financial
 pandas
