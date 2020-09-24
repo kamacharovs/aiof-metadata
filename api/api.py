@@ -1,95 +1,115 @@
 import os
-import aiof.core as core
 import aiof.helpers as helpers
-import aiof.car.core as car
 import aiof.fi.core as fi
 
-from flask import Flask
-from flask import request
-from flask import jsonify
-from flask_cors import CORS
-from werkzeug.exceptions import HTTPException, NotFound
+from typing import Optional
+
+from fastapi import FastAPI
+from pydantic import BaseModel
 
 
-def create_app(test_config=None):
-    app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-        SECRET_KEY="dev",
-    )
-    CORS(app)
+class FiTime(BaseModel):
+    startingAmount: Optional[float] = None
+    monthlyInvestment: Optional[float] = None
+    desiredYearsExpensesForFi: Optional[int] = None
+    desiredAnnualSpending: Optional[float] = None
 
-    if test_config is None:
-        app.config.from_pyfile("config.py", silent=True)
-    else:
-        app.config.from_mapping(test_config)
+class FiRuleOf72(BaseModel):
+    startingAmount: Optional[float] = None
+    interest: Optional[float] = None
 
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
+class FiAddedTime(BaseModel):
+    monthlyInvestment: Optional[float] = None
+    totalAdditionalExpense: Optional[float] = None
 
-    @app.errorhandler(NotFound)
-    def page_not_found_handler(e: HTTPException):
-        return 'Not found', 404
+class FiCompoundInterest(BaseModel):
+    startingAmount: Optional[float] = None
+    monthlyInvestment: Optional[float] = None
+    interest: Optional[float] = None
+    numberOfYears: Optional[int] = None
+    investmentFees: Optional[float] = None
+    taxDrag: Optional[float] = None
 
+class FiInvestmentFeesEffect(BaseModel):
+    ageAtCareerStart: Optional[int] = None
+    interestReturnWhileWorking: Optional[float] = None
+    interestReturnWhileRetired: Optional[float] = None
+    taxDrag: Optional[float] = None
+    annualSavingsFirstDecade: Optional[float] = None
+    annualSavingsSecondDecade: Optional[float] = None
+    annualWithdrawalThirdDecade: Optional[float] = None
 
-    @app.route("/metadata/frequencies", methods=["GET"])
-    def get_frequencies():
-        return jsonify(list(helpers._frequency.keys()))
-
-    @app.route("/metadata/car/loan", methods=["POST"])
-    def get_car_loan():
-        return jsonify(car.loan_calc(request.get_json(silent=True)))
-
-    @app.route("/metadata/loan/payments/<string:frequency>", methods=["GET", "POST"])
-    def get_loan_payments(frequency):
-        return jsonify(core.loan_payments_calc_as_table(request.get_json(silent=True), frequency))
-
-    @app.route("/metadata/compare/asset", methods=["GET"])
-    def compare_asset_value():
-        args = request.args
-        if "value" in args:
-            value = args["value"]
-        if "contribution" in args:
-            contribution = args["contribution"]
-        return jsonify(helpers.compare_asset_to_market(value, contribution))
+class FiRaisingChildren(BaseModel):
+    annualExpensesStart: Optional[float] = None
+    annualExpensesIncrement: Optional[float] = None
+    children: Optional[list] = None
+    interests: Optional[list] = None
 
 
-
-    @app.route("/metadata/fi/time/to/fi", methods=["POST"])
-    def time_to_fi():
-        return jsonify(fi.time_to_fi_req(request.get_json(silent=True)))
-    
-    @app.route("/metadata/fi/added/time", methods=["POST"])
-    def added_time_to_fi():
-        return jsonify(fi.added_time_to_fi_req(request.get_json(silent=True)))
-
-    @app.route("/metadata/fi/rule/of/72", methods=["POST"])
-    def rule_of_72():
-        return jsonify(fi.rule_of_72_req(request.get_json(silent=True)))
-
-    @app.route("/metadata/fi/ten/million/dream/<int:monthlyInvestment>", methods=["GET"])
-    def ten_million_dream(monthlyInvestment):
-        return jsonify(fi.ten_million_dream(monthlyInvestment))
-
-    @app.route("/metadata/fi/compound/interest", methods=["POST"])
-    def compound_interest():
-        return jsonify(fi.compound_interest_req(request.get_json(silent=True)))
-
-    @app.route("/metadata/fi/investment/fees/effect", methods=["POST"])
-    def investment_fees_effect():
-        return jsonify(fi.investment_fees_effect_req(request.get_json(silent=True)))
-
-    @app.route("/metadata/fi/cost/of/raising/children", methods=["POST"])
-    def cost_of_raising_children():
-        return jsonify(fi.cost_of_raising_children_req(request.get_json(silent=True)))
-    @app.route("/metadata/fi/cost/of/raising/children/families", methods=["GET"])
-    def cost_of_raising_children_families():
-        return jsonify(fi.cost_of_raising_children_faimilies())
+app = FastAPI()
 
 
-    return app
+# FI
+@app.post("/api/fi/time")
+def time_to_fi(req: FiTime):
+    return fi.time_to_fi(req.startingAmount,
+        req.monthlyInvestment,
+        req.desiredYearsExpensesForFi,
+        req.desiredAnnualSpending)
 
-    
-if __name__ == "__main__":
-    create_app().run()
+@app.post("/api/fi/rule/of/72")
+def time_to_fi(req: FiRuleOf72):
+    return fi.rule_of_72(req.startingAmount,
+        req.interest)
+
+@app.post("/api/fi/added/time")
+def time_to_fi(req: FiAddedTime):
+    return fi.added_time_to_fi(req.monthlyInvestment,
+        req.totalAdditionalExpense)
+
+@app.get("/api/fi/ten/million/dream/{monthlyInvestment}")
+def ten_million_dream(monthlyInvestment: float):
+    return fi.ten_million_dream(monthlyInvestment)
+
+@app.post("/api/fi/compound/interest")
+def compound_interest(req: FiCompoundInterest):
+    return fi.compound_interest(req.startingAmount,
+        req.monthlyInvestment,
+        req.interest,
+        req.numberOfYears,
+        req.investmentFees,
+        req.taxDrag)
+
+@app.post("/api/fi/investment/fees/effect")
+def investment_fees_effect(req: FiInvestmentFeesEffect):
+    return fi.investment_fees_effect(req.ageAtCareerStart,
+        req.interestReturnWhileWorking,
+        req.interestReturnWhileRetired,
+        req.taxDrag,
+        req.annualSavingsFirstDecade,
+        req.annualSavingsSecondDecade,
+        req.annualWithdrawalThirdDecade)
+
+@app.post("/api/fi/cost/of/raising/children")
+def cost_of_raising_children(req: FiRaisingChildren):
+    return fi.cost_of_raising_children(req.annualExpensesStart,
+        req.annualExpensesIncrement,
+        req.children,
+        req.interests)
+@app.get("/api/fi/cost/of/raising/children/families")
+def cost_of_raising_children_families():
+    return fi.cost_of_raising_children_faimilies()
+
+
+@app.get("/api/frequencies")
+def frequencies():
+    return helpers._frequency
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+
+
+@app.get("/items/{item_id}")
+def read_item(item_id: int, q: Optional[str] = None):
+    return {"item_id": item_id, "q": q}

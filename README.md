@@ -15,10 +15,13 @@ Overall documentation
 
 ### Libraries
 
+- [fastapi](https://github.com/tiangolo/fastapi)
+- [uvicorn](https://github.com/encode/uvicorn)
 - [pandas](https://pandas.pydata.org/docs/reference/index.html)
 - [statistics](https://docs.python.org/3/library/statistics.html)
-- [list of py finance libraries](https://github.com/wilsonfreitas/awesome-quant#python)
 - [numpy-financial](https://numpy.org/numpy-financial/latest/)
+- [pytest](https://docs.pytest.org/en/stable/)
+- [list of py finance libraries](https://github.com/wilsonfreitas/awesome-quant#python)
 
 ## API
 
@@ -39,12 +42,18 @@ API endpoinds available are
 
 ### How to run it
 
-The application is setup as a Flask API. In order to start the application, you must `cd` into the correct directory `../api`. Once there, simply run the `flask run` command. Sometimes, you would have to setup the `FLASK_APP` environment variable. In order to do that in powershell, run `$env:FLASK_APP="api"`. The complete steps are:
+```powershell
+python .\setup.py develop
+cd .\api
+uvicorn api:app
+```
+
+Local Docker run
 
 ```powershell
-$env:FLASK_APP="api"
-cd .\api\
-flask run
+docker build -t aiof-metadata .
+docker rmi $(docker images -f “dangling=true” -q)
+docker run -p 8080:80 aiof-metadata
 ```
 
 ## Tests
