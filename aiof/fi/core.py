@@ -531,3 +531,10 @@ def savings_rate(
         "savingsRateGross": round(savings_rate_gross, _default_round_dig),
         "years": years_obj
     }
+
+
+# Export to .csv
+def export_to_csv(content):
+    df = pd.DataFrame(content)
+    csv = df.to_csv(index=False)
+    return csv
