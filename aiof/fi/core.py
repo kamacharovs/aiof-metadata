@@ -5,65 +5,15 @@ import math
 import aiof.config as config
 
 
-# Global
+# Configs
 _settings = config.Settings()
 _default_round_dig = _settings.DefaultRoundingDigit
-_interests = [ 
-    2,
-    4,
-    6,
-    8
-]
-
-_ten_million = [
-    1000000,
-    2000000,
-    3000000,
-    4000000,
-    5000000,
-    6000000,
-    7000000,
-    8000000,
-    9000000,
-    10000000,
-    100000000,
-]
-_ten_million_interests = [
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10
-]
-
-_frequencies = [
-    365,
-    12,
-    1        
-]
-
-_fees = [
-    0.10,
-    0.50,
-    1.00,
-    1.50,
-    2.00,
-    2.50,
-    3.00,
-]
-
-_children = [
-    1,
-    2,
-    3,
-    4
-]
+_interests = _settings.DefaultInterests
+_frequencies = _settings.DefaultFrequencies
+_fees = _settings.DefaultFees
+_children = _settings.DefaultChildren
+_ten_million = _settings.DefaultTenMillion
+_ten_million_interests = _settings.DefaultTenMillionInterests
 
 
 # Financial Indepdence (FI) core
@@ -109,7 +59,6 @@ def time_to_fi(
     }
 
 
-
 # Rule of 72
 # Based on Physician on FIRE calculator
 # https://www.physicianonfire.com/calculators/72calculator/
@@ -139,7 +88,6 @@ def rule_of_72(
             })
 
     return years_obj
-
 
 
 # Added time to FI
@@ -173,7 +121,6 @@ def added_time_to_fi(
     }
 
 
-
 # $10m dream
 # This calculator, developed in the post about Dr. F’s $10 Million dream, will determine the number of years to reach a savings goal based on a variety of market returns
 # https://www.physicianonfire.com/calculators/10-million-dream/
@@ -197,7 +144,6 @@ def ten_million_dream(monthly_investment):
             "years": million_interests_obj
         })
     return ten_million_obj
-
 
 
 # Compound interest
@@ -239,7 +185,6 @@ def compound_interest(
             "compoundedEnd": math.ceil(fv_end)
         })
     return compound_interest_obj
-
 
 
 # Investment Fees effect
@@ -381,7 +326,6 @@ def investment_fees_effect(
     }
 
 
-
 # Cost of raising children
 # This calculator was designed to give you a rough idea of the financial implications of raising children. 
 # It is loosely based on the Department of Agriculture’s estimates of raising a child to age 18
@@ -473,7 +417,6 @@ def cost_of_raising_children_faimilies():
             "children": children_obj
         })
     return families_obj
-
 
 
 # Savings rate
