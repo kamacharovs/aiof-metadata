@@ -23,6 +23,12 @@ Overall documentation
 - [pytest](https://docs.pytest.org/en/stable/)
 - [list of py finance libraries](https://github.com/wilsonfreitas/awesome-quant#python)
 
+#### FastAPI
+
+Helpful `FastAPI` documentation
+
+- [Settings and Environment Variables](https://fastapi.tiangolo.com/advanced/settings/)
+
 ## API
 
 ### Financial independence (FI)
