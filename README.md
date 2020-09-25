@@ -40,7 +40,9 @@ API endpoinds available are
 /api/fi/investment/fees/effect
 ```
 
-### How to run it
+## How to run it
+
+In order to run the API locally, you would first need to run the `.\setup.py` script, if it hasn't been setup locally before. Afterwards, you need to change the directory to the `.\api` one and run it via `uvicorn`
 
 ```powershell
 python .\setup.py develop
@@ -48,18 +50,32 @@ cd .\api
 uvicorn api:app
 ```
 
-Local Docker run
+### Docker
 
 ```powershell
 docker build -t aiof-metadata .
-docker rmi $(docker images -f “dangling=true” -q)
 docker run -p 8080:80 aiof-metadata
+```
+
+Or run the container detached
+
+```poershell
+docker run -d -p 8080:80 aiof-metadata
+```
+
+Optional command to clean up `<none>` images
+
+```powershell
+docker rmi $(docker images -f “dangling=true” -q)
 ```
 
 ## Tests
 
-Unit tests and how to run them
+Unit tests are used to test units of code. Below you can see how to run them
 
 ### How to run unit tests
 
-`python .\setup.py test`
+```powershell
+cd .\tests\
+pytest
+```
