@@ -50,22 +50,19 @@ class FiRaisingChildren(BaseModel):
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:4100",
-]
+
+@lru_cache()
+def settings():
+    return config.Settings()
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=settings().cors_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=settings().cors_allowed_methods,
+    allow_headers=settings().cors_allowed_headers,
 )
-
-
-@lru_cache()
-def get_settings():
-    return config.Settings()
 
 
 # FI
@@ -125,8 +122,8 @@ def frequencies():
     return helpers._frequency
 
 
-@app.get("/app/settings")
-async def info(settings: config.Settings = Depends(get_settings)):
+@app.get("/api/app/settings")
+async def info(settings: config.Settings = Depends(settings)):
     return {
         "aiof_portal_url": settings.aiof_portal_url,
     }
