@@ -476,6 +476,7 @@ def cost_of_raising_children_faimilies():
 # Savings rate
 # don’t think there’s a right or a wrong way to calculate your savings, this is just a tool to give you a better idea of how much you are saving (and spending) each year.
 # Spending is calculated automatically. It assumes that all dollars unaccounted for elsewhere are spent, so this savings calculator doubles as a spending calculator
+# note: assumes future spending will be the same as current
 # https://www.physicianonfire.com/calculators/savings-calculator/
 def savings_rate(
     salary,
@@ -496,8 +497,7 @@ def savings_rate(
     mortgage_principal,
     student_loan_principal,
     other_post_tax_investment,
-    current_nest_egg,
-    ):
+    current_nest_egg):
     salary = salary if salary is not None else 300000
     match_and_profit_sharing = match_and_profit_sharing if match_and_profit_sharing is not None else 20000
     federal_income_tax = federal_income_tax if federal_income_tax is not None else 50000
@@ -537,8 +537,8 @@ def savings_rate(
     all_contributions = match_and_profit_sharing + pre_tax_investments + post_tax_investments
     monthly_contribution = all_contributions / 12
     max_potential_contribution = take_home_pay + match_and_profit_sharing + pre_tax_investments
-    savings_rate_net = all_contributions / max_potential_contribution
-    savings_rate_gross = all_contributions / compensation
+    savings_rate_net = (all_contributions / max_potential_contribution ) * 100
+    savings_rate_gross = (all_contributions / compensation ) * 100
     required_nest_egg_for_fi = annual_spending * 25
 
     years_obj = []
@@ -548,9 +548,40 @@ def savings_rate(
             -monthly_contribution,
             -current_nest_egg,
             required_nest_egg_for_fi,
-            when='end'
-        )
+            when='end') / 12
         years_obj.append({
             "interest": interest,
-            "years": years_to_fi
+            "years": round(years_to_fi, _default_round_dig)
         })
+
+    return {
+        "salary": salary,
+        "matchAndProfitSharing": match_and_profit_sharing,
+        "federalIncomeTax": federal_income_tax,
+        "stateIncomeTax": state_income_tax,
+        "fica": fica,
+        "healthAndDentalInsurance": health_and_dental_insurance,
+        "otherDeductibleBenefits": other_deductible_benefits,
+        "hsaInvestment": hsa_investment,
+        "fourOhOneKOrFourOhThreeB": four_oh_one_k_or_four_oh_three_b,
+        "fourFiveSevenB": four_five_seven_b,
+        "sepIra": sep_ira,
+        "otherTaxDeferred": other_tax_deferred,
+        "rothIra": roth_ira,
+        "taxableAccount": taxable_account,
+        "education": education,
+        "mortgagePrincipal": mortgage_principal,
+        "studentLoanPrincipal": student_loan_principal,
+        "otherPostTaxInvestment": other_post_tax_investment,
+        "currentNestEgg": current_nest_egg,
+
+        "postTaxIncome": round(post_tax_income, _default_round_dig),
+        "takeHomePay": round(take_home_pay, _default_round_dig),
+        "annualSpending": round(annual_spending, _default_round_dig),
+        "allContributions": round(all_contributions, _default_round_dig),
+        "monthlyContribution": round(monthly_contribution, _default_round_dig),
+        "maxPotentialContribution": round(max_potential_contribution, _default_round_dig),
+        "savingsRateNet": round(savings_rate_net, _default_round_dig),
+        "savingsRateGross": round(savings_rate_gross, _default_round_dig),
+        "years": years_obj
+    }

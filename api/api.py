@@ -47,6 +47,27 @@ class FiRaisingChildren(BaseModel):
     children: Optional[list] = None
     interests: Optional[list] = None
 
+class SavingsRate(BaseModel):
+    salary: Optional[float] = None
+    matchAndProfitSharing: Optional[float] = None
+    federalIncomeTax: Optional[float] = None
+    stateIncomeTax: Optional[float] = None
+    fica: Optional[float] = None
+    healthAndDentalInsurance: Optional[float] = None
+    otherDeductibleBenefits: Optional[float] = None
+    hsaInvestment: Optional[float] = None
+    fourOhOneKOrFourOhThreeB: Optional[float] = None
+    fourFiveSevenB: Optional[float] = None
+    sepIra: Optional[float] = None
+    otherTaxDeferred: Optional[float] = None
+    rothIra: Optional[float] = None
+    taxableAccount: Optional[float] = None
+    education: Optional[float] = None
+    mortgagePrincipal: Optional[float] = None
+    studentLoanPrincipal: Optional[float] = None
+    otherPostTaxInvestment: Optional[float] = None
+    currentNestEgg: Optional[float] = None
+
 
 app = FastAPI()
 
@@ -115,6 +136,28 @@ def cost_of_raising_children(req: FiRaisingChildren):
 @app.get("/api/fi/cost/of/raising/children/families")
 def cost_of_raising_children_families():
     return fi.cost_of_raising_children_faimilies()
+
+@app.post("/api/fi/savings/rate")
+def savings_rate(req: SavingsRate):
+    return fi.savings_rate(req.salary,
+        req.matchAndProfitSharing,
+        req.federalIncomeTax,
+        req.stateIncomeTax,
+        req.fica,
+        req.healthAndDentalInsurance,
+        req.otherDeductibleBenefits,
+        req.hsaInvestment,
+        req.fourOhOneKOrFourOhThreeB,
+        req.fourFiveSevenB,
+        req.sepIra,
+        req.otherTaxDeferred,
+        req.rothIra,
+        req.taxableAccount,
+        req.education,
+        req.mortgagePrincipal,
+        req.studentLoanPrincipal,
+        req.otherPostTaxInvestment,
+        req.currentNestEgg)
 
 
 @app.get("/api/frequencies")
