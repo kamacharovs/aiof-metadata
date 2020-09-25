@@ -470,3 +470,87 @@ def cost_of_raising_children_faimilies():
             "children": children_obj
         })
     return families_obj
+
+
+
+# Savings rate
+# don’t think there’s a right or a wrong way to calculate your savings, this is just a tool to give you a better idea of how much you are saving (and spending) each year.
+# Spending is calculated automatically. It assumes that all dollars unaccounted for elsewhere are spent, so this savings calculator doubles as a spending calculator
+# https://www.physicianonfire.com/calculators/savings-calculator/
+def savings_rate(
+    salary,
+    match_and_profit_sharing,
+    federal_income_tax,
+    state_income_tax,
+    fica,
+    health_and_dental_insurance,
+    other_deductible_benefits,
+    hsa_investment,
+    four_oh_one_k_or_four_oh_three_b,
+    four_five_seven_b,
+    sep_ira,
+    other_tax_deferred,
+    roth_ira,
+    taxable_account,
+    education,
+    mortgage_principal,
+    student_loan_principal,
+    other_post_tax_investment,
+    current_nest_egg,
+    ):
+    salary = salary if salary is not None else 300000
+    match_and_profit_sharing = match_and_profit_sharing if match_and_profit_sharing is not None else 20000
+    federal_income_tax = federal_income_tax if federal_income_tax is not None else 50000
+    state_income_tax = state_income_tax if state_income_tax is not None else 10000
+    fica = fica if fica is not None else 12000
+    compensation = salary + match_and_profit_sharing
+    income_taxes = federal_income_tax + state_income_tax + fica
+    post_tax_income = salary - income_taxes
+
+    # Pre-tax spending
+    health_and_dental_insurance = health_and_dental_insurance if health_and_dental_insurance is not None else 15000
+    other_deductible_benefits = other_deductible_benefits if other_deductible_benefits is not None else 0
+    pre_tax_spendings = health_and_dental_insurance + other_deductible_benefits
+
+    # Pre-tax investments
+    hsa_investment = hsa_investment if hsa_investment is not None else 7000
+    four_oh_one_k_or_four_oh_three_b = four_oh_one_k_or_four_oh_three_b if four_oh_one_k_or_four_oh_three_b is not None else 19500
+    four_five_seven_b = four_five_seven_b if four_five_seven_b is not None else 19500
+    sep_ira = sep_ira if sep_ira is not None else 0
+    other_tax_deferred = other_tax_deferred if other_tax_deferred is not None else 0
+    pre_tax_investments = hsa_investment + four_oh_one_k_or_four_oh_three_b + four_five_seven_b + sep_ira + other_tax_deferred
+
+    # Post-tax investments
+    roth_ira = roth_ira if roth_ira is not None else 12000
+    taxable_account = taxable_account if taxable_account is not None else 16000
+    education = education if education is not None else 10000
+    mortgage_principal = mortgage_principal if mortgage_principal is not None else 18000
+    student_loan_principal = student_loan_principal if student_loan_principal is not None else 12000
+    other_post_tax_investment = other_post_tax_investment if other_post_tax_investment is not None else 0
+    post_tax_investments = roth_ira + taxable_account + education + mortgage_principal + student_loan_principal + other_post_tax_investment
+
+    current_nest_egg = current_nest_egg if current_nest_egg is not None else 0
+
+    # Totals
+    take_home_pay = post_tax_income - pre_tax_spendings - pre_tax_investments
+    annual_spending = take_home_pay - post_tax_investments
+    all_contributions = match_and_profit_sharing + pre_tax_investments + post_tax_investments
+    monthly_contribution = all_contributions / 12
+    max_potential_contribution = take_home_pay + match_and_profit_sharing + pre_tax_investments
+    savings_rate_net = all_contributions / max_potential_contribution
+    savings_rate_gross = all_contributions / compensation
+    required_nest_egg_for_fi = annual_spending * 25
+
+    years_obj = []
+    for interest in _interests:
+        years_to_fi = npf.nper(
+            (interest / 100) / 12,
+            -monthly_contribution,
+            -current_nest_egg,
+            required_nest_egg_for_fi,
+            when='end'
+        )
+        years_obj.append({
+            "interest": interest,
+            "years": years_to_fi
+        })
