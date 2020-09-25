@@ -28,6 +28,14 @@ Overall documentation
 Helpful `FastAPI` documentation
 
 - [Settings and Environment Variables](https://fastapi.tiangolo.com/advanced/settings/)
+- [Dependencies - First Steps](https://fastapi.tiangolo.com/tutorial/dependencies/)
+- [Concurrency and async / await](https://fastapi.tiangolo.com/async/)
+
+#### Python
+
+Helpful `python` documentation
+
+- [Dependency injection and inversion of control in Python](http://python-dependency-injector.ets-labs.org/introduction/di_in_python.html)
 
 ## API
 
