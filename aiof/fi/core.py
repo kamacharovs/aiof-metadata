@@ -2,9 +2,12 @@ import numpy_financial as npf
 import pandas as pd
 import math
 
+import aiof.config as config
+
 
 # Global
-_default_round_dig = 2
+_settings = config.Settings()
+_default_round_dig = _settings.DefaultRoundingDigit
 _interests = [ 
     2,
     4,
@@ -476,7 +479,7 @@ def cost_of_raising_children_faimilies():
 # Savings rate
 # don’t think there’s a right or a wrong way to calculate your savings, this is just a tool to give you a better idea of how much you are saving (and spending) each year.
 # Spending is calculated automatically. It assumes that all dollars unaccounted for elsewhere are spent, so this savings calculator doubles as a spending calculator
-# note: assumes future spending will be the same as current
+# NOTE: assumes future spending requirements equals this year's spending
 # https://www.physicianonfire.com/calculators/savings-calculator/
 def savings_rate(
     salary,
