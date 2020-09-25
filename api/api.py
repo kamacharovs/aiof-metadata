@@ -1,12 +1,13 @@
 import os
+import aiof.config as config
 import aiof.helpers as helpers
 import aiof.fi.core as fi
 
-from typing import Optional
-
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from typing import Optional
+from functools import lru_cache
 
 
 class FiTime(BaseModel):
@@ -60,6 +61,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@lru_cache()
+def get_settings():
+    return config.Settings()
 
 
 # FI
@@ -117,3 +123,10 @@ def cost_of_raising_children_families():
 @app.get("/api/frequencies")
 def frequencies():
     return helpers._frequency
+
+
+@app.get("/app/settings")
+async def info(settings: config.Settings = Depends(get_settings)):
+    return {
+        "aiof_portal_url": settings.aiof_portal_url,
+    }
