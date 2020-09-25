@@ -30,6 +30,13 @@ Helpful `FastAPI` documentation
 - [Settings and Environment Variables](https://fastapi.tiangolo.com/advanced/settings/)
 - [Dependencies - First Steps](https://fastapi.tiangolo.com/tutorial/dependencies/)
 - [Concurrency and async / await](https://fastapi.tiangolo.com/async/)
+- [Custom Response - HTML, Stream, File, others](https://fastapi.tiangolo.com/advanced/custom-response/)
+
+#### Pandas
+
+Helpful `pandas` documentation
+
+- [DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/frame.html)
 
 #### Python
 
