@@ -5,20 +5,24 @@ from pydantic import BaseSettings
 
 class Settings(BaseSettings):
     DefaultRoundingDigit: int = os.getenv("DefaultRoundingDigit", 2)
+    DefaultFrequency: int = os.getenv("DefaultFrequency", 12)
     DefaultInterest: float = os.getenv("DefaultInterest", 7)
+    DefaultHysInterest: float = os.getenv("DefaultHysInterest", 1.75)
+    DefaultInvestmentFee: float = os.getenv("DefaultFee", 0.50)
+    DefaultTaxDrag: float = os.getenv("DefaultTaxDrag", 0.50)
+    DefaultChild: int = os.getenv("DefaultChild", 2)
+
     DefaultInterests: list = [ 
         2,
         4,
         6,
         8
     ]
-    DefaultFrequency: int = os.getenv("DefaultFrequency", 12)
     DefaultFrequencies: list = [
         365,
         12,
         1        
     ]
-    DefaultFee: float = os.getenv("DefaultFee", 0.10)
     DefaultFees: list = [
         0.10,
         0.50,
@@ -28,7 +32,6 @@ class Settings(BaseSettings):
         2.50,
         3.00,
     ]
-    DefaultChild: int = os.getenv("DefaultChild", 2)
     DefaultChildren: list = [
         1,
         2,
