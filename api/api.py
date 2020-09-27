@@ -4,6 +4,7 @@ import aiof.helpers as helpers
 import aiof.fi.core as fi
 
 from aiof.data.fi import *
+from aiof.data.asset import ComparableAsset
 
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -106,6 +107,10 @@ def savings_rate(req: SavingsRate):
 @app.get("/api/export/to/csv")
 def export_to_csv():
     return fi.export_to_csv(fi.rule_of_72(100000, 7))
+
+@app.post("/api/compare/asset")
+def compare_asset(asset: ComparableAsset):
+    return helpers.compare_asset(asset)
 
 
 @app.get("/api/frequencies")
