@@ -6,6 +6,14 @@ import numpy_financial as npf
 from logzero import logger
 from decimal import Decimal
 
+from aiof.config import Settings
+from aiof.data.asset import ComparableAsset
+
+# Configs
+_settings = Settings()
+_round_dig = _settings.DefaultRoundingDigit
+
+
 # Default settings (TODO move to config)
 app_settings = {
     "rounding_digits": 3,
@@ -253,3 +261,31 @@ def compare_asset_to_market(
         "contributionFrequency": contribution_frequency,
         "years": years_objs
     }
+
+
+# Compare asset
+def compare_asset(asset: ComparableAsset):
+    rate = ((asset.interest - asset.investmentFees - asset.taxDrag) / 100) / asset.frequency
+    hys_rate = (asset.hysInterest / 100) / asset.frequency
+    nper = asset.years * asset.frequency
+
+    fv_end = -npf.fv(rate, nper, 0, asset.value, when='end')
+    fv_begin = -npf.fv(rate, nper, 0, asset.value, when='begin')
+    fv_with_contribution_end = -npf.fv(rate, nper, asset.contribution, asset.value, when='end')
+    fv_with_contribution_begin = -npf.fv(rate, nper, asset.contribution, asset.value, when='begin')
+    hys_fv_end = -npf.fv(hys_rate, nper, 0, asset.value, when='end')
+    hys_fv_begin = -npf.fv(hys_rate, nper, 0, asset.value, when='begin')
+    hys_fv_with_contribution_end = -npf.fv(hys_rate, nper, asset.contribution, asset.value, when='end')
+    hys_fv_with_contribution_begin = -npf.fv(hys_rate, nper, asset.contribution, asset.value, when='begin')
+    
+
+    asset.marketValue = round(fv_end, _round_dig)
+    asset.marketBeginValuee = round(fv_begin, _round_dig)
+    asset.marketWithContributionValue = round(fv_with_contribution_end, _round_dig)
+    asset.marketBeginWithContributionValue = round(fv_with_contribution_begin, _round_dig)
+    asset.hysValue = round(hys_fv_end, _round_dig)
+    asset.hysBeginValue = round(hys_fv_begin, _round_dig)
+    asset.hysWithContributionValue = round(hys_fv_with_contribution_end, _round_dig)
+    asset.hysBeginWithContributionValue = round(hys_fv_with_contribution_begin, _round_dig)
+
+    return asset

@@ -1,64 +1,33 @@
 import os
+import aiof.config as config
 import aiof.helpers as helpers
 import aiof.fi.core as fi
 
-from typing import Optional
+from aiof.data.fi import *
+from aiof.data.asset import ComparableAsset
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-
-
-class FiTime(BaseModel):
-    startingAmount: Optional[float] = None
-    monthlyInvestment: Optional[float] = None
-    desiredYearsExpensesForFi: Optional[int] = None
-    desiredAnnualSpending: Optional[float] = None
-
-class FiRuleOf72(BaseModel):
-    startingAmount: Optional[float] = None
-    interest: Optional[float] = None
-
-class FiAddedTime(BaseModel):
-    monthlyInvestment: Optional[float] = None
-    totalAdditionalExpense: Optional[float] = None
-
-class FiCompoundInterest(BaseModel):
-    startingAmount: Optional[float] = None
-    monthlyInvestment: Optional[float] = None
-    interest: Optional[float] = None
-    numberOfYears: Optional[int] = None
-    investmentFees: Optional[float] = None
-    taxDrag: Optional[float] = None
-
-class FiInvestmentFeesEffect(BaseModel):
-    ageAtCareerStart: Optional[int] = None
-    interestReturnWhileWorking: Optional[float] = None
-    interestReturnWhileRetired: Optional[float] = None
-    taxDrag: Optional[float] = None
-    annualSavingsFirstDecade: Optional[float] = None
-    annualSavingsSecondDecade: Optional[float] = None
-    annualWithdrawalThirdDecade: Optional[float] = None
-
-class FiRaisingChildren(BaseModel):
-    annualExpensesStart: Optional[float] = None
-    annualExpensesIncrement: Optional[float] = None
-    children: Optional[list] = None
-    interests: Optional[list] = None
+from typing import Optional
+from functools import lru_cache
 
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:4100",
-]
+
+@lru_cache()
+def settings():
+    return config.Settings()
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=settings().cors_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=settings().cors_allowed_methods,
+    allow_headers=settings().cors_allowed_headers,
 )
 
 
@@ -113,7 +82,44 @@ def cost_of_raising_children(req: FiRaisingChildren):
 def cost_of_raising_children_families():
     return fi.cost_of_raising_children_faimilies()
 
+@app.post("/api/fi/savings/rate")
+def savings_rate(req: SavingsRate):
+    return fi.savings_rate(req.salary,
+        req.matchAndProfitSharing,
+        req.federalIncomeTax,
+        req.stateIncomeTax,
+        req.fica,
+        req.healthAndDentalInsurance,
+        req.otherDeductibleBenefits,
+        req.hsaInvestment,
+        req.fourOhOneKOrFourOhThreeB,
+        req.fourFiveSevenB,
+        req.sepIra,
+        req.otherTaxDeferred,
+        req.rothIra,
+        req.taxableAccount,
+        req.education,
+        req.mortgagePrincipal,
+        req.studentLoanPrincipal,
+        req.otherPostTaxInvestment,
+        req.currentNestEgg)
+
+@app.get("/api/export/to/csv")
+def export_to_csv():
+    return fi.export_to_csv(fi.rule_of_72(100000, 7))
+
+@app.post("/api/compare/asset")
+def compare_asset(asset: ComparableAsset):
+    return helpers.compare_asset(asset)
+
 
 @app.get("/api/frequencies")
 def frequencies():
     return helpers._frequency
+
+
+@app.get("/api/app/settings")
+async def info(settings: config.Settings = Depends(settings)):
+    return {
+        "aiof_portal_url": settings.aiof_portal_url,
+    }

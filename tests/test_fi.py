@@ -221,3 +221,79 @@ class FiTestCase(unittest.TestCase):
                 c["interest"] > 0
                 c["value"] > 0
 
+
+
+    def test_fi_savings_rate_defaults(self):
+        resp = savings_rate(
+            salary=None,
+            match_and_profit_sharing=None,
+            federal_income_tax=None,
+            state_income_tax=None,
+            fica=None,
+            health_and_dental_insurance=None,
+            other_deductible_benefits=None,
+            hsa_investment=None,
+            four_oh_one_k_or_four_oh_three_b=None,
+            four_five_seven_b=None,
+            sep_ira=None,
+            other_tax_deferred=None,
+            roth_ira=None,
+            taxable_account=None,
+            education=None,
+            mortgage_principal=None,
+            student_loan_principal=None,
+            other_post_tax_investment=None,
+            current_nest_egg=None)
+        self.assert_savings_rate(resp)
+    def test_fi_savings_rate(self):
+        resp = savings_rate(
+            salary=375000,
+            match_and_profit_sharing=50000,
+            federal_income_tax=50000,
+            state_income_tax=10000,
+            fica=0,
+            health_and_dental_insurance=500,
+            other_deductible_benefits=500,
+            hsa_investment=500,
+            four_oh_one_k_or_four_oh_three_b=19500,
+            four_five_seven_b=0,
+            sep_ira=0,
+            other_tax_deferred=10000,
+            roth_ira=6000,
+            taxable_account=25000,
+            education=0,
+            mortgage_principal=0,
+            student_loan_principal=0,
+            other_post_tax_investment=0,
+            current_nest_egg=700000)
+        self.assert_savings_rate(resp)
+
+    def assert_savings_rate(self, resp):
+        assert len(resp["years"]) > 0
+        assert resp["salary"] > 0
+        assert resp["matchAndProfitSharing"] > 0
+        assert resp["federalIncomeTax"] > 0
+        assert resp["stateIncomeTax"] > 0
+        assert resp["fica"] >= 0
+        assert resp["healthAndDentalInsurance"] > 0
+        assert resp["otherDeductibleBenefits"] >= 0
+        assert resp["hsaInvestment"] > 0
+        assert resp["fourOhOneKOrFourOhThreeB"] > 0
+        assert resp["fourFiveSevenB"] >= 0
+        assert resp["sepIra"] >= 0
+        assert resp["otherTaxDeferred"] >= 0
+        assert resp["rothIra"] >= 0
+        assert resp["taxableAccount"] >= 0
+        assert resp["education"] >= 0
+        assert resp["mortgagePrincipal"] >= 0
+        assert resp["studentLoanPrincipal"] >= 0
+        assert resp["otherPostTaxInvestment"] >= 0
+        assert resp["currentNestEgg"] >= 0
+        assert resp["postTaxIncome"] >= 0
+        assert resp["takeHomePay"] >= 0
+        assert resp["annualSpending"] >= 0
+        assert resp["allContributions"] >= 0
+        assert resp["monthlyContribution"] >= 0
+        assert resp["maxPotentialContribution"] >= 0
+        assert resp["savingsRateNet"] >= 0
+        assert resp["savingsRateGross"] >= 0
