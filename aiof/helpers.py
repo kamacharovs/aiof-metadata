@@ -277,7 +277,6 @@ def compare_asset(asset: ComparableAsset):
     hys_fv_begin = -npf.fv(hys_rate, nper, 0, asset.value, when='begin')
     hys_fv_with_contribution_end = -npf.fv(hys_rate, nper, asset.contribution, asset.value, when='end')
     hys_fv_with_contribution_begin = -npf.fv(hys_rate, nper, asset.contribution, asset.value, when='begin')
-    
 
     asset.marketValue = round(fv_end, _round_dig)
     asset.marketBeginValuee = round(fv_begin, _round_dig)
