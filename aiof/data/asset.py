@@ -38,10 +38,12 @@ class ComparableAsset(BaseModel):
     contribution: Optional[float] = 500                         # Contribution per frequency
 
     marketValue: Optional[float] = None                         # What if asset's value is invested in the market at 8% return?
-    marketBeginValuee: Optional[float] = None                       # When the compounding is at the beginning
+    marketBeginValue: Optional[float] = None                       # When the compounding is at the beginning
     marketWithContributionValue: Optional[float] = None         # What if asset's value is invested in the market at 8% return with monthly contributions?
     marketBeginWithContributionValue: Optional[float] = None        # When the compounding is at the beginning
     hysValue: Optional[float] = None                            # What if asset's value is put in a High Yield Savings Account at 1.75% interest?
     hysBeginValue: Optional[float] = None                           # When the compounding is at the beginning
     hysWithContributionValue: Optional[float] = None            # What if asset's value is put in a High Yield Savings Account at 1.75% interest with monthly contributions?
     hysBeginWithContributionValue: Optional[float] = None           # When the compounding is at the beginning
+
+    marketValueBreakdown: Optional[list] = None

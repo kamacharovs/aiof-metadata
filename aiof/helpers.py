@@ -278,7 +278,7 @@ def compare_asset(asset: ComparableAsset):
     hys_fv_with_contribution_begin = -npf.fv(hys_rate, nper, asset.contribution, asset.value, when='begin')
 
     asset.marketValue = round(fv_end, _round_dig)
-    asset.marketBeginValuee = round(fv_begin, _round_dig)
+    asset.marketBeginValue = round(fv_begin, _round_dig)
     asset.marketWithContributionValue = round(fv_with_contribution_end, _round_dig)
     asset.marketBeginWithContributionValue = round(fv_with_contribution_begin, _round_dig)
     asset.hysValue = round(hys_fv_end, _round_dig)
@@ -287,36 +287,37 @@ def compare_asset(asset: ComparableAsset):
     asset.hysBeginWithContributionValue = round(hys_fv_with_contribution_begin, _round_dig)
 
     # Calculate the contributions over the years as a table
-    asset_fv_as_table(
+    asset.marketValueBreakdown = asset_fv_breakdown_as_table(
         asset_value=asset.value,
-        contribution=asset.contribution,
+        contribution=0,
         years=asset.years,
-        rate=rate
-    )
+        rate=rate).to_dict('records')
 
     return asset
 
 
 # FV as a table
-def asset_fv_as_table(
+def asset_fv_breakdown_as_table(
     asset_value,
     contribution,
     years,
     rate,
     when="end"):
     
-    df = pd.DataFrame(np.zeros((years, 3)))
-    df.columns = ["year", "contribution", "value"]
+    df = pd.DataFrame(np.zeros((years, 4)))
+    df.columns = ["year", "contribution", "rate", "value"]
     df.iloc[0, 0] = 1
     df.iloc[0, 1] = contribution
-    df.iloc[0, 2] = -npf.fv(rate, 12, contribution, asset_value, when=when)
+    df.iloc[0, 2] = rate
+    df.iloc[0, 3] = -npf.fv(rate, 12, contribution, asset_value, when=when)
     for i in range(1, years):
         df.iloc[i, 0] = i + 1
         df.iloc[i, 1] = contribution
-        df.iloc[i, 2] = -npf.fv(rate, 12, contribution, df.iloc[i - 1, 2], when=when)
+        df.iloc[i, 2] = rate
+        df.iloc[i, 3] = -npf.fv(rate, 12, contribution, df.iloc[i - 1, 3], when=when)
     
-    df = df.round(_round_dig)
+    df = df.round({"contribution": _round_dig, "rate": 4, "value": _round_dig})
     df["year"] = df["year"].astype(int)
 
-    print(df)
+    return df
     
