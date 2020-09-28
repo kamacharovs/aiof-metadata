@@ -37,13 +37,18 @@ class ComparableAsset(BaseModel):
     taxDrag: Optional[float] = 0                                # Tax drag, if any          (reduced from interest)
     contribution: Optional[float] = 500                         # Contribution per frequency
 
-    marketValue: Optional[float] = None                         # What if asset's value is invested in the market at 8% return?
+    marketValue: Optional[float] = None                         # What if asset's value is invested in the market at [interest]% return?
     marketBeginValue: Optional[float] = None                       # When the compounding is at the beginning
-    marketWithContributionValue: Optional[float] = None         # What if asset's value is invested in the market at 8% return with monthly contributions?
+    marketValueBreakdown: Optional[list] = None                    # Breakdown of each year
+
+    marketWithContributionValue: Optional[float] = None         # What if asset's value is invested in the market at [interest]% return with monthly contributions?
     marketBeginWithContributionValue: Optional[float] = None        # When the compounding is at the beginning
+    marketWithContributionValueBreakdown: Optional[list] = None     # Breakdown of each year
+
     hysValue: Optional[float] = None                            # What if asset's value is put in a High Yield Savings Account at 1.75% interest?
     hysBeginValue: Optional[float] = None                           # When the compounding is at the beginning
+    hysValueBreakdown: Optional[list] = None                        # Breakdown of each year
+
     hysWithContributionValue: Optional[float] = None            # What if asset's value is put in a High Yield Savings Account at 1.75% interest with monthly contributions?
     hysBeginWithContributionValue: Optional[float] = None           # When the compounding is at the beginning
-
-    marketValueBreakdown: Optional[list] = None
+    hysWithContributionValueBreakdown: Optional[list] = None        # Breakdown of each year

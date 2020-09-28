@@ -279,19 +279,38 @@ def compare_asset(asset: ComparableAsset):
 
     asset.marketValue = round(fv_end, _round_dig)
     asset.marketBeginValue = round(fv_begin, _round_dig)
-    asset.marketWithContributionValue = round(fv_with_contribution_end, _round_dig)
-    asset.marketBeginWithContributionValue = round(fv_with_contribution_begin, _round_dig)
-    asset.hysValue = round(hys_fv_end, _round_dig)
-    asset.hysBeginValue = round(hys_fv_begin, _round_dig)
-    asset.hysWithContributionValue = round(hys_fv_with_contribution_end, _round_dig)
-    asset.hysBeginWithContributionValue = round(hys_fv_with_contribution_begin, _round_dig)
-
-    # Calculate the contributions over the years as a table
     asset.marketValueBreakdown = asset_fv_breakdown_as_table(
         asset_value=asset.value,
         contribution=0,
         years=asset.years,
         rate=rate).to_dict('records')
+
+    asset.marketWithContributionValue = round(fv_with_contribution_end, _round_dig)
+    asset.marketBeginWithContributionValue = round(fv_with_contribution_begin, _round_dig)
+    asset.marketWithContributionValueBreakdown = asset_fv_breakdown_as_table(
+        asset_value=asset.value,
+        contribution=asset.contribution,
+        years=asset.years,
+        rate=rate).to_dict('records')
+
+    asset.hysValue = round(hys_fv_end, _round_dig)
+    asset.hysBeginValue = round(hys_fv_begin, _round_dig)
+    asset.hysValueBreakdown = asset_fv_breakdown_as_table(
+        asset_value=asset.value,
+        contribution=0,
+        years=asset.years,
+        rate=hys_rate).to_dict('records')
+
+    asset.hysWithContributionValue = round(hys_fv_with_contribution_end, _round_dig)
+    asset.hysBeginWithContributionValue = round(hys_fv_with_contribution_begin, _round_dig)
+    asset.hysWithContributionValueBreakdown = asset_fv_breakdown_as_table(
+        asset_value=asset.value,
+        contribution=asset.contribution,
+        years=asset.years,
+        rate=hys_rate).to_dict('records')
+
+    # Calculate the contributions over the years as a table
+    
 
     return asset
 
