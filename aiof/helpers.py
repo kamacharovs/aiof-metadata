@@ -226,10 +226,9 @@ def future_value_calc(periodic_payment, rate_of_interest, number_of_years, frequ
 def compare_asset_to_market(
     asset_value,
     contribution=500,
-    market_interest=7,
-    round_digits=3):
-    asset_value = round(float(asset_value), round_digits)
-    contribution = round(float(contribution), round_digits)
+    market_interest=7):
+    asset_value = round(float(asset_value), _round_dig)
+    contribution = round(float(contribution), _round_dig)
     contribution_double = contribution * 2
     years = [ 2, 5, 10, 20, 30 ]
     contribution_frequency = "monthly"
@@ -237,11 +236,11 @@ def compare_asset_to_market(
     years_objs = []
 
     for year in years:
-        comp_year = round(compound_interest_calc(asset_value, year, market_interest), round_digits)
-        comp_year_with_cont = round(compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution, contribution_frequency), round_digits)
-        comp_year_with_double_cont = round(compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution_double, contribution_frequency), round_digits)
-        hys = round(compound_interest_calc(asset_value, year, hys_interest, contribution_frequency), round_digits)
-        hys_with_cont = round(compound_interest_with_contributions_calc(asset_value, year, hys_interest, contribution, contribution_frequency), round_digits)
+        comp_year = round(compound_interest_calc(asset_value, year, market_interest), _round_dig)
+        comp_year_with_cont = round(compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution, contribution_frequency), _round_dig)
+        comp_year_with_double_cont = round(compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution_double, contribution_frequency), _round_dig)
+        hys = round(compound_interest_calc(asset_value, year, hys_interest, contribution_frequency), _round_dig)
+        hys_with_cont = round(compound_interest_with_contributions_calc(asset_value, year, hys_interest, contribution, contribution_frequency), _round_dig)
 
         # hys: if the asset value was left in a HYS (High Yield Savings) account with default interest
         # hysWithContribution: if the asset value was left in a HYS (High Yield Savings) account with default interest and a contribution was done
