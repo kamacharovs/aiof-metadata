@@ -309,9 +309,6 @@ def compare_asset(asset: ComparableAsset):
         years=asset.years,
         rate=hys_rate).to_dict('records')
 
-    # Calculate the contributions over the years as a table
-    
-
     return asset
 
 
