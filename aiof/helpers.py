@@ -286,4 +286,37 @@ def compare_asset(asset: ComparableAsset):
     asset.hysWithContributionValue = round(hys_fv_with_contribution_end, _round_dig)
     asset.hysBeginWithContributionValue = round(hys_fv_with_contribution_begin, _round_dig)
 
+    # Calculate the contributions over the years as a table
+    asset_fv_as_table(
+        asset_value=asset.value,
+        contribution=asset.contribution,
+        years=asset.years,
+        rate=rate
+    )
+
     return asset
+
+
+# FV as a table
+def asset_fv_as_table(
+    asset_value,
+    contribution,
+    years,
+    rate,
+    when="end"):
+    
+    df = pd.DataFrame(np.zeros((years, 3)))
+    df.columns = ["year", "contribution", "value"]
+    df.iloc[0, 0] = 1
+    df.iloc[0, 1] = contribution
+    df.iloc[0, 2] = -npf.fv(rate, 12, contribution, asset_value, when=when)
+    for i in range(1, years):
+        df.iloc[i, 0] = i + 1
+        df.iloc[i, 1] = contribution
+        df.iloc[i, 2] = -npf.fv(rate, 12, contribution, df.iloc[i - 1, 2], when=when)
+    
+    df = df.round(_round_dig)
+    df["year"] = df["year"].astype(int)
+
+    print(df)
+    
