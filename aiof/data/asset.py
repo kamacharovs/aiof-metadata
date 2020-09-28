@@ -25,12 +25,12 @@ class Asset:
 
 
 class ComparableAsset(BaseModel):
-    name: str
-    type: str
+    name: Optional[str]
+    type: Optional[str]
     value: float
 
     interest: Optional[float] = 8                               # Interest
-    hysInterest: Optional[float] = 1.76                         # High yield savings interest
+    hysInterest: Optional[float] = 1.75                         # High yield savings interest
     years: Optional[int] = 25                                   # Number of years to compound
     frequency: Optional[int] = 12                               # Frequency of compounding, 12 = monthly
     investmentFees: Optional[float] = 0                         # Investment fees, if any   (reduced from interest)

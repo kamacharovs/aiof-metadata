@@ -108,7 +108,7 @@ def savings_rate(req: SavingsRate):
 def export_to_csv():
     return fi.export_to_csv(fi.rule_of_72(100000, 7))
 
-@app.post("/api/compare/asset")
+@app.post("/api/asset/breakdown")
 def compare_asset(asset: ComparableAsset):
     return helpers.compare_asset(asset)
 
