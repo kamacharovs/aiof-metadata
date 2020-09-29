@@ -31,6 +31,7 @@ Helpful `FastAPI` documentation
 - [Dependencies - First Steps](https://fastapi.tiangolo.com/tutorial/dependencies/)
 - [Concurrency and async / await](https://fastapi.tiangolo.com/async/)
 - [Custom Response - HTML, Stream, File, others](https://fastapi.tiangolo.com/advanced/custom-response/)
+- [tiangolo/uvicorn-gunicorn-fastapi-docker](https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker)
 
 #### Pandas
 
@@ -76,13 +77,13 @@ uvicorn api:app
 Build it
 
 ```powershell
-docker build -t aiof-metadata:dev .
+docker build -t aiof-metadata .
 ```
 
 Run it
 
 ```poershell
-docker run -it --rm -p 8080:80 aiof-metadata:dev
+docker run -it --rm -p 8000:80 aiof-metadata
 ```
 
 Make API calls to
