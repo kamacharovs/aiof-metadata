@@ -264,6 +264,7 @@ def compare_asset_to_market(
 
 # Compare asset
 def compare_asset(asset: ComparableAsset):
+    asset.init_values()
     rate = ((asset.interest - asset.investmentFees - asset.taxDrag) / 100) / asset.frequency
     hys_rate = (asset.hysInterest / 100) / asset.frequency
     nper = asset.years * asset.frequency

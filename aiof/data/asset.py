@@ -52,3 +52,12 @@ class ComparableAsset(BaseModel):
     hysWithContributionValue: Optional[float] = None            # What if asset's value is put in a High Yield Savings Account at 1.75% interest with monthly contributions?
     hysBeginWithContributionValue: Optional[float] = None           # When the compounding is at the beginning
     hysWithContributionValueBreakdown: Optional[list] = None        # Breakdown of each year
+
+    def init_values(self):
+        self.interest = self.interest if self.interest is not None else 8
+        self.hysInterest = self.hysInterest if self.hysInterest is not None else 1.75
+        self.years = self.years if self.years is not None else 25
+        self.frequency = self.frequency if self.frequency is not None else 12
+        self.investmentFees = self.investmentFees if self.investmentFees is not None else 0
+        self.taxDrag = self.taxDrag if self.taxDrag is not None else 0
+        self.contribution = self.contribution if self.contribution is not None else 500
