@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8-slim
 
 WORKDIR /app
 COPY . /app/
@@ -9,7 +9,7 @@ RUN python setup.py develop
 WORKDIR /app/tests
 RUN pytest
 
+ENV APP_MODULE=api.api:app
+ENV HOST=0.0.0.0
 ENV LISTEN_PORT=80
-EXPOSE 80
-WORKDIR /app/api
-CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "80"]
+ENV PORT=80
