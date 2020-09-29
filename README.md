@@ -4,47 +4,6 @@ All in one finance data crunching backend
 
 [![Build Status](https://gkamacharov.visualstudio.com/gkama-cicd/_apis/build/status/kamacharovs.aiof-metadata?branchName=master)](https://gkamacharov.visualstudio.com/gkama-cicd/_build/latest?definitionId=19&branchName=master)
 
-## Documentation
-
-Overall documentation
-
-### Package management
-
-- Install package: `python -m pip install <package-name>`
-- Uninstall package: `python -m pip uninstall <package-name>`
-
-### Libraries
-
-- [fastapi](https://github.com/tiangolo/fastapi)
-- [uvicorn](https://github.com/encode/uvicorn)
-- [pandas](https://pandas.pydata.org/docs/reference/index.html)
-- [statistics](https://docs.python.org/3/library/statistics.html)
-- [numpy-financial](https://numpy.org/numpy-financial/latest/)
-- [pytest](https://docs.pytest.org/en/stable/)
-- [list of py finance libraries](https://github.com/wilsonfreitas/awesome-quant#python)
-
-#### FastAPI
-
-Helpful `FastAPI` documentation
-
-- [Settings and Environment Variables](https://fastapi.tiangolo.com/advanced/settings/)
-- [Dependencies - First Steps](https://fastapi.tiangolo.com/tutorial/dependencies/)
-- [Concurrency and async / await](https://fastapi.tiangolo.com/async/)
-- [Custom Response - HTML, Stream, File, others](https://fastapi.tiangolo.com/advanced/custom-response/)
-- [tiangolo/uvicorn-gunicorn-fastapi-docker](https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker)
-
-#### Pandas
-
-Helpful `pandas` documentation
-
-- [DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/frame.html)
-
-#### Python
-
-Helpful `python` documentation
-
-- [Dependency injection and inversion of control in Python](http://python-dependency-injector.ets-labs.org/introduction/di_in_python.html)
-
 ## API
 
 ### Financial independence (FI)
@@ -60,6 +19,16 @@ API endpoinds available are
 /api/fi/rule/of/72
 /api/fi/ten/million/dream/{monthlyInvestment}
 /api/fi/investment/fees/effect
+```
+
+### Asset
+
+Asset functionality and analysis
+
+API endpoints available are
+
+```text
+/api/asset/breakdown
 ```
 
 ## How to run it
@@ -108,3 +77,44 @@ Unit tests are used to test units of code. Below you can see how to run them
 cd .\tests\
 pytest
 ```
+
+## Documentation
+
+Overall documentation
+
+### Package management
+
+- Install package: `python -m pip install <package-name>`
+- Uninstall package: `python -m pip uninstall <package-name>`
+
+### Libraries
+
+- [fastapi](https://github.com/tiangolo/fastapi)
+- [uvicorn](https://github.com/encode/uvicorn)
+- [pandas](https://pandas.pydata.org/docs/reference/index.html)
+- [statistics](https://docs.python.org/3/library/statistics.html)
+- [numpy-financial](https://numpy.org/numpy-financial/latest/)
+- [pytest](https://docs.pytest.org/en/stable/)
+- [list of py finance libraries](https://github.com/wilsonfreitas/awesome-quant#python)
+
+#### FastAPI
+
+Helpful `FastAPI` documentation
+
+- [Settings and Environment Variables](https://fastapi.tiangolo.com/advanced/settings/)
+- [Dependencies - First Steps](https://fastapi.tiangolo.com/tutorial/dependencies/)
+- [Concurrency and async / await](https://fastapi.tiangolo.com/async/)
+- [Custom Response - HTML, Stream, File, others](https://fastapi.tiangolo.com/advanced/custom-response/)
+- [tiangolo/uvicorn-gunicorn-fastapi-docker](https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker)
+
+#### Pandas
+
+Helpful `pandas` documentation
+
+- [DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/frame.html)
+
+#### Python
+
+Helpful `python` documentation
+
+- [Dependency injection and inversion of control in Python](http://python-dependency-injector.ets-labs.org/introduction/di_in_python.html)
