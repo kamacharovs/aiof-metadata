@@ -73,15 +73,22 @@ uvicorn api:app
 
 ### Docker
 
+Build it
+
 ```powershell
-docker build -t aiof-metadata .
-docker run -p 8080:80 aiof-metadata
+docker build -t aiof-metadata:dev .
 ```
 
-Or run the container detached
+Run it
 
 ```poershell
-docker run -d -p 8080:80 aiof-metadata
+docker run -it --rm -p 8080:80 aiof-metadata:dev
+```
+
+Make API calls to
+
+```text
+http://localhost:8080/
 ```
 
 Optional command to clean up `<none>` images
