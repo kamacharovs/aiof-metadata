@@ -1,4 +1,5 @@
 import math
+import io
 import pandas as pd
 import numpy as np
 import numpy_financial as npf
@@ -262,7 +263,10 @@ def compare_asset_to_market(
     }
 
 
-# Compare asset
+# Asset breakdown
+# - Takes in a ComparableAsset and generates future values (fv) for different scenarios
+# - For more information on each one, look at aiof.data.asset.Comparable class
+# Returns: aiof.data.asset.ComparableAsset with all fields populated
 def asset_breakdown(asset: ComparableAsset):
     asset.init_values()
     rate = ((asset.interest - asset.investmentFees - asset.taxDrag) / 100) / asset.frequency
@@ -317,7 +321,8 @@ def asset_breakdown(asset: ComparableAsset):
     return asset
 
 
-# FV as a table
+# Future value (fv) as a pandas.DataFrame table
+# - Takes in the inputs and breaks down the future value (fv) for each year
 def asset_fv_breakdown_as_table(
     asset_value,
     contribution,
@@ -341,3 +346,13 @@ def asset_fv_breakdown_as_table(
     df = df.round({"contribution": _round_dig, "rate": 4, "value": _round_dig})
     df["year"] = df["year"].astype(int)
     return df
+
+
+# Export to .csv
+# input: pandas DataFrame
+# output: csv bytes
+# can/will be used in FastAPI StreamResponse
+def export_to_csv(df):
+    stream = io.StringIO()
+    df.to_csv(stream, index=False)
+    return iter([stream.getvalue()])

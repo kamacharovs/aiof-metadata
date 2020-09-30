@@ -33,28 +33,28 @@ app.add_middleware(
 
 # FI
 @app.post("/api/fi/time")
-def time_to_fi(req: FiTime):
+async def time_to_fi(req: FiTime):
     return fi.time_to_fi(req.startingAmount,
         req.monthlyInvestment,
         req.desiredYearsExpensesForFi,
         req.desiredAnnualSpending)
 
 @app.post("/api/fi/rule/of/72")
-def rule_of_72(req: FiRuleOf72):
+async def rule_of_72(req: FiRuleOf72):
     return fi.rule_of_72(req.startingAmount,
         req.interest)
 
 @app.post("/api/fi/added/time")
-def added_time(req: FiAddedTime):
+async def added_time(req: FiAddedTime):
     return fi.added_time_to_fi(req.monthlyInvestment,
         req.totalAdditionalExpense)
 
 @app.get("/api/fi/ten/million/dream/{monthlyInvestment}")
-def ten_million_dream(monthlyInvestment: float):
+async def ten_million_dream(monthlyInvestment: float):
     return fi.ten_million_dream(monthlyInvestment)
 
 @app.post("/api/fi/compound/interest")
-def compound_interest(req: FiCompoundInterest):
+async def compound_interest(req: FiCompoundInterest):
     return fi.compound_interest(req.startingAmount,
         req.monthlyInvestment,
         req.interest,
@@ -63,7 +63,7 @@ def compound_interest(req: FiCompoundInterest):
         req.taxDrag)
 
 @app.post("/api/fi/investment/fees/effect")
-def investment_fees_effect(req: FiInvestmentFeesEffect):
+async def investment_fees_effect(req: FiInvestmentFeesEffect):
     return fi.investment_fees_effect(req.ageAtCareerStart,
         req.interestReturnWhileWorking,
         req.interestReturnWhileRetired,
@@ -73,17 +73,17 @@ def investment_fees_effect(req: FiInvestmentFeesEffect):
         req.annualWithdrawalThirdDecade)
 
 @app.post("/api/fi/cost/of/raising/children")
-def cost_of_raising_children(req: FiRaisingChildren):
+async def cost_of_raising_children(req: FiRaisingChildren):
     return fi.cost_of_raising_children(req.annualExpensesStart,
         req.annualExpensesIncrement,
         req.children,
         req.interests)
 @app.get("/api/fi/cost/of/raising/children/families")
-def cost_of_raising_children_families():
+async def cost_of_raising_children_families():
     return fi.cost_of_raising_children_faimilies()
 
 @app.post("/api/fi/savings/rate")
-def savings_rate(req: SavingsRate):
+async def savings_rate(req: SavingsRate):
     return fi.savings_rate(req.salary,
         req.matchAndProfitSharing,
         req.federalIncomeTax,
@@ -105,16 +105,30 @@ def savings_rate(req: SavingsRate):
         req.currentNestEgg)
 
 @app.get("/api/export/to/csv")
-def export_to_csv():
+async def export_to_csv():
     return fi.export_to_csv(fi.rule_of_72(100000, 7))
 
+
 @app.post("/api/asset/breakdown")
-def asset_breakdown(asset: ComparableAsset):
+async def asset_breakdown(asset: ComparableAsset):
     return helpers.asset_breakdown(asset)
+
+@app.get("/api/asset/breakdown/csv")
+async def export_asset_fv_breakdown_as_table_to_csv():
+    df = helpers.asset_fv_breakdown_as_table(
+        asset_value=15957,
+        contribution=500,
+        years=15,
+        rate=(8/100)/12,
+        frequency=12,
+    )
+    response = StreamingResponse(helpers.export_to_csv(df),
+                                media_type="text/csv")
+    return response 
 
 
 @app.get("/api/frequencies")
-def frequencies():
+async def frequencies():
     return helpers._frequency
 
 
