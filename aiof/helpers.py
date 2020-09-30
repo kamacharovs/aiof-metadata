@@ -284,7 +284,8 @@ def compare_asset(asset: ComparableAsset):
         asset_value=asset.value,
         contribution=0,
         years=asset.years,
-        rate=rate).to_dict('records')
+        rate=rate,
+        frequency=asset.frequency).to_dict('records')
 
     asset.marketWithContributionValue = round(fv_with_contribution_end, _round_dig)
     asset.marketBeginWithContributionValue = round(fv_with_contribution_begin, _round_dig)
@@ -292,7 +293,8 @@ def compare_asset(asset: ComparableAsset):
         asset_value=asset.value,
         contribution=asset.contribution,
         years=asset.years,
-        rate=rate).to_dict('records')
+        rate=rate,
+        frequency=asset.frequency).to_dict('records')
 
     asset.hysValue = round(hys_fv_end, _round_dig)
     asset.hysBeginValue = round(hys_fv_begin, _round_dig)
@@ -300,7 +302,8 @@ def compare_asset(asset: ComparableAsset):
         asset_value=asset.value,
         contribution=0,
         years=asset.years,
-        rate=hys_rate).to_dict('records')
+        rate=hys_rate,
+        frequency=asset.frequency).to_dict('records')
 
     asset.hysWithContributionValue = round(hys_fv_with_contribution_end, _round_dig)
     asset.hysBeginWithContributionValue = round(hys_fv_with_contribution_begin, _round_dig)
@@ -308,7 +311,8 @@ def compare_asset(asset: ComparableAsset):
         asset_value=asset.value,
         contribution=asset.contribution,
         years=asset.years,
-        rate=hys_rate).to_dict('records')
+        rate=hys_rate,
+        frequency=asset.frequency).to_dict('records')
 
     return asset
 
@@ -319,22 +323,21 @@ def asset_fv_breakdown_as_table(
     contribution,
     years,
     rate,
+    frequency,
     when="end"):
-    
     df = pd.DataFrame(np.zeros((years, 4)))
     df.columns = ["year", "contribution", "rate", "value"]
-    df.iloc[0, 0] = 1
-    df.iloc[0, 1] = contribution
-    df.iloc[0, 2] = rate
-    df.iloc[0, 3] = -npf.fv(rate, 12, contribution, asset_value, when=when)
-    for i in range(1, years):
+    asset_breakdown = -npf.fv(
+        rate=rate, 
+        nper=np.arange(frequency, ((years + 1) * frequency), frequency),
+        pmt=contribution,
+        pv=asset_value,
+        when=when)
+    for i in range(0, years):
         df.iloc[i, 0] = i + 1
         df.iloc[i, 1] = contribution
         df.iloc[i, 2] = rate
-        df.iloc[i, 3] = -npf.fv(rate, 12, contribution, df.iloc[i - 1, 3], when=when)
-    
+        df.iloc[i, 3] = asset_breakdown[i]
     df = df.round({"contribution": _round_dig, "rate": 4, "value": _round_dig})
     df["year"] = df["year"].astype(int)
-
     return df
-    
