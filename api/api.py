@@ -109,8 +109,8 @@ def export_to_csv():
     return fi.export_to_csv(fi.rule_of_72(100000, 7))
 
 @app.post("/api/asset/breakdown")
-def compare_asset(asset: ComparableAsset):
-    return helpers.compare_asset(asset)
+def asset_breakdown(asset: ComparableAsset):
+    return helpers.asset_breakdown(asset)
 
 
 @app.get("/api/frequencies")
