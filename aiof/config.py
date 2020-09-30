@@ -69,7 +69,8 @@ class Settings(BaseSettings):
     # End FI specific
 
     cors_origins: list = [
-        "http://localhost:4100"
+        "http://localhost:4100",
+        "http://localhost:1337"
     ]
     cors_allowed_methods: list = [
         "*"

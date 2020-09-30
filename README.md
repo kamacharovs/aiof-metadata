@@ -4,6 +4,80 @@ All in one finance data crunching backend
 
 [![Build Status](https://gkamacharov.visualstudio.com/gkama-cicd/_apis/build/status/kamacharovs.aiof-metadata?branchName=master)](https://gkamacharov.visualstudio.com/gkama-cicd/_build/latest?definitionId=19&branchName=master)
 
+## API
+
+### Financial independence (FI)
+
+Financial Independence is based on the FIRE movement. Financial Independence, Retire Early (FIRE) is a movement dedicated to a program of extreme savings and investment that allows proponents to retire far earlier than traditional budgets and retirement plans would allow. By dedicating up to 70% of income to savings, followers of the FIRE movement may eventually be able to quit their jobs and live solely off small withdrawals from their portfolios decades before the conventional retirement age of 65. More information can be found [here](https://www.investopedia.com/terms/f/financial-independence-retire-early-fire.asp)
+
+API endpoinds available are
+
+```text
+/api/fi/time
+/api/fi/added/time
+/api/fi/compound/interest
+/api/fi/rule/of/72
+/api/fi/ten/million/dream/{monthlyInvestment}
+/api/fi/investment/fees/effect
+```
+
+### Asset
+
+Asset functionality and analysis
+
+API endpoints available are
+
+```text
+/api/asset/breakdown
+```
+
+## How to run it
+
+In order to run the API locally, you would first need to run the `.\setup.py` script, if it hasn't been setup locally before. Afterwards, you need to change the directory to the `.\api` one and run it via `uvicorn`
+
+```powershell
+python .\setup.py develop
+cd .\api
+uvicorn api:app
+```
+
+### Docker
+
+Build it
+
+```powershell
+docker build -t aiof-metadata .
+```
+
+Run it
+
+```poershell
+docker run -it --rm -p 8000:80 aiof-metadata
+```
+
+Make API calls to
+
+```text
+http://localhost:8080/
+```
+
+Optional command to clean up `<none>` images
+
+```powershell
+docker rmi $(docker images -f “dangling=true” -q)
+```
+
+## Tests
+
+Unit tests are used to test units of code. Below you can see how to run them
+
+### How to run unit tests
+
+```powershell
+cd .\tests\
+pytest
+```
+
 ## Documentation
 
 Overall documentation
@@ -31,6 +105,7 @@ Helpful `FastAPI` documentation
 - [Dependencies - First Steps](https://fastapi.tiangolo.com/tutorial/dependencies/)
 - [Concurrency and async / await](https://fastapi.tiangolo.com/async/)
 - [Custom Response - HTML, Stream, File, others](https://fastapi.tiangolo.com/advanced/custom-response/)
+- [tiangolo/uvicorn-gunicorn-fastapi-docker](https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker)
 
 #### Pandas
 
@@ -43,60 +118,3 @@ Helpful `pandas` documentation
 Helpful `python` documentation
 
 - [Dependency injection and inversion of control in Python](http://python-dependency-injector.ets-labs.org/introduction/di_in_python.html)
-
-## API
-
-### Financial independence (FI)
-
-Financial Independence is based on the FIRE movement. Financial Independence, Retire Early (FIRE) is a movement dedicated to a program of extreme savings and investment that allows proponents to retire far earlier than traditional budgets and retirement plans would allow. By dedicating up to 70% of income to savings, followers of the FIRE movement may eventually be able to quit their jobs and live solely off small withdrawals from their portfolios decades before the conventional retirement age of 65. More information can be found [here](https://www.investopedia.com/terms/f/financial-independence-retire-early-fire.asp)
-
-API endpoinds available are
-
-```text
-/api/fi/time
-/api/fi/added/time
-/api/fi/compound/interest
-/api/fi/rule/of/72
-/api/fi/ten/million/dream/{monthlyInvestment}
-/api/fi/investment/fees/effect
-```
-
-## How to run it
-
-In order to run the API locally, you would first need to run the `.\setup.py` script, if it hasn't been setup locally before. Afterwards, you need to change the directory to the `.\api` one and run it via `uvicorn`
-
-```powershell
-python .\setup.py develop
-cd .\api
-uvicorn api:app
-```
-
-### Docker
-
-```powershell
-docker build -t aiof-metadata .
-docker run -p 8080:80 aiof-metadata
-```
-
-Or run the container detached
-
-```poershell
-docker run -d -p 8080:80 aiof-metadata
-```
-
-Optional command to clean up `<none>` images
-
-```powershell
-docker rmi $(docker images -f “dangling=true” -q)
-```
-
-## Tests
-
-Unit tests are used to test units of code. Below you can see how to run them
-
-### How to run unit tests
-
-```powershell
-cd .\tests\
-pytest
-```

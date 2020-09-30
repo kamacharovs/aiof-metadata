@@ -226,10 +226,9 @@ def future_value_calc(periodic_payment, rate_of_interest, number_of_years, frequ
 def compare_asset_to_market(
     asset_value,
     contribution=500,
-    market_interest=7,
-    round_digits=3):
-    asset_value = round(float(asset_value), round_digits)
-    contribution = round(float(contribution), round_digits)
+    market_interest=7):
+    asset_value = round(float(asset_value), _round_dig)
+    contribution = round(float(contribution), _round_dig)
     contribution_double = contribution * 2
     years = [ 2, 5, 10, 20, 30 ]
     contribution_frequency = "monthly"
@@ -237,11 +236,11 @@ def compare_asset_to_market(
     years_objs = []
 
     for year in years:
-        comp_year = round(compound_interest_calc(asset_value, year, market_interest), round_digits)
-        comp_year_with_cont = round(compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution, contribution_frequency), round_digits)
-        comp_year_with_double_cont = round(compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution_double, contribution_frequency), round_digits)
-        hys = round(compound_interest_calc(asset_value, year, hys_interest, contribution_frequency), round_digits)
-        hys_with_cont = round(compound_interest_with_contributions_calc(asset_value, year, hys_interest, contribution, contribution_frequency), round_digits)
+        comp_year = round(compound_interest_calc(asset_value, year, market_interest), _round_dig)
+        comp_year_with_cont = round(compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution, contribution_frequency), _round_dig)
+        comp_year_with_double_cont = round(compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution_double, contribution_frequency), _round_dig)
+        hys = round(compound_interest_calc(asset_value, year, hys_interest, contribution_frequency), _round_dig)
+        hys_with_cont = round(compound_interest_with_contributions_calc(asset_value, year, hys_interest, contribution, contribution_frequency), _round_dig)
 
         # hys: if the asset value was left in a HYS (High Yield Savings) account with default interest
         # hysWithContribution: if the asset value was left in a HYS (High Yield Savings) account with default interest and a contribution was done
@@ -265,6 +264,7 @@ def compare_asset_to_market(
 
 # Compare asset
 def compare_asset(asset: ComparableAsset):
+    asset.init_values()
     rate = ((asset.interest - asset.investmentFees - asset.taxDrag) / 100) / asset.frequency
     hys_rate = (asset.hysInterest / 100) / asset.frequency
     nper = asset.years * asset.frequency
@@ -277,15 +277,67 @@ def compare_asset(asset: ComparableAsset):
     hys_fv_begin = -npf.fv(hys_rate, nper, 0, asset.value, when='begin')
     hys_fv_with_contribution_end = -npf.fv(hys_rate, nper, asset.contribution, asset.value, when='end')
     hys_fv_with_contribution_begin = -npf.fv(hys_rate, nper, asset.contribution, asset.value, when='begin')
-    
 
     asset.marketValue = round(fv_end, _round_dig)
-    asset.marketBeginValuee = round(fv_begin, _round_dig)
+    asset.marketBeginValue = round(fv_begin, _round_dig)
+    asset.marketValueBreakdown = asset_fv_breakdown_as_table(
+        asset_value=asset.value,
+        contribution=0,
+        years=asset.years,
+        rate=rate,
+        frequency=asset.frequency).to_dict('records')
+
     asset.marketWithContributionValue = round(fv_with_contribution_end, _round_dig)
     asset.marketBeginWithContributionValue = round(fv_with_contribution_begin, _round_dig)
+    asset.marketWithContributionValueBreakdown = asset_fv_breakdown_as_table(
+        asset_value=asset.value,
+        contribution=asset.contribution,
+        years=asset.years,
+        rate=rate,
+        frequency=asset.frequency).to_dict('records')
+
     asset.hysValue = round(hys_fv_end, _round_dig)
     asset.hysBeginValue = round(hys_fv_begin, _round_dig)
+    asset.hysValueBreakdown = asset_fv_breakdown_as_table(
+        asset_value=asset.value,
+        contribution=0,
+        years=asset.years,
+        rate=hys_rate,
+        frequency=asset.frequency).to_dict('records')
+
     asset.hysWithContributionValue = round(hys_fv_with_contribution_end, _round_dig)
     asset.hysBeginWithContributionValue = round(hys_fv_with_contribution_begin, _round_dig)
+    asset.hysWithContributionValueBreakdown = asset_fv_breakdown_as_table(
+        asset_value=asset.value,
+        contribution=asset.contribution,
+        years=asset.years,
+        rate=hys_rate,
+        frequency=asset.frequency).to_dict('records')
 
     return asset
+
+
+# FV as a table
+def asset_fv_breakdown_as_table(
+    asset_value,
+    contribution,
+    years,
+    rate,
+    frequency,
+    when="end"):
+    df = pd.DataFrame(np.zeros((years, 4)))
+    df.columns = ["year", "contribution", "rate", "value"]
+    asset_breakdown = -npf.fv(
+        rate=rate, 
+        nper=np.arange(frequency, ((years + 1) * frequency), frequency),
+        pmt=contribution,
+        pv=asset_value,
+        when=when)
+    for i in range(0, years):
+        df.iloc[i, 0] = i + 1
+        df.iloc[i, 1] = contribution
+        df.iloc[i, 2] = rate
+        df.iloc[i, 3] = asset_breakdown[i]
+    df = df.round({"contribution": _round_dig, "rate": 4, "value": _round_dig})
+    df["year"] = df["year"].astype(int)
+    return df

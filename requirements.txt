@@ -2,8 +2,8 @@
 fastapi==0.61.1
 uvicorn==0.11.8
 pytest==6.0.2
-numpy
-numpy_financial
-pandas
-statistics
-logzero
+numpy==1.19.0
+numpy_financial===1.0.0
+pandas===1.1.2
+statistics===1.0.3.5
+logzero===1.5.0
