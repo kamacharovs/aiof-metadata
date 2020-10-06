@@ -9,7 +9,7 @@ RUN python setup.py develop
 WORKDIR /app/tests
 RUN pytest
 
-ENV APP_MODULE=api.api:app
+ENV APP_MODULE=api.main:app
 ENV HOST=0.0.0.0
 ENV LISTEN_PORT=80
 ENV PORT=80
