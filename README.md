@@ -33,12 +33,11 @@ API endpoints available are
 
 ## How to run it
 
-In order to run the API locally, you would first need to run the `python .\setup.py develop` script, if it hasn't been setup locally before. Afterwards, you need to change the directory to the `.\api` one and run it via `uvicorn`
+In order to run the API locally, you would first need to run the `python .\setup.py develop` script, if it hasn't been setup locally before. Afterwards, start the API via `uvicorn`
 
 ```powershell
 python .\setup.py develop
-cd .\api
-uvicorn main:app
+uvicorn api.main:app
 ```
 
 ### Docker
