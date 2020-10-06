@@ -38,7 +38,7 @@ In order to run the API locally, you would first need to run the `.\setup.py` sc
 ```powershell
 python .\setup.py develop
 cd .\api
-uvicorn api:app
+uvicorn main:app
 ```
 
 ### Docker
@@ -102,6 +102,7 @@ Overall documentation
 Helpful `FastAPI` documentation
 
 - [Settings and Environment Variables](https://fastapi.tiangolo.com/advanced/settings/)
+- [Bigger Applications - Multiple Files](https://fastapi.tiangolo.com/tutorial/bigger-applications/)
 - [Dependencies - First Steps](https://fastapi.tiangolo.com/tutorial/dependencies/)
 - [Concurrency and async / await](https://fastapi.tiangolo.com/async/)
 - [Custom Response - HTML, Stream, File, others](https://fastapi.tiangolo.com/advanced/custom-response/)
