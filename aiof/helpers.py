@@ -13,29 +13,8 @@ from aiof.data.asset import ComparableAsset
 # Configs
 _settings = Settings()
 _round_dig = _settings.DefaultRoundingDigit
-
-
-# Default settings (TODO move to config)
-app_settings = {
-    "rounding_digits": 3,
-    "hys_average_interest": 1.75
-}
-
-
-_frequency = {
-    "daily": 365,
-    "monthly": 12,
-    "quarterly": 4,
-    "half-year": 2,
-    "yearly": 1
-}
-_frequency_text = {
-    "daily": "day",
-    "monthly": "month",
-    "quarterly": "quarter",
-    "half-year": "half-year",
-    "yearly": "year"
-}
+_frequency = _settings.Frequencies
+_frequency_text = _settings.FrequenciesMap
 
 
 def convert_frequency(frequency, as_float=False, as_int=False):
@@ -76,7 +55,11 @@ def compound_interest_with_contributions_calc(
     return comp + futurevaluewithdeposits
 
 
-def loan_payments_calc(loan_amount, number_of_years, rate_of_interest, frequency="monthly"):
+def loan_payments_calc(
+    loan_amount, 
+    number_of_years, 
+    rate_of_interest, 
+    frequency="monthly"):
     frequency_int = convert_frequency(frequency, as_int=True)
     return npf.pmt(rate = (to_percentage(rate_of_interest) / frequency_int), nper = number_of_years * frequency_int, pv = -loan_amount)
 
@@ -201,66 +184,6 @@ def equated_monthly_installment_calc(principal_amount, rate_of_interest, number_
 def doubling_time_with_continuous_compounding(rate_of_interest, frequency="yearly"):
     interest = to_percentage(rate_of_interest)
     return (np.log(2) / interest)
-
-
-"""
-source: https://financeformulas.net/Future_Value_of_Annuity.html
-
-The future value of an annuity formula is used to calculate what the value at a future date would be for a series of periodic payments.
-
-The future value of an annuity formula assumes that
-
-1. The rate does not change
-2. The first payment is one period away
-3. The periodic payment does not change
-"""
-def future_value_calc(periodic_payment, rate_of_interest, number_of_years, frequency="yearly"):
-    interest = to_percentage(rate_of_interest)
-    frequency_int = number_of_years * convert_frequency(frequency, as_int=True)
-    return periodic_payment * ((pow(1 + interest, frequency_int) - 1) / interest)
-
-
-# Asset value comparison
-# - This is what your asset's value will look like if you let it sit for "n" number of years with compound interest (aka - invest into the market)
-# - Additional stats for 2, 5, 10, etc. years, also with regular contributions, double contributions, etc.
-# The market's rate is defaulted at 7%
-def compare_asset_to_market(
-    asset_value,
-    contribution=500,
-    market_interest=7):
-    asset_value = round(float(asset_value), _round_dig)
-    contribution = round(float(contribution), _round_dig)
-    contribution_double = contribution * 2
-    years = [ 2, 5, 10, 20, 30 ]
-    contribution_frequency = "monthly"
-    hys_interest = app_settings["hys_average_interest"]
-    years_objs = []
-
-    for year in years:
-        comp_year = round(compound_interest_calc(asset_value, year, market_interest), _round_dig)
-        comp_year_with_cont = round(compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution, contribution_frequency), _round_dig)
-        comp_year_with_double_cont = round(compound_interest_with_contributions_calc(asset_value, year, market_interest, contribution_double, contribution_frequency), _round_dig)
-        hys = round(compound_interest_calc(asset_value, year, hys_interest, contribution_frequency), _round_dig)
-        hys_with_cont = round(compound_interest_with_contributions_calc(asset_value, year, hys_interest, contribution, contribution_frequency), _round_dig)
-
-        # hys: if the asset value was left in a HYS (High Yield Savings) account with default interest
-        # hysWithContribution: if the asset value was left in a HYS (High Yield Savings) account with default interest and a contribution was done
-        years_objs.append(
-            {
-                "year": year,
-                "value": comp_year,
-                "valueWithContribution": comp_year_with_cont,
-                "valueWithDoubleContribution": comp_year_with_double_cont,
-                "hys": hys,
-                "hysWithContribution": hys_with_cont,
-            })
-
-    return {
-        "value": asset_value,
-        "contribution": contribution,
-        "contributionFrequency": contribution_frequency,
-        "years": years_objs
-    }
 
 
 # Asset breakdown

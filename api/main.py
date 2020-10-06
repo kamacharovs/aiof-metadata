@@ -50,7 +50,10 @@ async def export_asset_fv_breakdown_as_table_to_csv():
 
 @app.get("/api/frequencies")
 async def frequencies():
-    return helpers._frequency
+    return settings().Frequencies
+@app.get("/api/frequencies/map")
+async def frequencies():
+    return settings().FrequenciesMap
 
 
 @app.get("/api/app/settings")

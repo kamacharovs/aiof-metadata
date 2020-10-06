@@ -1,6 +1,6 @@
+import math
 import numpy_financial as npf
 import pandas as pd
-import math
 
 import aiof.config as config
 

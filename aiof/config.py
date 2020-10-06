@@ -38,6 +38,21 @@ class Settings(BaseSettings):
         3,
         4
     ]
+    
+    Frequencies: dict = {
+        "daily": 365,
+        "monthly": 12,
+        "quarterly": 4,
+        "half-year": 2,
+        "yearly": 1
+    }
+    FrequenciesMap: dict = {
+        "daily": "day",
+        "monthly": "month",
+        "quarterly": "quarter",
+        "half-year": "half-year",
+        "yearly": "year"
+    }
 
     # FI specific
     DefaultTenMillion: list = [
