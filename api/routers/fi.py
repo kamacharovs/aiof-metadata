@@ -1,7 +1,7 @@
 import aiof.fi.core as fi
 
-
 from aiof.data.fi import *
+
 from fastapi import APIRouter
 
 

@@ -30,11 +30,6 @@ app.add_middleware(
 )
 
 
-@app.get("/api/export/to/csv")
-async def export_to_csv():
-    return fi.export_to_csv(fi.rule_of_72(100000, 7))
-
-
 @app.post("/api/asset/breakdown")
 async def asset_breakdown(asset: ComparableAsset):
     return helpers.asset_breakdown(asset)
