@@ -9,7 +9,7 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-@router.get("/analyze", tags=["car"])
+@router.post("/analyze", tags=["car"])
 async def analyze():
     return a.analyze(
         [

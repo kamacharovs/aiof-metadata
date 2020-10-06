@@ -13,6 +13,6 @@ from typing import Optional
 #   - Etc.
 
 class Liability(BaseModel):
-    name: str
-    type: str
+    name: Optional[str]
+    type: Optional[str]
     value: float

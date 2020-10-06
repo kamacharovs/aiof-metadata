@@ -16,8 +16,8 @@ _default_contribution = 500
 
 
 class Asset(BaseModel):
-    name: str
-    type: str
+    name: Optional[str]
+    type: Optional[str]
     value: float
 
 
