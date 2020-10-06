@@ -12,6 +12,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from typing import Optional
 from functools import lru_cache
+from api.routers import car
 
 
 app = FastAPI()
@@ -137,3 +138,13 @@ async def info(settings: config.Settings = Depends(settings)):
     return {
         "aiof_portal_url": settings.aiof_portal_url,
     }
+
+
+app.include_router(car.router)
+#app.include_router(
+#    items.router,
+#    prefix="/items",
+    #tags=["items"],
+    #dependencies=[Depends(get_token_header)],
+    #responses={404: {"description": "Not found"}},
+#)
