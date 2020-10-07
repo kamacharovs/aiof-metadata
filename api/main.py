@@ -10,23 +10,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from typing import Optional
-from functools import lru_cache
 
 
 app = FastAPI()
 
 
-@lru_cache()
-def settings():
-    return config.Settings()
-
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings().cors_origins,
+    allow_origins=config.get_settings().cors_origins,
     allow_credentials=True,
-    allow_methods=settings().cors_allowed_methods,
-    allow_headers=settings().cors_allowed_headers,
+    allow_methods=config.get_settings().cors_allowed_methods,
+    allow_headers=config.get_settings().cors_allowed_headers,
 )
 
 
@@ -50,16 +44,16 @@ async def export_asset_fv_breakdown_as_table_to_csv():
 
 @app.get("/api/frequencies")
 async def frequencies():
-    return settings().Frequencies
+    return config.get_settings().Frequencies
 @app.get("/api/frequencies/map")
 async def frequencies_map():
-    return settings().FrequenciesMap
+    return config.get_settings().FrequenciesMap
 
 
 @app.get("/api/app/settings")
-async def info(settings: config.Settings = Depends(settings)):
+async def info(settings: config.Settings = Depends(config.get_settings)):
     return {
-        "aiof_portal_url": settings.aiof_portal_url,
+        "cors_origins": settings.cors_origins,
     }
 
 

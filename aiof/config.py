@@ -1,6 +1,7 @@
 import os
 
 from pydantic import BaseSettings
+from functools import lru_cache
 
 
 class Settings(BaseSettings):
@@ -116,3 +117,9 @@ class Settings(BaseSettings):
         "rv",
         "other"
     ]
+
+
+@lru_cache()
+def get_settings():
+    return Settings()
+    
