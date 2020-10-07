@@ -17,8 +17,13 @@ _default_contribution = 500
 
 class Asset(BaseModel):
     name: Optional[str]
-    type: Optional[str]
+    type: str
     value: float
+
+    def subtract(self, value):
+        self.value - value
+    def add(self, value):
+        self.value + value
 
 
 class ComparableAsset(BaseModel):

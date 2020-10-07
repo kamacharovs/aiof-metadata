@@ -94,3 +94,25 @@ class Settings(BaseSettings):
         "*"
     ]
 
+
+    # Asset
+    AssetTypes = [
+        "cash",
+        "car",
+        "house",
+        "investment",
+        "stock",
+        "other"
+    ]
+
+    # Liability
+    LiabilityTypes = [
+        "personal loan",
+        "car loan",
+        "student loan",
+        "credit card",
+        "mortgage",
+        "house renovation",
+        "rv",
+        "other"
+    ]

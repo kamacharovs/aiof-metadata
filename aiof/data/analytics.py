@@ -14,3 +14,5 @@ class AssetsLiabilities(BaseModel):
 
     liabilitiesTotal: float
     liabilitiesMean: float
+
+    analytics: dict

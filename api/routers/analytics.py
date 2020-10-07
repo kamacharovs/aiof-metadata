@@ -13,11 +13,13 @@ router = APIRouter()
 async def analyze():
     return a.analyze(
         [
-            Asset(name="test", type="test", value=35000),
-            Asset(name="asset 1", type="asset 2", value=8000)
+            Asset(name="asset 1", type="cash", value=35000),
+            Asset(name="asset 2", type="cash", value=8000),
+            Asset(name="asset 3", type="stock", value=24999)
         ],
         [
-            Liability(name="test", type="test", value=15000),
-            Liability(name="test 2", type="test 2", value=2564)
+            Liability(name="liabiliy 1", type="credit card", value=15000),
+            Liability(name="liabiliy 2", type="credit card", value=2564),
+            Liability(name="liabiliy 3", type="personal loan", value=4999)
         ]
     )
