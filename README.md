@@ -19,6 +19,7 @@ API endpoinds available are
 /api/fi/rule/of/72
 /api/fi/ten/million/dream/{monthlyInvestment}
 /api/fi/investment/fees/effect
+/api/fi/savings/rate
 ```
 
 ### Asset
