@@ -17,20 +17,33 @@ _frequency = _settings.Frequencies
 _frequency_text = _settings.FrequenciesMap
 
 
-def convert_frequency(frequency, as_float=False, as_int=False):
+def convert_frequency(frequency, as_decimal=False, as_int=False):
     if frequency not in _frequency:
         raise Exception("frequency must be one of the following: " + ", ".join(_frequency))
-    if as_float:
-        return float(_frequency[frequency])
+    if as_decimal:
+        return Decimal(_frequency[frequency])
     elif as_int:
         return int(_frequency[frequency])
-    return Decimal(_frequency[frequency])
+    return float(_frequency[frequency])
 
 
 def to_percentage(number):
     if number < 0 or number > 100:
         raise Exception("number can't be less than 0 or bigger than 100")
     return float(number) / 100
+
+
+# Default future value (fv) calculation
+#   interest: is the actual interest 7%, 8%, 0.06%, etc.
+#   years: future value in # years
+#   pmt: payment per frequency
+#   frequency: daily, monthly, yearly etc.
+#   when: the compound interest is calculated
+def fv(interest, years, pmt, pv, frequency="monthly", when="end"):
+    freq = convert_frequency(frequency)
+    rate = (interest / 100) / freq
+    nper = years * freq
+    return -npf.fv(rate, nper, pmt, pv, when=when)
 
 
 def compound_interest_calc(principal_amount, number_of_years, rate_of_interest, frequency="yearly"):

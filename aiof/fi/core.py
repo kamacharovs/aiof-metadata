@@ -6,8 +6,8 @@ import aiof.config as config
 
 
 # Configs
-_settings = config.Settings()
-_default_round_dig = _settings.DefaultRoundingDigit
+_settings = config.get_settings()
+_round_dig = _settings.DefaultRoundingDigit
 _interests = _settings.DefaultInterests
 _frequencies = _settings.DefaultFrequencies
 _fees = _settings.DefaultFees
@@ -362,7 +362,7 @@ def cost_of_raising_children(
                 when='begin')
             cost_obj.append({
                 "interest": interest,
-                "value": round(fv, _default_round_dig)
+                "value": round(fv, _round_dig)
             })
 
         children_obj.append({
@@ -497,7 +497,7 @@ def savings_rate(
             when='end') / 12
         years_obj.append({
             "interest": interest,
-            "years": round(years_to_fi, _default_round_dig)
+            "years": round(years_to_fi, _round_dig)
         })
 
     return {
@@ -521,14 +521,14 @@ def savings_rate(
         "otherPostTaxInvestment": other_post_tax_investment,
         "currentNestEgg": current_nest_egg,
 
-        "postTaxIncome": round(post_tax_income, _default_round_dig),
-        "takeHomePay": round(take_home_pay, _default_round_dig),
-        "annualSpending": round(annual_spending, _default_round_dig),
-        "allContributions": round(all_contributions, _default_round_dig),
-        "monthlyContribution": round(monthly_contribution, _default_round_dig),
-        "maxPotentialContribution": round(max_potential_contribution, _default_round_dig),
-        "savingsRateNet": round(savings_rate_net, _default_round_dig),
-        "savingsRateGross": round(savings_rate_gross, _default_round_dig),
+        "postTaxIncome": round(post_tax_income, _round_dig),
+        "takeHomePay": round(take_home_pay, _round_dig),
+        "annualSpending": round(annual_spending, _round_dig),
+        "allContributions": round(all_contributions, _round_dig),
+        "monthlyContribution": round(monthly_contribution, _round_dig),
+        "maxPotentialContribution": round(max_potential_contribution, _round_dig),
+        "savingsRateNet": round(savings_rate_net, _round_dig),
+        "savingsRateGross": round(savings_rate_gross, _round_dig),
         "years": years_obj
     }
     

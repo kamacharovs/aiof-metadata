@@ -1,6 +1,7 @@
 import os
 
 from pydantic import BaseSettings
+from typing import Optional, List
 from functools import lru_cache
 
 
@@ -9,10 +10,12 @@ class Settings(BaseSettings):
     DefaultFrequency: int = os.getenv("DefaultFrequency", 12)
     DefaultInterest: float = os.getenv("DefaultInterest", 7)
     DefaultHysInterest: float = os.getenv("DefaultHysInterest", 1.75)
+    DefaultAverageBankInterest: float = os.getenv("DefaultAverageBankInterest", 0.06)
     DefaultInvestmentFee: float = os.getenv("DefaultFee", 0.50)
     DefaultTaxDrag: float = os.getenv("DefaultTaxDrag", 0.50)
     DefaultChild: int = os.getenv("DefaultChild", 2)
 
+    DefaultYears: List[int] = [ 2, 5, 10, 20, 30 ]
     DefaultInterests: list = [ 
         2,
         4,
@@ -122,4 +125,3 @@ class Settings(BaseSettings):
 @lru_cache()
 def get_settings():
     return Settings()
-    
