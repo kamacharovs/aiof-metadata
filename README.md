@@ -107,6 +107,12 @@ Helpful `FastAPI` documentation
 - [Custom Response - HTML, Stream, File, others](https://fastapi.tiangolo.com/advanced/custom-response/)
 - [tiangolo/uvicorn-gunicorn-fastapi-docker](https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker)
 
+#### Pydantic
+
+Helpful `pydantic` documentation
+
+- [Typing Iterables](https://pydantic-docs.helpmanual.io/usage/types/#typing-iterables)
+
 #### Pandas
 
 Helpful `pandas` documentation
