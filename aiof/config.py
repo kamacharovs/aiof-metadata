@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     DefaultChild: int = os.getenv("DefaultChild", 2)
 
     DefaultYears: List[int] = [ 2, 5, 10, 20, 30 ]
+    DefaultShortYears: List[int] = [ 5, 10, 30 ]
     DefaultInterests: list = [ 
         2,
         4,

@@ -6,9 +6,10 @@ from aiof.data.liability import Liability
 
 
 class Analytics(BaseModel):
-    diff: Optional[float]
-    cashToCcRation: Optional[float]
-    ccToCashRatio: Optional[float]
+    diff: Optional[float] = None
+    cashToCcRation: Optional[float] = None
+    ccToCashRatio: Optional[float] = None
+    assetsFv: Optional[List[dict]] = None
 
 
 class AssetsLiabilitiesRequest(BaseModel):

@@ -19,7 +19,7 @@ _settings = config.get_settings()
 _round_dig = _settings.DefaultRoundingDigit
 _average_bank_interest = _settings.DefaultAverageBankInterest
 _average_market_interest = _settings.DefaultInterest
-_years = _settings.DefaultYears
+_years = _settings.DefaultShortYears
 
 
 def analyze(
@@ -50,8 +50,8 @@ def analyze(
     analytics.diff = round(diff, _round_dig)
 
     # If the asset is cash, then assume it's sitting in a bank account with an average interest
-    assets_fv(assets)
-    
+    analytics.assetsFv = assets_fv(assets)
+
     return AssetsLiabilities(
         assets=assets_values,
         liabilities=liabilities_values,
@@ -65,26 +65,22 @@ def analyze(
 
 def assets_fv(
     assets: List[Asset]):
-    to_return_obj = []
+    fv = []
     for year in _years:
-        fv_obj = []
         for asset in assets:
-            fv_asset = 0.0
+            interest = 0.0
             if (asset.type == "cash"):
-                fv_asset = helpers.fv(interest=_average_bank_interest, years=year, pmt=0, pv=asset.value)
+                interest = _average_bank_interest
             elif (asset.type == "stock"):
-                fv_asset = helpers.fv(interest=_average_market_interest, years=year, pmt=0, pv=asset.value)
-            fv_obj.append(
+                interest = _average_market_interest
+            fv_asset = helpers.fv(interest=interest, years=year, pmt=0, pv=asset.value)
+            fv.append(
                 {
+                    "year": year,
                     "type": asset.type,
+                    "interest": interest,
                     "pv": asset.value,
-                    "fv": fv_asset
+                    "fv": round(fv_asset, _round_dig)
                 })
-        
-        to_return_obj.append(
-            {
-                "year": year,
-                "fvs": fv_obj
-            })
-    print(to_return_obj)
+    return fv
                 
