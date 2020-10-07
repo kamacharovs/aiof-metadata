@@ -36,7 +36,7 @@ class HelpersTestCase(unittest.TestCase):
 
 
     def test_compound_interest(self):
-        assert compound_interest_calc(1000, 5, 8) > 1000
+        assert compound_interest_calc(1000, 5, 8) > 0
 
     def test_compound_interest_all_frequencies(self):
         frequencies = [
@@ -47,7 +47,7 @@ class HelpersTestCase(unittest.TestCase):
             "yearly"
         ]
         for f in frequencies:
-            assert compound_interest_calc(1000, 5, 8) > 1000
+            assert compound_interest_calc(1000, 5, 8) > 0
 
 
     
@@ -98,8 +98,13 @@ class HelpersTestCase(unittest.TestCase):
 
 
 
-    def test_future_value_calc_calc(self):
-        assert round(future_value_calc(1000, 2, 5), 2) == 5204.04
+    def test_fv_calc(self):
+        asset_fv = fv(
+            interest=5,
+            years=5,
+            pmt=0,
+            pv=5000)
+        assert round(asset_fv, 2) == 6416.79
 
 
 if __name__ == "__main__":
