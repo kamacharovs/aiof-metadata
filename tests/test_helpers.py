@@ -24,7 +24,6 @@ class HelpersTestCase(unittest.TestCase):
         with self.assertRaises(Exception): convert_frequency("test")
 
 
-
     def test_to_percentage_80(self):
         assert to_percentage(80) == 0.8
     def test_to_percentage_5(self):
@@ -32,7 +31,6 @@ class HelpersTestCase(unittest.TestCase):
 
     def test_to_percentage_raises_exception(self):
         with self.assertRaises(Exception): to_percentage(200)
-
 
 
     def test_compound_interest(self):
@@ -48,7 +46,6 @@ class HelpersTestCase(unittest.TestCase):
         ]
         for f in frequencies:
             assert compound_interest_calc(1000, 5, 8) > 0
-
 
     
     def test_loan_payments_calc_monthly(self):
@@ -80,15 +77,12 @@ class HelpersTestCase(unittest.TestCase):
         payments_df = loan_payments_calc_as_table(30000, 6, 4.5)
 
 
-
     def test_simple_interest_calc(self):
         assert simple_interest_calc(1000, 15, 5) == 7.5
-
 
     
     def test_equated_monthly_installment_calc(self):
         assert equated_monthly_installment_calc(1000, 7.5, 36) > 0
-
 
 
     def test_doubling_time_with_continuous_compounding_6_percent(self):
@@ -97,14 +91,27 @@ class HelpersTestCase(unittest.TestCase):
         assert round(doubling_time_with_continuous_compounding(10), 2) == 6.93
 
 
-
-    def test_fv_calc(self):
-        asset_fv = fv(
+    def test_fv(self):
+        fv_res = fv(
             interest=5,
             years=5,
             pmt=0,
             pv=5000)
-        assert round(asset_fv, 2) == 6416.79
+        assert round(fv_res, 2) == 6416.79
+    def test_fv_with_pmt(self):
+        fv_res = fv(
+            interest=5,
+            years=5,
+            pmt=250,
+            pv=5000)
+        assert round(fv_res, 2) > 6416.79
+    def test_fv_small_interest(self):
+        fv_res = fv(
+            interest=0.01,
+            years=2,
+            pmt=0,
+            pv=5000)
+        assert round(fv_res, 2) > 5000
 
 
 if __name__ == "__main__":
