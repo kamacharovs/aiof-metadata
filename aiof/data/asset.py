@@ -25,6 +25,13 @@ class Asset(BaseModel):
     def add(self, value):
         self.value + value
 
+class AssetFv(BaseModel):
+    year: Optional[int]
+    type: Optional[str]
+    interest: Optional[float]
+    pv: Optional[float]
+    fv: Optional[float]
+
 
 class ComparableAsset(BaseModel):
     name: Optional[str]

@@ -5,7 +5,7 @@ import aiof.config as config
 import aiof.helpers as helpers
 
 from aiof.data.analytics import Analytics, AssetsLiabilities
-from aiof.data.asset import Asset
+from aiof.data.asset import Asset, AssetFv
 from aiof.data.liability import Liability
 
 from typing import List
@@ -65,7 +65,7 @@ def analyze(
 
 def assets_fv(
     assets: List[Asset]):
-    fv = []
+    asset_fvs = []
     for year in _years:
         for asset in assets:
             interest = 0.0
@@ -74,13 +74,14 @@ def assets_fv(
             elif (asset.type == "stock"):
                 interest = _average_market_interest
             fv_asset = helpers.fv(interest=interest, years=year, pmt=0, pv=asset.value)
-            fv.append(
-                {
-                    "year": year,
-                    "type": asset.type,
-                    "interest": interest,
-                    "pv": asset.value,
-                    "fv": round(fv_asset, _round_dig)
-                })
-    return fv
+            asset_fvs.append(
+                AssetFv(
+                    year=year,
+                    type=asset.type,
+                    interest=interest,
+                    pv=asset.value,
+                    fv=round(fv_asset, _round_dig)
+                )
+            )
+    return asset_fvs
                 
