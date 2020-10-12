@@ -1,6 +1,8 @@
 import os
 
 from pydantic import BaseSettings
+from typing import Optional, List
+from functools import lru_cache
 
 
 class Settings(BaseSettings):
@@ -8,10 +10,13 @@ class Settings(BaseSettings):
     DefaultFrequency: int = os.getenv("DefaultFrequency", 12)
     DefaultInterest: float = os.getenv("DefaultInterest", 7)
     DefaultHysInterest: float = os.getenv("DefaultHysInterest", 1.75)
+    DefaultAverageBankInterest: float = os.getenv("DefaultAverageBankInterest", 0.06)
     DefaultInvestmentFee: float = os.getenv("DefaultFee", 0.50)
     DefaultTaxDrag: float = os.getenv("DefaultTaxDrag", 0.50)
     DefaultChild: int = os.getenv("DefaultChild", 2)
 
+    DefaultYears: List[int] = [ 2, 5, 10, 20, 30 ]
+    DefaultShortYears: List[int] = [ 5, 10, 30 ]
     DefaultInterests: list = [ 
         2,
         4,
@@ -38,6 +43,21 @@ class Settings(BaseSettings):
         3,
         4
     ]
+    
+    Frequencies: dict = {
+        "daily": 365,
+        "monthly": 12,
+        "quarterly": 4,
+        "half-year": 2,
+        "yearly": 1
+    }
+    FrequenciesMap: dict = {
+        "daily": "day",
+        "monthly": "month",
+        "quarterly": "quarter",
+        "half-year": "half-year",
+        "yearly": "year"
+    }
 
     # FI specific
     DefaultTenMillion: list = [
@@ -79,3 +99,30 @@ class Settings(BaseSettings):
         "*"
     ]
 
+
+    # Asset
+    AssetTypes = [
+        "cash",
+        "car",
+        "house",
+        "investment",
+        "stock",
+        "other"
+    ]
+
+    # Liability
+    LiabilityTypes = [
+        "personal loan",
+        "car loan",
+        "student loan",
+        "credit card",
+        "mortgage",
+        "house renovation",
+        "rv",
+        "other"
+    ]
+
+
+@lru_cache()
+def get_settings():
+    return Settings()

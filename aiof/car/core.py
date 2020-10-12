@@ -13,4 +13,8 @@ def loan_calc_internal(
     principal_amount, 
     number_of_months,
     rate_of_interest):
-    return helpers.loan_payments_calc(principal_amount, number_of_months / 12, rate_of_interest, frequency="monthly")
+    return helpers.loan_payments_calc(
+        principal_amount, 
+        number_of_months / 12, 
+        rate_of_interest, 
+        frequency="monthly")

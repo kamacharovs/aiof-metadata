@@ -19,6 +19,7 @@ API endpoinds available are
 /api/fi/rule/of/72
 /api/fi/ten/million/dream/{monthlyInvestment}
 /api/fi/investment/fees/effect
+/api/fi/savings/rate
 ```
 
 ### Asset
@@ -33,12 +34,11 @@ API endpoints available are
 
 ## How to run it
 
-In order to run the API locally, you would first need to run the `.\setup.py` script, if it hasn't been setup locally before. Afterwards, you need to change the directory to the `.\api` one and run it via `uvicorn`
+In order to run the API locally, you would first need to run the `python .\setup.py develop` script, if it hasn't been setup locally before. Afterwards, start the API via `uvicorn`
 
 ```powershell
 python .\setup.py develop
-cd .\api
-uvicorn api:app
+uvicorn api.main:app
 ```
 
 ### Docker
@@ -102,10 +102,17 @@ Overall documentation
 Helpful `FastAPI` documentation
 
 - [Settings and Environment Variables](https://fastapi.tiangolo.com/advanced/settings/)
+- [Bigger Applications - Multiple Files](https://fastapi.tiangolo.com/tutorial/bigger-applications/)
 - [Dependencies - First Steps](https://fastapi.tiangolo.com/tutorial/dependencies/)
 - [Concurrency and async / await](https://fastapi.tiangolo.com/async/)
 - [Custom Response - HTML, Stream, File, others](https://fastapi.tiangolo.com/advanced/custom-response/)
 - [tiangolo/uvicorn-gunicorn-fastapi-docker](https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker)
+
+#### Pydantic
+
+Helpful `pydantic` documentation
+
+- [Typing Iterables](https://pydantic-docs.helpmanual.io/usage/types/#typing-iterables)
 
 #### Pandas
 
@@ -118,3 +125,5 @@ Helpful `pandas` documentation
 Helpful `python` documentation
 
 - [Dependency injection and inversion of control in Python](http://python-dependency-injector.ets-labs.org/introduction/di_in_python.html)
+- [Lambda, Map, and Filter in Python](https://medium.com/better-programming/lambda-map-and-filter-in-python-4935f248593)
+- [numpydoc docstring guide¶](https://numpydoc.readthedocs.io/en/latest/format.html#numpydoc-docstring-guide)

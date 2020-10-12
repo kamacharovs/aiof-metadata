@@ -15,21 +15,22 @@ _default_taxDrag = 0
 _default_contribution = 500
 
 
-class Asset:
-    _types = [
-        "car",
-        "house",
-        "boat",
-        "stock",
-        "investment property",
-        "cash",
-        "other"
-    ]
+class Asset(BaseModel):
+    name: Optional[str]
+    type: str
+    value: float
 
-    def __init__(self, name, type, value):
-        self.name = name
-        self.type = type if type in self._types else "other"
-        self.value = value
+    def subtract(self, value):
+        self.value - value
+    def add(self, value):
+        self.value + value
+
+class AssetFv(BaseModel):
+    year: Optional[int]
+    type: Optional[str]
+    interest: Optional[float]
+    pv: Optional[float]
+    fv: Optional[float]
 
 
 class ComparableAsset(BaseModel):

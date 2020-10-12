@@ -1,3 +1,7 @@
+from pydantic import BaseModel
+from typing import Optional
+
+
 # Anything that you are paying interest on:
 #   - Credit card
 #   - Student loans
@@ -8,19 +12,7 @@
 #   - Any personal loan
 #   - Etc.
 
-class Liability:
-    _types = [
-        "credit card",
-        "car loan",
-        "mortgage",
-        "house renovation",
-        "rv",
-        "personal loan",
-        "loan",
-        "other"
-    ]
-
-    def __init__(self, name, type, value):
-        self.name = name
-        self.type = type if type in self._types else "other"
-        self.value = value
+class Liability(BaseModel):
+    name: Optional[str]
+    type: Optional[str]
+    value: float
