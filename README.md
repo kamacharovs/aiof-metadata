@@ -126,3 +126,4 @@ Helpful `python` documentation
 
 - [Dependency injection and inversion of control in Python](http://python-dependency-injector.ets-labs.org/introduction/di_in_python.html)
 - [Lambda, Map, and Filter in Python](https://medium.com/better-programming/lambda-map-and-filter-in-python-4935f248593)
+- [numpydoc docstring guide¶](https://numpydoc.readthedocs.io/en/latest/format.html#numpydoc-docstring-guide)

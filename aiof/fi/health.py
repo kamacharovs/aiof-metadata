@@ -12,6 +12,23 @@ def bmi_imperial(
     weight: float,
     feet: float,
     inches: float):
+    """
+    Calculate your BMI (Body Mass Index) given one's weight (lbs), feet and inches
+
+    Parameters
+    ----------
+    `weight` : float or None
+        one's weight in lbs. Defaults to 165
+    `feet` : float or None
+        one's feet height. Defaults to 6
+    `inches` : float or None
+        one's inches height. Defaults to 0
+
+    Returns
+    -------
+    `float`
+        The BMI (Body Mass Index)
+    """
     weight = weight if weight is not None else 165
     feet = feet if feet is not None else 6
     inches = inches if inches is not None else 0
@@ -24,6 +41,21 @@ def bmi_imperial(
 def bmi_metric(
     weight: float,
     height: float):
+    """
+    Calculate your BMI (Body Mass Index) given one's weight and height
+
+    Parameters
+    ----------
+    `weight` : float or None
+        one's weight in kgs. Defaults to 75
+    `height` : float or None
+        one's height in cms. Defaults to 183
+
+    Returns
+    -------
+    `float`
+        The BMI (Body Mass Index)
+    """
     weight = weight if weight is not None else 75
     height = height if height is not None else 183
 
