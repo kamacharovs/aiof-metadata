@@ -3,8 +3,9 @@ import json
 
 from aiof.fi.core import *
 
+
 class FiTestCase(unittest.TestCase):
-    """Fi unit tests"""
+    """Fi core unit tests"""
 
     _starting_amount = 350000
     _monthly_investment = 7000
