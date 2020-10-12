@@ -13,16 +13,16 @@ def bmi_imperial(
     feet: float,
     inches: float):
     """
-    Calculate your BMI (Body Mass Index) given one's weight (lbs), feet and inches
+    Calculate one's BMI (Body Mass Index) given one's weight (lbs), feet and inches
 
     Parameters
     ----------
-    `weight` : float or None
-        one's weight in lbs. Defaults to 165
-    `feet` : float or None
-        one's feet height. Defaults to 6
-    `inches` : float or None
-        one's inches height. Defaults to 0
+    `weight` : float or None.
+        one's weight in lbs. defaults to `165`\n
+    `feet` : float or None.
+        one's feet height. defaults to `6`\n
+    `inches` : float or None.
+        one's inches height. defaults to `0`
 
     Returns
     -------
@@ -42,14 +42,14 @@ def bmi_metric(
     weight: float,
     height: float):
     """
-    Calculate your BMI (Body Mass Index) given one's weight and height
+    Calculate one's BMI (Body Mass Index) given one's weight and height
 
     Parameters
     ----------
-    `weight` : float or None
-        one's weight in kgs. Defaults to 75
+    `weight` : float or None.
+        one's weight in kgs. defaults to `75`\n
     `height` : float or None
-        one's height in cms. Defaults to 183
+        one's height in cms. defaults to `183`
 
     Returns
     -------
@@ -61,4 +61,3 @@ def bmi_metric(
 
     bmi = weight / ((height * height) / 10000)
     return round(bmi, _round_dig)
-    

@@ -413,15 +413,30 @@ def investment_fees_effect(
     }
 
 
-# Cost of raising children
-# This calculator was designed to give you a rough idea of the financial implications of raising children. 
-# It is loosely based on the Department of Agriculture’s estimates of raising a child to age 18
-# https://www.physicianonfire.com/calculators/cost-of-raising-children/
 def cost_of_raising_children(
-    annual_expenses_start,
-    annual_expenses_increment,
-    children,
-    interests):
+    annual_expenses_start: float,
+    annual_expenses_increment: float,
+    children: list,
+    interests: list):
+    """
+    This calculator was designed to give you a rough idea of the financial implications of raising children. 
+    It is loosely based on the Department of Agriculture’s estimates of raising a child to age 18
+
+    Parameters
+    ----------
+    `annual_expenses_start` : float or None.
+        annual expenses start per child. defaults to `5,000`\n
+    `annual_expenses_increment` : float or None.
+        annual expenses increment per child. defaults to `5,000`\n
+    `children` : list or None.
+        the number of children for which to calculate the cost of raising. defaults to `[1,2,3,4]`\n
+    `interests` : list or None.
+        the interest rates at which to calculate the opportunity cost. defaults to `[2,4,6,8]`
+
+    Notes
+    ----------
+    Based on Physician on FIRE's calculator: https://www.physicianonfire.com/calculators/cost-of-raising-children/
+    """
     annual_expenses_start = annual_expenses_start if annual_expenses_start is not None else 5000
     annual_expenses_increment = annual_expenses_increment if annual_expenses_increment is not None else 4000
     children = children if children is not None else _children
@@ -506,31 +521,33 @@ def cost_of_raising_children_faimilies():
     return families_obj
 
 
-# Savings rate
-# don’t think there’s a right or a wrong way to calculate your savings, this is just a tool to give you a better idea of how much you are saving (and spending) each year.
-# Spending is calculated automatically. It assumes that all dollars unaccounted for elsewhere are spent, so this savings calculator doubles as a spending calculator
-# NOTE: assumes future spending requirements equals this year's spending
-# https://www.physicianonfire.com/calculators/savings-calculator/
 def savings_rate(
-    salary,
-    match_and_profit_sharing,
-    federal_income_tax,
-    state_income_tax,
-    fica,
-    health_and_dental_insurance,
-    other_deductible_benefits,
-    hsa_investment,
-    four_oh_one_k_or_four_oh_three_b,
-    four_five_seven_b,
-    sep_ira,
-    other_tax_deferred,
-    roth_ira,
-    taxable_account,
-    education,
-    mortgage_principal,
-    student_loan_principal,
-    other_post_tax_investment,
-    current_nest_egg):
+    salary: float,
+    match_and_profit_sharing: float,
+    federal_income_tax: float,
+    state_income_tax: float,
+    fica: float,
+    health_and_dental_insurance: float,
+    other_deductible_benefits: float,
+    hsa_investment: float,
+    four_oh_one_k_or_four_oh_three_b: float,
+    four_five_seven_b: float,
+    sep_ira: float,
+    other_tax_deferred: float,
+    roth_ira: float,
+    taxable_account: float,
+    education: float,
+    mortgage_principal: float,
+    student_loan_principal: float,
+    other_post_tax_investment: float,
+    current_nest_egg: float):
+    """
+    Calculate one's savings rate
+
+    Notes
+    ----------
+    Based on Physician on FIRE's calculator: https://www.physicianonfire.com/calculators/savings-calculator/
+    """
     salary = salary if salary is not None else 300000
     match_and_profit_sharing = match_and_profit_sharing if match_and_profit_sharing is not None else 20000
     federal_income_tax = federal_income_tax if federal_income_tax is not None else 50000
