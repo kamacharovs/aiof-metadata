@@ -8,7 +8,7 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-@router.post("/analyze", tags=["car"])
+@router.post("/analyze")
 async def analyze(req: AssetsLiabilitiesRequest):
     return a.analyze(
         assets=req.assets,
