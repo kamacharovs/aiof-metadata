@@ -24,6 +24,11 @@ app.add_middleware(
 )
 
 
+@app.get("/health")
+async def health_check():
+    return "Healthy"
+
+
 @app.post("/api/asset/breakdown")
 async def asset_breakdown(asset: ComparableAsset):
     return helpers.asset_breakdown(asset)
