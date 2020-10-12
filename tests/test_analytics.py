@@ -23,8 +23,8 @@ class AnalyticsTestCase(unittest.TestCase):
         assets_fv_res = assets_fv(assets=self.test_assets)
         
         assert len(assets_fv_res) > 0
-        assert assets_fv_res[0]["year"] > 0
-        assert assets_fv_res[0]["type"] == "cash" or "stock"
-        assert assets_fv_res[0]["interest"] > 0
-        assert assets_fv_res[0]["pv"] == self.test_assets[0].value
-        assert assets_fv_res[0]["fv"] > self.test_assets[0].value
+        assert assets_fv_res[0].year > 0
+        assert assets_fv_res[0].type == "cash" or "stock"
+        assert assets_fv_res[0].interest > 0
+        assert assets_fv_res[0].pv == self.test_assets[0].value
+        assert assets_fv_res[0].fv > self.test_assets[0].value
