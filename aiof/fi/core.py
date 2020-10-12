@@ -19,13 +19,29 @@ _ten_million_interests = _settings.DefaultTenMillionInterests
 # Financial Indepdence (FI) core
 
 
-# Based on Physician on FIRE calculator
-# https://www.physicianonfire.com/timetofi/
 def time_to_fi(
-    starting_amount,
-    monthly_investment,
-    desired_years_expenses_for_fi,
-    desired_annual_spending):
+    starting_amount: float,
+    monthly_investment: float,
+    desired_years_expenses_for_fi: int,
+    desired_annual_spending: float):
+    """
+    Find out how many years you have left in your path to FI (financial independence) at various real returns on your investments
+
+    Parameters
+    ----------
+    `starting_amount` : float or None.
+        starting amount. defaults to `800,000`\n
+    `monthly_investment` : float or None.
+        monthly investment over the years. defaults to `5,000`\n
+    `desired_years_expenses_for_fi` : int or None.
+        desired years of expenses after one retires. defaults to `25`\n
+    `desired_annual_spending` : float or None.
+        desired annual spending amount after one retires. defaults to `100,000`
+
+    Notes
+    ----------
+    Based on Physician on FIRE's calculator: https://www.physicianonfire.com/timetofi/
+    """
     starting_amount = starting_amount if starting_amount is not None else 800000
     monthly_investment = monthly_investment if monthly_investment is not None else 5000
     desired_years_expenses_for_fi = desired_years_expenses_for_fi if desired_years_expenses_for_fi is not None else 25
@@ -59,12 +75,23 @@ def time_to_fi(
     }
 
 
-# Rule of 72
-# Based on Physician on FIRE calculator
-# https://www.physicianonfire.com/calculators/72calculator/
 def rule_of_72(
-    starting_amount,
-    interest):
+    starting_amount: float,
+    interest: float):
+    """
+    Estimates how long a lump sum of money will take to double. As a bonus, the Rule of 114 for tripling your money, and the Rule of 144 for quadrupling your money are included
+
+    Parameters
+    ----------
+    `starting_amount` : float or None.
+        starting amount. defaults to `100,000`\n
+    `interest` : float or None.
+        interest rate. defaults to `8`
+
+    Notes
+    ----------
+    Based on Physician on FIRE's calculator: https://www.physicianonfire.com/calculators/72calculator/
+    """
     starting_amount = round(starting_amount) if starting_amount is not None else 100000
     interest = interest if interest is not None else 8
 
@@ -90,12 +117,23 @@ def rule_of_72(
     return years_obj
 
 
-# Added time to FI
-# This calculator was designed to help you determine how much an additional expense (such as having children) can add to your FI timeline.
-# Plug in the grand total of the additional expense and the amount you invest monthly to cover it
 def added_time_to_fi(
-    monthly_investment,
-    total_additional_expense):
+    monthly_investment: float,
+    total_additional_expense: float):
+    """
+    Determine how much an additional expense (such as having children) can add to your FI (financial independence) timeline
+
+    Parameters
+    ----------
+    `monthly_investment` : float or None.
+        monthly investment over the years. defaults to `10,000`\n
+    `total_additional_expense` : float or None.
+        total additional expense. defaults to `422,000`
+
+    Notes
+    ----------
+    Based on Physician on FIRE's calculator: https://www.physicianonfire.com/calculators/added-time-fi-calculator/
+    """
     monthly_investment = round(monthly_investment) if monthly_investment is not None else 10000
     total_additional_expense = round(total_additional_expense) if total_additional_expense is not None else 422000
 
@@ -121,10 +159,21 @@ def added_time_to_fi(
     }
 
 
-# $10m dream
-# This calculator, developed in the post about Dr. F’s $10 Million dream, will determine the number of years to reach a savings goal based on a variety of market returns
-# https://www.physicianonfire.com/calculators/10-million-dream/
-def ten_million_dream(monthly_investment):
+def ten_million_dream(monthly_investment: float):
+    """
+    Determine the number of years to reach a savings goal based on a variety of market returns
+
+    Parameters
+    ----------
+    `monthly_investment` : float or None.
+        monthly investment over the years. defaults to `10,000`
+
+    Notes
+    ----------
+    Based on Physician on FIRE's calculator: https://www.physicianonfire.com/calculators/10-million-dream/
+    """
+    monthly_investment = monthly_investment if monthly_investment is not None else 10000
+
     ten_million_obj = []
     for million in _ten_million:
         million_interests_obj = []
@@ -146,19 +195,36 @@ def ten_million_dream(monthly_investment):
     return ten_million_obj
 
 
-# Compound interest
-# Enter your data in the white cells. Six results are displayed representing daily, monthly, and annual compounding, with additions made at the beginning or end of the day, month or year
-# https://www.physicianonfire.com/calculators/compound/
-#
-# investment_fees : Including expense ratios, fund loads, AUM fees, etc… (0.1% to 3%)
-# tax_drag        : For taxable account only (typical range of 0.3% to 1%)
 def compound_interest(
-    starting_amount,
-    monthly_investment,
-    interest_rate,
-    number_of_years,
-    investment_fees,
-    tax_drag):
+    starting_amount: float,
+    monthly_investment: float,
+    interest_rate: float,
+    number_of_years: int,
+    investment_fees: float,
+    tax_drag: float):
+    """
+    Compound interest calculator. Results are displayed representing daily, monthly, and annual compounding, 
+    with additions made at the beginning or end of the day, month or year
+
+    Parameters
+    ----------
+    `starting_amount` : float or None.
+        starting amount. defaults to `0`\n
+    `monthly_investment` : float or None.
+        monthly investment over the years. defaults to `5,000`\n
+    `interest_rate` : float or None.
+        interest rate at which the compounding is calculated. defaults to `7`\n
+    `number_of_years` : int or None.
+        number of years for which the compounding is calculated. defaults to `25`\n
+    `investment_fees` : float or None.
+        investment fees (if any) to subtract from the interest rate. defaults to `0.50`\n
+    `tax_drag` : float or None.
+        tax drag (if any) to subtract from the interest rate. defaults to `0.50`
+
+    Notes
+    ----------
+    Based on Physician on FIRE's calculator: https://www.physicianonfire.com/calculators/compound/
+    """
     starting_amount = starting_amount if starting_amount is not None else 0
     monthly_investment = monthly_investment if monthly_investment is not None else 5000
     interest_rate = interest_rate if interest_rate is not None else 7
@@ -187,18 +253,39 @@ def compound_interest(
     return compound_interest_obj
 
 
-# Investment Fees effect
-# Enter your data in the gray boxes. If you enter your withdrawal (spending) for the initial decade, the calculator will assume 25% increases for the two decades that follow, 
-# then spending is held steady. You may enter your own assumptions for each decade if you prefer
-# https://www.physicianonfire.com/calculators/fees-effect-calculator/
 def investment_fees_effect(
-    age_at_career_start,
-    interest_return_while_working,
-    interest_return_while_retired,
-    tax_drag,
-    annual_savings_1_decade,
-    annual_savings_2_decade,
-    annual_withdrawal_3_decade):
+    age_at_career_start: int,
+    interest_return_while_working: float,
+    interest_return_while_retired: float,
+    tax_drag: float,
+    annual_savings_1_decade: float,
+    annual_savings_2_decade: float,
+    annual_withdrawal_3_decade: float):
+    """
+    Effects of investment fees
+
+    Parameters
+    ----------
+    `age_at_career_start` : int or None.
+        age at which one's career has started. defaults to `32`\n
+    `interest_return_while_working` : float or None.
+        interest rate while one is working. defaults to `8`\n
+    `interest_return_while_retired` : float or None.
+        interest rate while one is retired. defaults to `5`\n
+    `tax_drag` : float or None.
+        tax drag (if any) to subtract from the interest rate. defaults to `0.30`\n
+    `annual_savings_1_decade` : float or None.
+        the amount of savings in the 1st decade of working. defaults to `50,000`\n
+    `annual_savings_2_decade` : float or None.
+        the amount of savings in the 2nd decade of working. defaults to `100,000`\n
+    `annual_withdrawal_3_decade` : float or None.
+        the amount of withdrawal in the 3rd decade of retirement. the other decades are calculated accordingly - 
+        additional percentages. defaults to `70,000`\n
+
+    Notes
+    ----------
+    Based on Physician on FIRE's calculator: https://www.physicianonfire.com/calculators/fees-effect-calculator/
+    """
     age_at_career_start = age_at_career_start if age_at_career_start is not None else 32
     interest_return_while_working = interest_return_while_working if interest_return_while_working is not None else 8
     interest_return_while_retired = interest_return_while_retired if interest_return_while_retired is not None else 5

@@ -61,3 +61,4 @@ def bmi_metric(
 
     bmi = weight / ((height * height) / 10000)
     return round(bmi, _round_dig)
+    
