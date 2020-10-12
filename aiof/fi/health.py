@@ -9,9 +9,9 @@ _round_dig = _settings.DefaultRoundingDigit
 # Staying fit and healthy for a longer & better retirement
 
 def bmi_imperial(
-    weight,
-    feet,
-    inches):
+    weight: float,
+    feet: float,
+    inches: float):
     weight = weight if weight is not None else 165
     feet = feet if feet is not None else 6
     inches = inches if inches is not None else 0
@@ -22,8 +22,8 @@ def bmi_imperial(
 
 
 def bmi_metric(
-    weight,
-    height):
+    weight: float,
+    height: float):
     weight = weight if weight is not None else 75
     height = height if height is not None else 183
 

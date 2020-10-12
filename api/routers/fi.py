@@ -1,4 +1,5 @@
 import aiof.fi.core as fi
+import aiof.fi.health as fihealth
 
 from aiof.data.fi import *
 
@@ -79,3 +80,19 @@ async def savings_rate(req: SavingsRate):
         req.studentLoanPrincipal,
         req.otherPostTaxInvestment,
         req.currentNestEgg)
+
+
+@router.post("/health/bmi/imperial")
+async def bmi_imperial(req: BmiImperial):
+    return fihealth.bmi_imperial(
+        weight=req.weight,
+        feet=req.feet,
+        inches=req.inches
+    )
+
+@router.post("/health/bmi/metric")
+async def bmi_metric(req: BmiMetric):
+    return fihealth.bmi_metric(
+        weight=req.weight,
+        height=req.height
+    )

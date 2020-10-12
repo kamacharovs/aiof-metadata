@@ -59,3 +59,13 @@ class SavingsRate(BaseModel):
     studentLoanPrincipal: Optional[float] = None
     otherPostTaxInvestment: Optional[float] = None
     currentNestEgg: Optional[float] = None
+
+
+class BmiImperial(BaseModel):
+    weight: float
+    feet: float
+    inches: float
+
+class BmiMetric(BaseModel):
+    weight: float
+    height: float
