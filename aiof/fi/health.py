@@ -29,7 +29,3 @@ def bmi_metric(
 
     bmi = weight / ((height * height) / 10000)
     return round(bmi, _round_dig)
-
-
-if __name__ == "__main__":
-    print(bmi_imperial(None, None, None))

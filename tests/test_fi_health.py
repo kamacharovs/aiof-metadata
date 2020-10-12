@@ -7,8 +7,6 @@ from aiof.fi.health import bmi_imperial, bmi_metric
 class FiHealthTestCase(unittest.TestCase):
     """Fi health unit tests"""
 
-    _starting_amount = 350000
-
 
     def test_bmi_imperial_defaults(self):
         bmi = bmi_imperial(
