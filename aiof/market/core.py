@@ -1,5 +1,8 @@
+import warnings
 import numpy as np
 import pandas as pd
+
+warnings.simplefilter(action="ignore", category=FutureWarning)
 
 import pandas_datareader as pdr
 import pandas_datareader.data as web
