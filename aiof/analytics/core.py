@@ -89,6 +89,16 @@ def assets_fv(
 def debt_to_income_ratio_calc(
     income: float,
     liabilities: List[Liability]) -> float:
+    """
+    Calculate your debt to income ratio
+
+    Parameters
+    ----------
+    `income` : float. 
+        annual income\n
+    `liabilities` : List[Liability].
+        list of liabilities that will be used to calculate your debt to income ratio\n
+    """
     acceptable_liability_types = [
         "personal loan",
         "student loan"
@@ -111,4 +121,14 @@ def debt_to_income_ratio_calc(
 def debt_to_income_ratio_basic_calc(
     income: float,
     total_monthly_debt_payments: float) -> float:
+    """
+    Calculate your debt to income ratio
+
+    Parameters
+    ----------
+    `income` : float. 
+        annual income\n
+    `total_monthly_debt_payments` : float.
+        total monthly debt payments. usually include credit cards, personal loan, student loan, etc.\n
+    """
     return ((total_monthly_debt_payments * 12) / income) * 100

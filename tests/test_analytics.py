@@ -20,17 +20,17 @@ class AnalyticsTestCase(unittest.TestCase):
             value=24999)
     ]
     test_liabilities = [
-        Liability(name="l 1",
+        Liability(name="l1",
             type="personal loan",
             value=1685.50,
             years=5,
             monthlyPayment=35),
-        Liability(name="l 2",
+        Liability(name="l2",
             type="student loan",
             value=25000,
             years=10,
             monthlyPayment=208),
-        Liability(name="l 3",
+        Liability(name="l3",
             type="car loan",
             value=34000,
             years=6,
