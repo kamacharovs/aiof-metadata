@@ -24,7 +24,7 @@ _years = _settings.DefaultShortYears
 
 def analyze(
     assets: List[Asset],
-    liabilities: List[Liability]):
+    liabilities: List[Liability]) -> AssetsLiabilities:
     assets_values = list(map(lambda x: x.value, assets))
     liabilities_values = list(map(lambda x: x.value, liabilities))
 
@@ -85,3 +85,30 @@ def assets_fv(
             )
     return asset_fvs
                 
+
+def debt_to_income_ratio_calc(
+    income: float,
+    liabilities: List[Liability]) -> float:
+    acceptable_liability_types = [
+        "personal loan",
+        "student loan"
+    ]
+    filtered_liabilities = [x for x in liabilities if x.type.lower() in acceptable_liability_types and x.monthlyPayment is not None]
+    total_liabilities_payments = 0.0
+
+    if len(filtered_liabilities) == 0:
+        return 0.0
+
+    for liability in filtered_liabilities:
+        liability_payment = 0.0
+        if (liability.type == "personal loan" or liability.type == "student loan"):
+            liability_payment = liability.monthlyPayment
+        total_liabilities_payments += liability_payment
+
+    return debt_to_income_ratio_basic_calc(income, total_liabilities_payments)
+
+
+def debt_to_income_ratio_basic_calc(
+    income: float,
+    total_monthly_debt_payments: float) -> float:
+    return ((total_monthly_debt_payments * 12) / income) * 100
