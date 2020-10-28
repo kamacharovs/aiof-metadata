@@ -20,6 +20,7 @@ _round_dig = _settings.DefaultRoundingDigit
 _average_bank_interest = _settings.DefaultAverageBankInterest
 _average_market_interest = _settings.DefaultInterest
 _years = _settings.DefaultShortYears
+_acceptable_liability_types = _settings.AnalyticsDebtToIncomeAcceptableLiabilityTypes
 
 
 def analyze(
@@ -64,7 +65,7 @@ def analyze(
 
 
 def assets_fv(
-    assets: List[Asset]):
+    assets: List[Asset]) -> List[AssetFv]:
     asset_fvs = []
     for year in _years:
         for asset in assets:
@@ -99,17 +100,7 @@ def debt_to_income_ratio_calc(
     `liabilities` : List[Liability].
         list of liabilities that will be used to calculate your debt to income ratio\n
     """
-    acceptable_liability_types = [
-        "personal loan",
-        "student loan",
-        "auto loan",
-        "rent",
-        "mortgage",
-        "credit card",
-        "auto lease",
-        "other"
-    ]
-    filtered_liabilities = [x for x in liabilities if x.type.lower() in acceptable_liability_types and x.monthlyPayment is not None]
+    filtered_liabilities = [x for x in liabilities if x.type.lower() in _acceptable_liability_types and x.monthlyPayment is not None]
 
     if len(filtered_liabilities) == 0:
         return 0.0
