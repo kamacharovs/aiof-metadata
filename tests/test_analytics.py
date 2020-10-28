@@ -39,31 +39,33 @@ class AnalyticsTestCase(unittest.TestCase):
 
 
     def test_analyze(self):
-        res = analyze(assets=self.test_assets, liabilities=self.test_liabilities)
-        assert len(res.assets) > 0
-        assert len(res.liabilities) > 0
-        assert res.assetsTotal > 0
-        assert res.assetsMean > 0
-        assert res.liabilitiesTotal > 0
-        assert res.liabilitiesMean > 0
-        assert res.analytics.diff > 0
-        assert res.analytics.cashToCcRatio > 0
-        assert len(res.analytics.assetsFv) > 0
+        resp = analyze(assets=self.test_assets, liabilities=self.test_liabilities)
+
+        assert len(resp.assets) > 0
+        assert len(resp.liabilities) > 0
+        assert resp.assetsTotal > 0
+        assert resp.assetsMean > 0
+        assert resp.liabilitiesTotal > 0
+        assert resp.liabilitiesMean > 0
+        assert resp.analytics.diff > 0
+        assert resp.analytics.cashToCcRatio > 0
+        assert len(resp.analytics.assetsFv) > 0
 
 
     def test_assets_fv(self):
-        assets_fv_res = assets_fv(assets=self.test_assets)
-        
-        assert len(assets_fv_res) > 0
-        assert assets_fv_res[0].year > 0
-        assert assets_fv_res[0].type == "cash" or "stock"
-        assert assets_fv_res[0].interest > 0
-        assert assets_fv_res[0].pv == self.test_assets[0].value
-        assert assets_fv_res[0].fv > self.test_assets[0].value
+        resp = assets_fv(assets=self.test_assets)   
+
+        assert len(resp) > 0
+        assert resp[0].year > 0
+        assert resp[0].type == "cash" or "stock"
+        assert resp[0].interest > 0
+        assert resp[0].pv == self.test_assets[0].value
+        assert resp[0].fv > self.test_assets[0].value
 
 
     def test_debt_to_income_ratio_calc_liabilities(self):
         resp = debt_to_income_ratio_calc(income=150000, liabilities=self.test_liabilities)
+
         assert resp > 0
 
     def test_debt_to_income_ratio_calc_liabilities_is_zero(self):
@@ -73,6 +75,7 @@ class AnalyticsTestCase(unittest.TestCase):
                 value=1000)
         ]
         resp = debt_to_income_ratio_calc(income=150000, liabilities=specific_liabilities)
+
         assert resp == 0
 
     def test_debt_to_income_ratio_calc_no_monthly_payment_but_years(self):
@@ -87,14 +90,17 @@ class AnalyticsTestCase(unittest.TestCase):
                 years=6)
         ]
         resp = debt_to_income_ratio_calc(income=150000, liabilities=specific_liabilities)
+
         assert resp > 0
         assert resp > 1
 
 
     def test_debt_to_income_ratio_basic_calc(self):
         resp = debt_to_income_ratio_basic_calc(income=50000, total_monthly_debt_payments=1250)
+
         assert resp > 0
 
     def test_debt_to_income_ratio_basic_calc_exact(self):
         resp = debt_to_income_ratio_basic_calc(income=1000, total_monthly_debt_payments=10)
+        
         assert round(resp) == 12
