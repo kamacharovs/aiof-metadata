@@ -18,4 +18,4 @@ class Liability(BaseModel):
     value: float
 
     years: Optional[int]
-    monthlyPayment: Optional[float]
+    monthlyPayment: Optional[float] = 0
