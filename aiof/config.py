@@ -125,6 +125,7 @@ class Settings(BaseSettings):
         "other"
     ]
 
+
     # Analytics
     AnalyticsDebtToIncomeAcceptableLiabilityTypes = [
         "personal loan",

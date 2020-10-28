@@ -107,7 +107,15 @@ def debt_to_income_ratio_calc(
     
     total_liabilities_payments = 0.0
     for liability in filtered_liabilities:
-        total_liabilities_payments += liability.monthlyPayment
+        liability_monthly_payment = 0
+
+        # Check if there are cases where .monthlyPayment is 0 and .years is there
+        # then calculate the monthly payment
+        if liability.years is not None and liability.years > 0 and liability.monthlyPayment == 0:
+            liability_monthly_payment = (liability.value / liability.years) / 12
+        else:
+            liability_monthly_payment = liability.monthlyPayment
+        total_liabilities_payments += liability_monthly_payment
 
     return debt_to_income_ratio_basic_calc(income, total_liabilities_payments)
 
