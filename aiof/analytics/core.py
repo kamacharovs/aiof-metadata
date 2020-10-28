@@ -104,11 +104,11 @@ def debt_to_income_ratio_calc(
         "student loan"
     ]
     filtered_liabilities = [x for x in liabilities if x.type.lower() in acceptable_liability_types and x.monthlyPayment is not None]
-    total_liabilities_payments = 0.0
 
     if len(filtered_liabilities) == 0:
         return 0.0
-
+    
+    total_liabilities_payments = 0.0
     for liability in filtered_liabilities:
         liability_payment = 0.0
         if (liability.type == "personal loan" or liability.type == "student loan"):
