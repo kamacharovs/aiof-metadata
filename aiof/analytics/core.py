@@ -37,15 +37,22 @@ def analyze(
 
     diff = assets_value_total - liabilities_value_total
 
-    # Total cash in Assets
     analytics = Analytics()
-    cash_assets = list(map(lambda x: x.value, filter(lambda x: x.type.lower() == "cash", assets)))
+    acceptable_assets = ["cash"]
+    acceptable_liabilitites = ["credit card"]
+
+    cash_assets = list(map(lambda x: x.value, filter(lambda x: x.type.lower() in acceptable_assets, assets)))
     total_cash_assets = sum(cash_assets)
-    cc_liabilities = list(map(lambda x: x.value, filter(lambda x: x.type.lower() == "credit card", liabilities)))
+    cc_liabilities = list(map(lambda x: x.value, filter(lambda x: x.type.lower() in acceptable_liabilitites, liabilities)))
     total_cc_liabilities = sum(cc_liabilities)
 
-    if (total_cc_liabilities > 0 and total_cash_assets > 0 and total_cash_assets > total_cc_liabilities):
-        analytics.cashToCcRation = round((total_cc_liabilities / total_cash_assets) * 100, _round_dig)
+    # Calculate cashToCcRatio or ccToCashRatio
+    if (total_cash_assets > 0 and total_cc_liabilities == 0):
+        analytics.cashToCcRatio = round(100, _round_dig)
+    elif (total_cc_liabilities > 0 and total_cash_assets == 0):
+        analytics.ccToCashRatio = round(100, _round_dig)
+    elif (total_cc_liabilities > 0 and total_cash_assets > 0 and total_cash_assets > total_cc_liabilities):
+        analytics.cashToCcRatio = round((total_cc_liabilities / total_cash_assets) * 100, _round_dig)
     elif (total_cc_liabilities > 0 and total_cash_assets > 0 and total_cash_assets < total_cc_liabilities):
         analytics.ccToCashRatio = round((total_cash_assets / total_cash_assets) * 100, _round_dig)
     analytics.diff = round(diff, _round_dig)
@@ -133,4 +140,4 @@ def debt_to_income_ratio_basic_calc(
     `total_monthly_debt_payments` : float.
         total monthly debt payments. usually include credit cards, personal loan, student loan, etc.\n
     """
-    return ((total_monthly_debt_payments * 12) / income) * 100
+    return round(((total_monthly_debt_payments * 12) / income) * 100, _round_dig)

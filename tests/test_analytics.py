@@ -2,7 +2,7 @@ import unittest
 
 from aiof.data.asset import Asset
 from aiof.data.liability import Liability
-from aiof.analytics.core import assets_fv, debt_to_income_ratio_calc, debt_to_income_ratio_basic_calc
+from aiof.analytics.core import analyze, assets_fv, debt_to_income_ratio_calc, debt_to_income_ratio_basic_calc
 
 
 class AnalyticsTestCase(unittest.TestCase):
@@ -36,6 +36,20 @@ class AnalyticsTestCase(unittest.TestCase):
             years=6,
             monthlyPayment=500)
     ]
+
+
+    def test_analyze(self):
+        res = analyze(assets=self.test_assets, liabilities=self.test_liabilities)
+        assert len(res.assets) > 0
+        assert len(res.liabilities) > 0
+        assert res.assetsTotal > 0
+        assert res.assetsMean > 0
+        assert res.liabilitiesTotal > 0
+        assert res.liabilitiesMean > 0
+        assert res.analytics.diff > 0
+        assert res.analytics.cashToCcRatio > 0
+        assert len(res.analytics.assetsFv) > 0
+
 
     def test_assets_fv(self):
         assets_fv_res = assets_fv(assets=self.test_assets)

@@ -1,15 +1,15 @@
 from pydantic import BaseModel
 from typing import Optional, List
 
-from aiof.data.asset import Asset
+from aiof.data.asset import Asset, AssetFv
 from aiof.data.liability import Liability
 
 
 class Analytics(BaseModel):
     diff: Optional[float] = None
-    cashToCcRation: Optional[float] = None
+    cashToCcRatio: Optional[float] = None
     ccToCashRatio: Optional[float] = None
-    assetsFv: Optional[List[dict]] = None
+    assetsFv: Optional[List[AssetFv]] = None
 
 
 class AssetsLiabilitiesRequest(BaseModel):
