@@ -37,6 +37,7 @@ API endpoints available are
 In order to run the API locally, you would first need to run the `python .\setup.py develop` script, if it hasn't been setup locally before. Afterwards, start the API via `uvicorn`
 
 ```powershell
+pip install -r .\requirements.txt
 python .\setup.py develop
 uvicorn api.main:app
 ```
