@@ -9,6 +9,7 @@ class Analytics(BaseModel):
     diff: Optional[float] = None
     cashToCcRatio: Optional[float] = None
     ccToCashRatio: Optional[float] = None
+    debtToIncomeRatio: Optional[float] = None
     assetsFv: Optional[List[AssetFv]] = None
 
 

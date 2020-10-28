@@ -58,7 +58,10 @@ def analyze(
     analytics.diff = round(diff, _round_dig)
 
     # If the asset is cash, then assume it's sitting in a bank account with an average interest
-    analytics.assetsFv = assets_fv(assets)
+    analytics.assetsFv = assets_fv(assets=assets)
+
+    # Debt to income ration calculation
+    analytics.debtToIncomeRatio = debt_to_income_ratio_calc(income=150000, liabilities=liabilities)
 
     return AssetsLiabilities(
         assets=assets_values,

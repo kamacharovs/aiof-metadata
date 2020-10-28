@@ -49,6 +49,7 @@ class AnalyticsTestCase(unittest.TestCase):
         assert resp.liabilitiesMean > 0
         assert resp.analytics.diff > 0
         assert resp.analytics.cashToCcRatio > 0
+        assert resp.analytics.debtToIncomeRatio > 0
         assert len(resp.analytics.assetsFv) > 0
 
 
@@ -102,5 +103,5 @@ class AnalyticsTestCase(unittest.TestCase):
 
     def test_debt_to_income_ratio_basic_calc_exact(self):
         resp = debt_to_income_ratio_basic_calc(income=1000, total_monthly_debt_payments=10)
-        
+
         assert round(resp) == 12
