@@ -1,3 +1,4 @@
+import time
 import aiof.config as config
 import aiof.helpers as helpers
 
@@ -22,14 +23,22 @@ app.add_middleware(
 )
 
 
+@app.middleware("http")
+async def log_request(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = int(round((time.time() - start_time) * 1000))
+    logger.info("Request Host={0} | Url={1} | Time={2}".format(request.client.host, request.url, str(process_time)))
+    return response
+
+
 @app.get("/health")
 async def health_check():
     return "Healthy"
 
 
 @app.post("/api/asset/breakdown")
-async def asset_breakdown(asset: ComparableAsset, request: Request):
-    logger.info("Request Host={0} | Url={1}".format(request.client.host, request.url))
+async def asset_breakdown(asset: ComparableAsset):
     return helpers.asset_breakdown(asset)
 
 @app.get("/api/asset/breakdown/csv")
