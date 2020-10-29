@@ -37,6 +37,7 @@ API endpoints available are
 In order to run the API locally, you would first need to run the `python .\setup.py develop` script, if it hasn't been setup locally before. Afterwards, start the API via `uvicorn`
 
 ```powershell
+pip install -r .\requirements.txt
 python .\setup.py develop
 uvicorn api.main:app
 ```
@@ -107,6 +108,8 @@ Helpful `FastAPI` documentation
 - [Dependencies - First Steps](https://fastapi.tiangolo.com/tutorial/dependencies/)
 - [Concurrency and async / await](https://fastapi.tiangolo.com/async/)
 - [Custom Response - HTML, Stream, File, others](https://fastapi.tiangolo.com/advanced/custom-response/)
+- [Middleware](https://fastapi.tiangolo.com/tutorial/middleware/)
+- [Handling Errors](https://fastapi.tiangolo.com/tutorial/handling-errors/)
 - [tiangolo/uvicorn-gunicorn-fastapi-docker](https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker)
 
 #### Pydantic

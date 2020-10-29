@@ -1,3 +1,4 @@
+from aiof.data.analytics import Analytics
 import os
 
 from pydantic import BaseSettings
@@ -113,12 +114,27 @@ class Settings(BaseSettings):
     # Liability
     LiabilityTypes = [
         "personal loan",
-        "car loan",
         "student loan",
+        "auto loan",
+        "auto lease",
         "credit card",
+        "rent",
         "mortgage",
         "house renovation",
         "rv",
+        "other"
+    ]
+
+
+    # Analytics
+    AnalyticsDebtToIncomeAcceptableLiabilityTypes = [
+        "personal loan",
+        "student loan",
+        "auto loan",
+        "credit card",
+        "rent",
+        "mortgage",
+        "auto lease",
         "other"
     ]
 

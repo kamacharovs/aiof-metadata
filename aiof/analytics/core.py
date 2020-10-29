@@ -7,6 +7,7 @@ import aiof.helpers as helpers
 from aiof.data.analytics import Analytics, AssetsLiabilities
 from aiof.data.asset import Asset, AssetFv
 from aiof.data.liability import Liability
+from aiof.fi.core import cost_of_raising_children
 
 from typing import List
 
@@ -20,11 +21,20 @@ _round_dig = _settings.DefaultRoundingDigit
 _average_bank_interest = _settings.DefaultAverageBankInterest
 _average_market_interest = _settings.DefaultInterest
 _years = _settings.DefaultShortYears
+_acceptable_liability_types = _settings.AnalyticsDebtToIncomeAcceptableLiabilityTypes
 
 
 def analyze(
     assets: List[Asset],
     liabilities: List[Liability]) -> AssetsLiabilities:
+    """
+    Given a list of assets and liabilities, perform analytics on them
+
+    Parameters
+    ----------
+    `assets` : List[Asset]\n
+    `liabilities` : List[Liability]
+    """
     assets_values = list(map(lambda x: x.value, assets))
     liabilities_values = list(map(lambda x: x.value, liabilities))
 
@@ -36,21 +46,31 @@ def analyze(
 
     diff = assets_value_total - liabilities_value_total
 
-    # Total cash in Assets
     analytics = Analytics()
-    cash_assets = list(map(lambda x: x.value, filter(lambda x: x.type.lower() == "cash", assets)))
+    acceptable_assets = ["cash"]
+    acceptable_liabilitites = ["credit card"]
+
+    cash_assets = list(map(lambda x: x.value, filter(lambda x: x.type.lower() in acceptable_assets, assets)))
     total_cash_assets = sum(cash_assets)
-    cc_liabilities = list(map(lambda x: x.value, filter(lambda x: x.type.lower() == "credit card", liabilities)))
+    cc_liabilities = list(map(lambda x: x.value, filter(lambda x: x.type.lower() in acceptable_liabilitites, liabilities)))
     total_cc_liabilities = sum(cc_liabilities)
 
-    if (total_cc_liabilities > 0 and total_cash_assets > 0 and total_cash_assets > total_cc_liabilities):
-        analytics.cashToCcRation = round((total_cc_liabilities / total_cash_assets) * 100, _round_dig)
+    # Calculate cashToCcRatio or ccToCashRatio
+    if (total_cash_assets > 0 and total_cc_liabilities == 0):
+        analytics.cashToCcRatio = round(100, _round_dig)
+    elif (total_cc_liabilities > 0 and total_cash_assets == 0):
+        analytics.ccToCashRatio = round(100, _round_dig)
+    elif (total_cc_liabilities > 0 and total_cash_assets > 0 and total_cash_assets > total_cc_liabilities):
+        analytics.cashToCcRatio = round((total_cc_liabilities / total_cash_assets) * 100, _round_dig)
     elif (total_cc_liabilities > 0 and total_cash_assets > 0 and total_cash_assets < total_cc_liabilities):
         analytics.ccToCashRatio = round((total_cash_assets / total_cash_assets) * 100, _round_dig)
     analytics.diff = round(diff, _round_dig)
 
     # If the asset is cash, then assume it's sitting in a bank account with an average interest
-    analytics.assetsFv = assets_fv(assets)
+    analytics.assetsFv = assets_fv(assets=assets)
+
+    # Debt to income ration calculation
+    analytics.debtToIncomeRatio = debt_to_income_ratio_calc(income=150000, liabilities=liabilities)
 
     return AssetsLiabilities(
         assets=assets_values,
@@ -64,7 +84,15 @@ def analyze(
 
 
 def assets_fv(
-    assets: List[Asset]):
+    assets: List[Asset]) -> List[AssetFv]:
+    """
+    Calculate assets' future value
+
+    Parameters
+    ----------
+    `assets` : List[Asset]. 
+        list of assets to calculate their future value
+    """
     asset_fvs = []
     for year in _years:
         for asset in assets:
@@ -90,30 +118,31 @@ def debt_to_income_ratio_calc(
     income: float,
     liabilities: List[Liability]) -> float:
     """
-    Calculate your debt to income ratio
+    Calculate debt to income ratio
 
     Parameters
     ----------
     `income` : float. 
         annual income\n
     `liabilities` : List[Liability].
-        list of liabilities that will be used to calculate your debt to income ratio\n
+        list of liabilities that will be used to calculate debt to income ratio\n
     """
-    acceptable_liability_types = [
-        "personal loan",
-        "student loan"
-    ]
-    filtered_liabilities = [x for x in liabilities if x.type.lower() in acceptable_liability_types and x.monthlyPayment is not None]
-    total_liabilities_payments = 0.0
+    filtered_liabilities = [x for x in liabilities if x.type.lower() in _acceptable_liability_types and x.monthlyPayment is not None]
 
     if len(filtered_liabilities) == 0:
         return 0.0
-
+    
+    total_liabilities_payments = 0.0
     for liability in filtered_liabilities:
-        liability_payment = 0.0
-        if (liability.type == "personal loan" or liability.type == "student loan"):
-            liability_payment = liability.monthlyPayment
-        total_liabilities_payments += liability_payment
+        liability_monthly_payment = 0
+
+        # Check if there are cases where .monthlyPayment is 0 and .years is there
+        # then calculate the monthly payment
+        if liability.years is not None and liability.years > 0 and liability.monthlyPayment == 0:
+            liability_monthly_payment = (liability.value / liability.years) / 12
+        else:
+            liability_monthly_payment = liability.monthlyPayment
+        total_liabilities_payments += liability_monthly_payment
 
     return debt_to_income_ratio_basic_calc(income, total_liabilities_payments)
 
@@ -122,7 +151,7 @@ def debt_to_income_ratio_basic_calc(
     income: float,
     total_monthly_debt_payments: float) -> float:
     """
-    Calculate your debt to income ratio
+    Calculate debt to income ratio
 
     Parameters
     ----------
@@ -131,4 +160,10 @@ def debt_to_income_ratio_basic_calc(
     `total_monthly_debt_payments` : float.
         total monthly debt payments. usually include credit cards, personal loan, student loan, etc.\n
     """
-    return ((total_monthly_debt_payments * 12) / income) * 100
+    return round(((total_monthly_debt_payments * 12) / income) * 100, _round_dig)
+
+
+def life_event(
+    event: str):
+    if event == "raising children":
+        cost = cost_of_raising_children()
