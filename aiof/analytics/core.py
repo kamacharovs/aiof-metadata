@@ -26,6 +26,14 @@ _acceptable_liability_types = _settings.AnalyticsDebtToIncomeAcceptableLiability
 def analyze(
     assets: List[Asset],
     liabilities: List[Liability]) -> AssetsLiabilities:
+    """
+    Given a list of assets and liabilities, perform analytics on them
+
+    Parameters
+    ----------
+    `assets` : List[Asset]\n
+    `liabilities` : List[Liability]
+    """
     assets_values = list(map(lambda x: x.value, assets))
     liabilities_values = list(map(lambda x: x.value, liabilities))
 
@@ -76,6 +84,14 @@ def analyze(
 
 def assets_fv(
     assets: List[Asset]) -> List[AssetFv]:
+    """
+    Calculate assets' future value
+
+    Parameters
+    ----------
+    `assets` : List[Asset]. 
+        list of assets to calculate their future value
+    """
     asset_fvs = []
     for year in _years:
         for asset in assets:
@@ -101,14 +117,14 @@ def debt_to_income_ratio_calc(
     income: float,
     liabilities: List[Liability]) -> float:
     """
-    Calculate your debt to income ratio
+    Calculate debt to income ratio
 
     Parameters
     ----------
     `income` : float. 
         annual income\n
     `liabilities` : List[Liability].
-        list of liabilities that will be used to calculate your debt to income ratio\n
+        list of liabilities that will be used to calculate debt to income ratio\n
     """
     filtered_liabilities = [x for x in liabilities if x.type.lower() in _acceptable_liability_types and x.monthlyPayment is not None]
 
@@ -134,7 +150,7 @@ def debt_to_income_ratio_basic_calc(
     income: float,
     total_monthly_debt_payments: float) -> float:
     """
-    Calculate your debt to income ratio
+    Calculate debt to income ratio
 
     Parameters
     ----------
