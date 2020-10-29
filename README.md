@@ -108,6 +108,8 @@ Helpful `FastAPI` documentation
 - [Dependencies - First Steps](https://fastapi.tiangolo.com/tutorial/dependencies/)
 - [Concurrency and async / await](https://fastapi.tiangolo.com/async/)
 - [Custom Response - HTML, Stream, File, others](https://fastapi.tiangolo.com/advanced/custom-response/)
+- [Middleware](https://fastapi.tiangolo.com/tutorial/middleware/)
+- [Handling Errors](https://fastapi.tiangolo.com/tutorial/handling-errors/)
 - [tiangolo/uvicorn-gunicorn-fastapi-docker](https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker)
 
 #### Pydantic
