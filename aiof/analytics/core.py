@@ -7,6 +7,7 @@ import aiof.helpers as helpers
 from aiof.data.analytics import Analytics, AssetsLiabilities
 from aiof.data.asset import Asset, AssetFv
 from aiof.data.liability import Liability
+from aiof.fi.core import cost_of_raising_children
 
 from typing import List
 
@@ -160,3 +161,9 @@ def debt_to_income_ratio_basic_calc(
         total monthly debt payments. usually include credit cards, personal loan, student loan, etc.\n
     """
     return round(((total_monthly_debt_payments * 12) / income) * 100, _round_dig)
+
+
+def life_event(
+    event: str):
+    if event == "raising children":
+        cost = cost_of_raising_children()

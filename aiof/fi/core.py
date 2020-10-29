@@ -4,6 +4,8 @@ import pandas as pd
 
 import aiof.config as config
 
+from typing import List
+
 
 # Configs
 _settings = config.get_settings()
@@ -414,24 +416,27 @@ def investment_fees_effect(
 
 
 def cost_of_raising_children(
-    annual_expenses_start: float,
-    annual_expenses_increment: float,
-    children: list,
-    interests: list):
+    annual_expenses_start: float = None,
+    annual_expenses_increment: float = None,
+    children: List[int] = None,
+    interests: List[int] = None,
+    years: int = 18):
     """
     This calculator was designed to give you a rough idea of the financial implications of raising children. 
     It is loosely based on the Department of Agriculture’s estimates of raising a child to age 18
 
     Parameters
     ----------
-    `annual_expenses_start` : float or None.
+    `annual_expenses_start` : float
         annual expenses start per child. defaults to `5,000`\n
     `annual_expenses_increment` : float or None.
         annual expenses increment per child. defaults to `5,000`\n
     `children` : list or None.
         the number of children for which to calculate the cost of raising. defaults to `[1,2,3,4]`\n
     `interests` : list or None.
-        the interest rates at which to calculate the opportunity cost. defaults to `[2,4,6,8]`
+        the interest rates at which to calculate the opportunity cost. defaults to `[2,4,6,8]`\n
+    `years` : int or 18.
+        the number of years to calculate the cost on. defaults to `18`
 
     Notes
     ----------
@@ -455,10 +460,9 @@ def cost_of_raising_children(
         
         cost_obj = []
         for interest in interests:
-            # nper = 12 months * 18 years
             fv = -npf.fv(
                 (interest / 100) / 12,
-                216,
+                years * 12,
                 annual_expenses / 12,
                 0,
                 when='begin')
@@ -469,8 +473,9 @@ def cost_of_raising_children(
 
         children_obj.append({
             "children": child,
-            "annualExpenses": annual_expenses,
-            "totalExpenses": total_expenses,
+            "years": years,
+            "annualExpenses": round(annual_expenses, _round_dig),
+            "totalExpenses": round(total_expenses, _round_dig),
             "cost": cost_obj
         })
     return children_obj
