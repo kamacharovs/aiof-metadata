@@ -1,13 +1,13 @@
-import os
 import aiof.config as config
 import aiof.helpers as helpers
 
 from aiof.data.asset import ComparableAsset
 from api.routers import fi, car, analytics, market
 
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from logzero import logger
 
 
 app = FastAPI()
@@ -28,7 +28,8 @@ async def health_check():
 
 
 @app.post("/api/asset/breakdown")
-async def asset_breakdown(asset: ComparableAsset):
+async def asset_breakdown(asset: ComparableAsset, request: Request):
+    logger.info("Request Host={0} | Url={1}".format(request.client.host, request.url))
     return helpers.asset_breakdown(asset)
 
 @app.get("/api/asset/breakdown/csv")
