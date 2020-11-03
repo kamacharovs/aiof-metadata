@@ -1,3 +1,5 @@
+import datetime
+
 from pydantic import BaseModel
 from typing import Optional
 
@@ -69,3 +71,18 @@ class BmiImperial(BaseModel):
 class BmiMetric(BaseModel):
     weight: float
     height: float
+
+
+class CoastFireSavings(BaseModel):
+    age: int                            # Age
+    year: datetime                      # Year
+    contribution: float                 # Yearly contribution
+    yearlyReturn: float                 # Yearly return in %
+    total: Optional[float]
+    initialEarning: Optional[float]
+    withdrawFour: Optional[float]
+    withdrawThree: Optional[float]
+    withdrawTwo: Optional[float]
+    presentValueFour: Optional[float]
+    presentValueThree: Optional[float]
+    presentValueTwo: Optional[float]
