@@ -77,7 +77,7 @@ def coast_fire_savings(
     # it's time to populate the rest of the calculations for a potential Coast FIRE
     for i in range(0, len(coast_savings)):
         # Update contributions after flip year to -, meaning they're being withdrawn
-        if i + start_age >= years_to_flip:
+        if coast_savings[i].contribution == 0 and i + start_age >= years_to_flip:
             coast_savings[i].contribution = -coast_savings[i - 1].withdrawFour
 
         if i == 0:
