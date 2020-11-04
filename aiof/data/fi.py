@@ -75,9 +75,10 @@ class BmiMetric(BaseModel):
 
 class CoastFireSavings(BaseModel):
     age: int                            # Age
-    year: datetime                      # Year
+    year: int                           # Year
     contribution: float                 # Yearly contribution
     yearlyReturn: float                 # Yearly return in %
+
     total: Optional[float]
     initialEarning: Optional[float]
     withdrawFour: Optional[float]
