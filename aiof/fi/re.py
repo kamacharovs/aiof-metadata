@@ -38,15 +38,41 @@ def coast_fire_savings(
 
     # If coast_savings is None, then generate it
     if coast_savings is None:
-        coast_savings = list(CoastFireSavings)
+        coast_savings = []
+        contribution_years_first_five = math.ceil(end_age - (end_age * 0.05))
+        contribution_years_next_twenty = math.ceil(end_age - (end_age * 0.2))
 
         for i in range(start_age, end_age, 1):
             yearly_return = 0.08 if i < years_to_flip_interest else 0.06
+            contribution = 0
 
-            coast_savings = CoastFireSavings(
+            # Calculate the contribution
+            # first 5% is small contribution
+            # next 20% is heavy, then 0 until you have to take money out
+            if i < contribution_years_first_five:
+                contribution = 15000
+            elif i < contribution_years_next_twenty:
+                contribution = 40000
+            elif i < years_to_flip_interest:
+                contribution = 0 
+            else:
+                contribution = 0
+
+            coast_savings_to_add = CoastFireSavings(
                 age=i,
                 year=year,
+                contribution=contribution,
                 yearlyReturn=yearly_return
             )
-            coast_savings.append(coast_savings)
+            coast_savings.append(coast_savings_to_add)
             year += 1
+
+    # Now that the list of CoastFireSavings is populated with the required fields,
+    # it's time to populate the rest of the calculations for a potential Coast FIRE
+    for i in range(0, len(coast_savings)):
+        if i == 0:
+            coast_savings[i].total = (current_balance + coast_savings[i].contribution) * (coast_savings[i].yearlyReturn + 1)
+        else:
+            coast_savings[i].total = (coast_savings[i-1].total + coast_savings[i].contribution) * (coast_savings[i].yearlyReturn + 1)
+
+    return coast_savings
