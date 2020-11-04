@@ -26,8 +26,14 @@ def coast_fire_savings(
     ----------
     `initial_interest_rate` : float.
         initial interest amount used. defaults to `0.02`\n
-    `start_age` : float.
-        initial interest amount used. defaults to `30`\n
+    `start_age` : int.
+        start age. defaults to `33`\n
+    `end_age` : int.
+        end age. defaults to `72`\n
+    `current_balance` : int.
+        current starting balance. defaults to `100,000`\n
+    `coast_savings` : List[CoastFireSavings] or None.
+        completely customizable coast fire savings list. defaults to being generated at runtime
 
     Notes
     ----------
@@ -71,7 +77,7 @@ def coast_fire_savings(
     # it's time to populate the rest of the calculations for a potential Coast FIRE
     for i in range(0, len(coast_savings)):
         # Update contributions after flip year to -, meaning they're being withdrawn
-        if i + start_age > years_to_flip:
+        if i + start_age >= years_to_flip:
             coast_savings[i].contribution = -coast_savings[i - 1].withdrawFour
 
         if i == 0:
@@ -82,7 +88,6 @@ def coast_fire_savings(
         coast_savings[i].withdrawFour = coast_savings[i].total * 0.04
         coast_savings[i].withdrawThree = coast_savings[i].total * 0.03
         coast_savings[i].withdrawTwo = coast_savings[i].total * 0.02
-        coast_savings[i].withdrawFour = coast_savings[i].total * 0.04
 
         coast_savings[i].presentValueFour = -npf.pv(
             rate=initial_interest_rate,
