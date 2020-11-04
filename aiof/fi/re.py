@@ -55,8 +55,6 @@ def coast_fire_savings(
                 contribution = 15000
             elif i < contribution_years_next_twenty:
                 contribution = 40000
-            elif i > years_to_flip:
-                contribution = -coast_savings[(i - start_age) - 1].contribution
             else:
                 contribution = 0
 
