@@ -113,6 +113,10 @@ async def bmi_metric(req: BmiMetric):
     )
 
 
-@router.get("/re/sample")
-async def re_sample():
-    return fire.coast_fire_savings()
+@router.post("/coast/savings")
+async def re_sample(req: CoastFireSavingsRequest):
+    return fire.coast_fire_savings(
+        coast_savings=req.savings,
+        initial_interest_rate=req.initialInterestRate,
+        current_balance=req.currentBalance
+    )

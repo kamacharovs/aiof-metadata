@@ -1,7 +1,7 @@
 import datetime
 
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 
 class FiTime(BaseModel):
@@ -87,3 +87,8 @@ class CoastFireSavings(BaseModel):
     presentValueFour: Optional[float]
     presentValueThree: Optional[float]
     presentValueTwo: Optional[float]
+
+class CoastFireSavingsRequest(BaseModel):
+    savings: List[CoastFireSavings]
+    initialInterestRate: Optional[float]    = 0.02
+    currentBalance: Optional[float]         = 100000
