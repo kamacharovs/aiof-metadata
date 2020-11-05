@@ -35,31 +35,31 @@ def coast_fire_savings(
     """
     for i in range(0, len(coast_savings)):
         if i == 0:
-            coast_savings[i].total = (current_balance + coast_savings[i].contribution) * (coast_savings[i].yearlyReturn + 1)
+            coast_savings[i].total = round((current_balance + coast_savings[i].contribution) * (coast_savings[i].yearlyReturn + 1), _round_dig)
         else:
-            coast_savings[i].total = (coast_savings[i-1].total + coast_savings[i].contribution) * (coast_savings[i].yearlyReturn + 1)
-        coast_savings[i].initialEarning = coast_savings[i].total * coast_savings[i].yearlyReturn
-        coast_savings[i].withdrawFour = coast_savings[i].total * 0.04
-        coast_savings[i].withdrawThree = coast_savings[i].total * 0.03
-        coast_savings[i].withdrawTwo = coast_savings[i].total * 0.02
+            coast_savings[i].total = round((coast_savings[i-1].total + coast_savings[i].contribution) * (coast_savings[i].yearlyReturn + 1), _round_dig)
+        coast_savings[i].initialEarning = round(coast_savings[i].total * coast_savings[i].yearlyReturn, _round_dig)
+        coast_savings[i].withdrawFour = round(coast_savings[i].total * 0.04, _round_dig)
+        coast_savings[i].withdrawThree = round(coast_savings[i].total * 0.03, _round_dig)
+        coast_savings[i].withdrawTwo = round(coast_savings[i].total * 0.02, _round_dig)
 
-        coast_savings[i].presentValueFour = -npf.pv(
+        coast_savings[i].presentValueFour = round(-npf.pv(
             rate=initial_interest_rate,
             nper=1,
             pmt=0,
             fv=coast_savings[i].withdrawFour,
-            when='end')
-        coast_savings[i].presentValueThree = -npf.pv(
+            when='end'), _round_dig)
+        coast_savings[i].presentValueThree = round(-npf.pv(
             rate=initial_interest_rate,
             nper=1,
             pmt=0,
             fv=coast_savings[i].withdrawThree,
-            when='end')
-        coast_savings[i].presentValueTwo = -npf.pv(
+            when='end'), _round_dig)
+        coast_savings[i].presentValueTwo = round(-npf.pv(
             rate=initial_interest_rate,
             nper=1,
             pmt=0,
             fv=coast_savings[i].withdrawTwo,
-            when='end')
+            when='end'), _round_dig)
 
     return coast_savings
