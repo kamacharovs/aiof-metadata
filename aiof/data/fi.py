@@ -1,5 +1,7 @@
+import datetime
+
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 
 class FiTime(BaseModel):
@@ -69,3 +71,24 @@ class BmiImperial(BaseModel):
 class BmiMetric(BaseModel):
     weight: float
     height: float
+
+
+class CoastFireSavings(BaseModel):
+    age: int                            # Age
+    year: int                           # Year
+    contribution: float                 # Yearly contribution
+    yearlyReturn: float                 # Yearly return in %
+
+    total: Optional[float]
+    initialEarning: Optional[float]
+    withdrawFour: Optional[float]
+    withdrawThree: Optional[float]
+    withdrawTwo: Optional[float]
+    presentValueFour: Optional[float]
+    presentValueThree: Optional[float]
+    presentValueTwo: Optional[float]
+
+class CoastFireSavingsRequest(BaseModel):
+    savings: List[CoastFireSavings]
+    initialInterestRate: Optional[float]    = 0.02
+    currentBalance: Optional[float]         = 100000

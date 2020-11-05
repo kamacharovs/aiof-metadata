@@ -1,5 +1,6 @@
 import aiof.fi.core as fi
 import aiof.fi.health as fihealth
+import aiof.fi.re as fire
 
 from aiof.data.fi import *
 
@@ -109,4 +110,13 @@ async def bmi_metric(req: BmiMetric):
     return fihealth.bmi_metric(
         weight=req.weight,
         height=req.height
+    )
+
+
+@router.post("/coast/savings")
+async def re_sample(req: CoastFireSavingsRequest):
+    return fire.coast_fire_savings(
+        coast_savings=req.savings,
+        initial_interest_rate=req.initialInterestRate,
+        current_balance=req.currentBalance
     )
