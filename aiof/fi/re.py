@@ -5,8 +5,8 @@ import numpy_financial as npf
 import aiof.config as config
 
 from aiof.data.fi import CoastFireSavings
-
 from typing import List
+
 
 # Configs
 _settings = config.get_settings()

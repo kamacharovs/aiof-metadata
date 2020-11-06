@@ -1,19 +1,16 @@
 import time
-from warnings import catch_warnings
 import aiof.config as config
 import aiof.helpers as helpers
 
 from aiof.data.asset import ComparableAsset
 from api.routers import fi, car, analytics, market
 
-from fastapi import FastAPI, Request, HTTPException, Depends
+from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-from logzero import logger
 
 
 app = FastAPI()
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -22,6 +19,8 @@ app.add_middleware(
     allow_methods=config.get_settings().cors_allowed_methods,
     allow_headers=config.get_settings().cors_allowed_headers,
 )
+
+logger = config.get_logger(__name__)
 
 
 @app.middleware("http")

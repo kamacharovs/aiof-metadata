@@ -1,9 +1,12 @@
-from aiof.data.analytics import Analytics
 import os
+import logging
+import logging.config
 
 from pydantic import BaseSettings
 from typing import Optional, List
 from functools import lru_cache
+
+from aiof.data.analytics import Analytics
 
 
 class Settings(BaseSettings):
@@ -142,3 +145,9 @@ class Settings(BaseSettings):
 @lru_cache()
 def get_settings():
     return Settings()
+
+
+#https://docs.microsoft.com/en-us/azure/azure-monitor/app/opencensus-python#instrument-with-opencensus-python-sdk-for-azure-monitor
+def get_logger(name: str):
+    logging.basicConfig(level=logging.INFO)
+    return logging.getLogger(name)
