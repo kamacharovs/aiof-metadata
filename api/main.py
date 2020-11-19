@@ -4,7 +4,7 @@ import aiof.config as config
 import aiof.helpers as helpers
 
 from aiof.data.asset import ComparableAsset
-from api.routers import fi, car, analytics, market
+from api.routers import fi, car, analytics, market, house
 
 from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -99,3 +99,8 @@ app.include_router(
     market.router,
     prefix="/api/market",
     tags=["market"])
+
+app.include_router(
+    house.router,
+    prefix="/api/house",
+    tags=["house"])
