@@ -17,11 +17,24 @@ class HouseTestCase(unittest.TestCase):
                 property_value      =   150000,
                 down_payment        =   15000,
                 interest_rate       =   2.75,
-                #loan_term_years     =   15,
-                #start_date          =   datetime.datetime.utcnow() + datetime.timedelta(days=10),
-                #pmi                 =   0.05,
-                #property_insurance  =   0,
-                #monthly_hoa         =   0
+                loan_term_years     =   15,
+                start_date          =   datetime.datetime.utcnow() + datetime.timedelta(days=10),
+                pmi                 =   0.05,
+                property_insurance  =   0,
+                monthly_hoa         =   0
+            )
+        )
+    def test_mortgage_calc_30(self):
+        self.mortgage_calc_assert(
+            mortgage_calc(
+                property_value      =   250000,
+                down_payment        =   50000,
+                interest_rate       =   4.25,
+                loan_term_years     =   30,
+                start_date          =   datetime.datetime.utcnow() + datetime.timedelta(days=365),
+                pmi                 =   0.05,
+                property_insurance  =   0,
+                monthly_hoa         =   0
             )
         )
 
