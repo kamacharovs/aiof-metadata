@@ -1,11 +1,43 @@
 import unittest
 import json
+import math
 
 from aiof.house.core import *
 
 
 class HouseTestCase(unittest.TestCase):
     """House unit tests"""
+
+    def test_mortgage_calc_defaults(self):
+        self.mortgage_calc_assert(mortgage_calc())
+
+    def test_mortgage_calc_15(self):
+        self.mortgage_calc_assert(
+            mortgage_calc(
+                property_value      =   150000,
+                down_payment        =   15000,
+                interest_rate       =   2.75,
+                #loan_term_years     =   15,
+                #start_date          =   datetime.datetime.utcnow() + datetime.timedelta(days=10),
+                #pmi                 =   0.05,
+                #property_insurance  =   0,
+                #monthly_hoa         =   0
+            )
+        )
+
+    def mortgage_calc_assert(self, df):
+        assert df is not None
+        assert df.size > 0
+        assert df.loc[len(df), "endingBalance"] == 0
+
+        for index in range(2, len(df) + 1):
+            assert df.loc[index, "payment"] > 0
+            assert df.loc[index, "principalPaid"] > 0
+            assert df.loc[index, "interestPaid"] > 0
+            assert df.loc[index, "startingBalance"] > 0
+            assert df.loc[index, "endingBalance"] >= 0
+            assert math.floor(round(df.loc[index, "payment"], 1)) == math.floor(round(df.loc[index, "principalPaid"] + df.loc[index, "interestPaid"], 1))
+
 
     def test_mortgage_calc_yearly(self):
         assert house_mortgage_calc(250000, 3.25, 30) > 0

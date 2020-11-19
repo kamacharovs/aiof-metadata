@@ -13,14 +13,6 @@ _settings = config.get_settings()
 _round_dig = _settings.DefaultRoundingDigit
 
 
-def house_mortgage_calc(principal_amount, rate_of_interest, number_of_periods, frequency="yearly"):
-    interest = to_percentage(rate_of_interest)
-    periods = convert_frequency(frequency) * number_of_periods
-    numerator = interest * pow((1 + interest), float(periods))
-    denominator = pow(1 + interest, float(periods)) - 1
-    return principal_amount * (numerator / denominator)
-
-
 def mortgage_calc(
     property_value: float = None,
     down_payment: float = None,
@@ -60,14 +52,14 @@ def mortgage_calc(
     Based on https://www.mortgagecalculator.org/
     """
     # Check for None
-    property_value = property_value if property_value is not None else 300000
-    down_payment = down_payment if down_payment is not None else 60000
-    interest_rate = interest_rate if interest_rate is not None else 3.8
-    loan_term_years = loan_term_years if loan_term_years is not None else 30
-    start_date = start_date if start_date is not None else datetime.datetime.utcnow()
-    pmi = pmi if pmi is not None else 0.5
-    property_insurance = property_insurance if property_insurance is not None else 1000
-    monthly_hoa = monthly_hoa if monthly_hoa is not None else 0
+    property_value      = property_value if property_value is not None else 300000
+    down_payment        = down_payment if down_payment is not None else 60000
+    interest_rate       = interest_rate if interest_rate is not None else 3.8
+    loan_term_years     = loan_term_years if loan_term_years is not None else 30
+    start_date          = start_date if start_date is not None else datetime.datetime.utcnow()
+    pmi                 = pmi if pmi is not None else 0.5
+    property_insurance  = property_insurance if property_insurance is not None else 1000
+    monthly_hoa         = monthly_hoa if monthly_hoa is not None else 0
 
     # Check and fix parameters
     interest_rate = interest_rate / 100
@@ -83,9 +75,9 @@ def mortgage_calc(
     df.index += 1
     df.index.name = "period"
 
-    df["payment"] = -1 * npf.pmt(interest_rate / 12, loan_term_years * payments_per_year, loan_amount)
-    df["principalPaid"] = -1 * npf.ppmt(interest_rate / payments_per_year, df.index, loan_term_years * payments_per_year, loan_amount)
-    df["interestPaid"] = -1 * npf.ipmt(interest_rate / payments_per_year, df.index, loan_term_years * payments_per_year, loan_amount)
+    df["payment"] = -npf.pmt(interest_rate / 12, loan_term_years * payments_per_year, loan_amount)
+    df["principalPaid"] = -npf.ppmt(interest_rate / payments_per_year, df.index, loan_term_years * payments_per_year, loan_amount)
+    df["interestPaid"] = -npf.ipmt(interest_rate / payments_per_year, df.index, loan_term_years * payments_per_year, loan_amount)
     
     # Populate the first ending balance, then the rest
     df["endingBalance"] = 0
@@ -95,16 +87,24 @@ def mortgage_calc(
         prev_balance = df.loc[period - 1, "endingBalance"]
         principal_paid = df.loc[period, "principalPaid"]
 
+        df.loc[period, "startingBalance"] = prev_balance
         if prev_balance == 0:
-            df.loc[period, ["payment", "principalPaid", "interestPaid","startingBalance", "endingBalance"]] == 0
+            df.loc[period, ["payment", "principalPaid", "interestPaid", "startingBalance", "endingBalance"]] == 0
             continue
         elif principal_paid <= prev_balance:
-            df.loc[period, "startingBalance"] = prev_balance
             df.loc[period, "endingBalance"] = prev_balance - principal_paid
     
     df = df.round(_round_dig)
-
+    
     return df if not as_json else df.to_dict(orient="records")
+
+
+def house_mortgage_calc(principal_amount, rate_of_interest, number_of_periods, frequency="yearly"):
+    interest = to_percentage(rate_of_interest)
+    periods = convert_frequency(frequency) * number_of_periods
+    numerator = interest * pow((1 + interest), float(periods))
+    denominator = pow(1 + interest, float(periods)) - 1
+    return principal_amount * (numerator / denominator)
 
 
 def house_future_value_calc(periodic_payment, rate_of_interest, number_of_years, frequency="yearly"):
