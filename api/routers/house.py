@@ -8,4 +8,4 @@ router = APIRouter()
 
 @router.get("/mortgage")
 async def mortgage_calc():
-    return house.mortgage_calc()
+    return house.mortgage_calc(as_json=True)

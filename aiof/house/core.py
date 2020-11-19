@@ -1,4 +1,5 @@
 import datetime
+import json
 import pandas as pd
 import numpy_financial as npf
 
@@ -28,7 +29,8 @@ def mortgage_calc(
     start_date: datetime = datetime.datetime.utcnow(),
     pmi: float = 0.5,
     home_insurance: float = 1000,
-    monthly_hoa: float = 0):
+    monthly_hoa: float = 0,
+    as_json: bool = False):
     """
     Calculate mortgage
 
@@ -53,7 +55,7 @@ def mortgage_calc(
     # Create the data frame
     rng = pd.date_range(start_date, periods=loan_term_years * payments_per_year, freq="MS")
     rng.name = "paymentDate"
-    df = pd.DataFrame(index=rng, columns=["payment", "principalPaid", "interestPaid", "endingBalance"], dtype="float")
+    df = pd.DataFrame(index=rng, columns=["payment", "principalPaid", "interestPaid", "startingBalance", "endingBalance"], dtype="float")
     df.reset_index(inplace=True)
     df.index += 1
     df.index.name = "period"
@@ -62,25 +64,24 @@ def mortgage_calc(
     df["principalPaid"] = -1 * npf.ppmt(interest_rate / payments_per_year, df.index, loan_term_years * payments_per_year, loan_amount)
     df["interestPaid"] = -1 * npf.ipmt(interest_rate / payments_per_year, df.index, loan_term_years * payments_per_year, loan_amount)
     
-
     # Populate the first ending balance, then the rest
     df["endingBalance"] = 0
+    df.loc[1, "startingBalance"] = loan_amount
     df.loc[1, "endingBalance"] = loan_amount - df.loc[1, "principalPaid"]
     for period in range(2, len(df) + 1):
         prev_balance = df.loc[period - 1, "endingBalance"]
         principal_paid = df.loc[period, "principalPaid"]
 
         if prev_balance == 0:
-            df.loc[period, ["payment", "principalPaid", "interestPaid", "endingBalance"]] == 0
+            df.loc[period, ["payment", "principalPaid", "interestPaid","startingBalance", "endingBalance"]] == 0
             continue
         elif principal_paid <= prev_balance:
+            df.loc[period, "startingBalance"] = prev_balance
             df.loc[period, "endingBalance"] = prev_balance - principal_paid
     
     df = df.round(_round_dig)
 
-    print(df)
-
-    return None
+    return df.to_dict(orient="records") if as_json else df
 
 
 def house_future_value_calc(periodic_payment, rate_of_interest, number_of_years, frequency="yearly"):
