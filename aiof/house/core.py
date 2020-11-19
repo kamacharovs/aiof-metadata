@@ -22,14 +22,14 @@ def house_mortgage_calc(principal_amount, rate_of_interest, number_of_periods, f
 
 
 def mortgage_calc(
-    property_value: float = 300000,
-    down_payment: float = 60000,
-    interest_rate: float = 3.8,
-    loan_term_years: int = 30,
-    start_date: datetime = datetime.datetime.utcnow(),
-    pmi: float = 0.5,
-    home_insurance: float = 1000,
-    monthly_hoa: float = 0,
+    property_value: float = None,
+    down_payment: float = None,
+    interest_rate: float = None,
+    loan_term_years: int = None,
+    start_date: datetime = None,
+    pmi: float = None,
+    property_insurance: float = None,
+    monthly_hoa: float = None,
     as_json: bool = False):
     """
     Calculate mortgage
@@ -40,19 +40,42 @@ def mortgage_calc(
         value of the property. defaults to `300,000`\n
     `down_payment` : float.
         down payment for the property. defaults to `60,000`\n
+    `interest_rate` : float.
+        annual interest rate. defaults to `3.8`\n
+    `loan_term_years` : float.
+        years in the loan term. defaults to `30`\n
+    `start_date` : datetime.
+        start date of the loan. defaults to `datetime.datetime.utcnow()`\n
+    `pmi` : float.
+        pmi interest rate. defaults to `0.5`\n
+    `property_insurance` : float.
+        annual property insurance. defaults to `1000`\n
+    `monthly_hoa` : float.
+        monthly hoa dues. defaults to `0`\n
+    `as_json` : bool.
+        whether to return the pandas.DataFrame as JSON. defaults to `False`\n
 
     Notes
     ----------
     Based on https://www.mortgagecalculator.org/
     """
-    # Fix interest rates to percentages
-    interest_rate = interest_rate if interest_rate < 1 else interest_rate / 100
-    pmi = pmi if pmi < 1 else pmi / 100
+    # Check for None
+    property_value = property_value if property_value is not None else 300000
+    down_payment = down_payment if down_payment is not None else 60000
+    interest_rate = interest_rate if interest_rate is not None else 3.8
+    loan_term_years = loan_term_years if loan_term_years is not None else 30
+    start_date = start_date if start_date is not None else datetime.datetime.utcnow()
+    pmi = pmi if pmi is not None else 0.5
+    property_insurance = property_insurance if property_insurance is not None else 1000
+    monthly_hoa = monthly_hoa if monthly_hoa is not None else 0
 
+    # Check and fix parameters
+    interest_rate = interest_rate / 100
+    pmi = pmi / 100
     payments_per_year = 12
     loan_amount = property_value - down_payment
 
-    # Create the data frame
+    # Create and initially populate the data frame
     rng = pd.date_range(start_date, periods=loan_term_years * payments_per_year, freq="MS")
     rng.name = "paymentDate"
     df = pd.DataFrame(index=rng, columns=["payment", "principalPaid", "interestPaid", "startingBalance", "endingBalance"], dtype="float")
@@ -81,7 +104,7 @@ def mortgage_calc(
     
     df = df.round(_round_dig)
 
-    return df.to_dict(orient="records") if as_json else df
+    return df if not as_json else df.to_dict(orient="records")
 
 
 def house_future_value_calc(periodic_payment, rate_of_interest, number_of_years, frequency="yearly"):
