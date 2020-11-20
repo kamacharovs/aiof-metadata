@@ -8,7 +8,7 @@ from api.routers import fi, car, analytics, market, house
 
 from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, JSONResponse
 from logzero import logger
 
 
@@ -23,6 +23,19 @@ app.add_middleware(
     allow_headers=config.get_settings().cors_allowed_headers,
 )
 
+
+@app.exception_handler(ValueError)
+async def unicorn_exception_handler(req: Request, ve: ValueError):
+    return write_exception_response(400, ve)
+
+def write_exception_response(status_code: int, message: str):
+    return JSONResponse(
+        status_code=status_code,
+        content={
+            "code": status_code,
+            "message": f"{message}"
+            },
+    )
 
 @app.middleware("http")
 async def exception_middleware(request: Request, call_next):
