@@ -66,6 +66,23 @@ def mortgage_calc(
     pmi = pmi / 100
     payments_per_year = 12
     loan_amount = property_value - down_payment
+    
+    # Validation
+    if loan_amount < 0:
+        raise ValueError("Loan Amount (property value minus down payment) cannot be negative")
+    elif down_payment < 0:
+        raise ValueError("Down payment cannot be negative")
+    elif loan_term_years < 0 or loan_term_years > 100:
+        raise ValueError("Loan term years must be between 1 and 100")
+    elif interest_rate > 1 or interest_rate < 0:
+        raise ValueError("Interest rate cannot be negative or bigger than 100%")
+    elif pmi > 1 or pmi < 0:
+        raise ValueError("PMI rate cannot be negative or bigger than 100%")
+    elif property_insurance < 0:
+        raise ValueError("Property insurance cannot be negative")
+    elif monthly_hoa < 0:
+        raise ValueError("Monthly HOA cannot be negative")
+
 
     # Create and initially populate the data frame
     rng = pd.date_range(start_date, periods=loan_term_years * payments_per_year, freq="MS")

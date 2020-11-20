@@ -24,6 +24,7 @@ class HouseTestCase(unittest.TestCase):
                 monthly_hoa         =   0
             )
         )
+
     def test_mortgage_calc_30(self):
         self.mortgage_calc_assert(
             mortgage_calc(
@@ -38,6 +39,42 @@ class HouseTestCase(unittest.TestCase):
             )
         )
 
+    def test_mortgage_calc_invalid_loan_amount_raises_value_error(self):
+        with self.assertRaises(ValueError): 
+            mortgage_calc(
+                property_value  = 150000,
+                down_payment    = 200000)
+
+    def test_mortgage_calc_invalid_down_payment_raises_value_error(self):
+        with self.assertRaises(ValueError): 
+            mortgage_calc(down_payment = -1)
+
+    def test_mortgage_calc_invalid_loan_term_years_raises_value_error(self):
+        with self.assertRaises(ValueError): 
+            mortgage_calc(loan_term_years = -1)
+        with self.assertRaises(ValueError): 
+            mortgage_calc(loan_term_years = 150)
+
+    def test_mortgage_calc_invalid_invalid_interest_rate_raises_value_error(self):
+        with self.assertRaises(ValueError): 
+            mortgage_calc(interest_rate = 101)
+        with self.assertRaises(ValueError): 
+            mortgage_calc(interest_rate = -1)
+
+    def test_mortgage_calc_invalid_pmi_raises_value_error(self):
+        with self.assertRaises(ValueError): 
+            mortgage_calc(pmi = 101)
+        with self.assertRaises(ValueError): 
+            mortgage_calc(pmi = -1)
+
+    def test_mortgage_calc_invalid_property_insurance_raises_value_error(self):
+        with self.assertRaises(ValueError): 
+            mortgage_calc(property_insurance = -1)
+
+    def test_mortgage_calc_invalid_monthly_hoa_raises_value_error(self):
+        with self.assertRaises(ValueError): 
+            mortgage_calc(monthly_hoa = -1)
+        
     def mortgage_calc_assert(self, df):
         assert df is not None
         assert df.size > 0
