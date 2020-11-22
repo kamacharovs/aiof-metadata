@@ -2,7 +2,7 @@ import unittest
 import json
 import math
 
-from aiof.house.core import *
+from aiof.property.core import *
 
 
 class HouseTestCase(unittest.TestCase):

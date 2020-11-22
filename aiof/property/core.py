@@ -1,5 +1,4 @@
 import datetime
-import json
 import pandas as pd
 import numpy_financial as npf
 
@@ -114,6 +113,30 @@ def mortgage_calc(
     df = df.round(_round_dig)
     
     return df if not as_json else df.to_dict(orient="records")
+
+
+def mortgage_calc_yearly_breakdown(
+    property_value: float = None,
+    down_payment: float = None,
+    interest_rate: float = None,
+    loan_term_years: int = None,
+    start_date: datetime = None,
+    pmi: float = None,
+    property_insurance: float = None,
+    monthly_hoa: float = None):
+    mortgage_df = mortgage_calc(
+        property_value,
+        down_payment,
+        interest_rate,
+        loan_term_years,
+        start_date,
+        pmi,
+        property_insurance,
+        monthly_hoa)
+    
+    return {
+        "data": mortgage_df.to_dict(orient="records")
+    }
 
 
 def house_mortgage_calc(principal_amount, rate_of_interest, number_of_periods, frequency="yearly"):
