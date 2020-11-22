@@ -1,6 +1,7 @@
 import datetime
 import pandas as pd
 import numpy_financial as npf
+from pandas.core.frame import DataFrame
 
 import aiof.config as config
 
@@ -21,6 +22,7 @@ def mortgage_calc(
     pmi: float = None,
     property_insurance: float = None,
     monthly_hoa: float = None,
+    include_yearly_breakdown: bool = False,
     as_json: bool = False):
     """
     Calculate mortgage
@@ -111,32 +113,34 @@ def mortgage_calc(
             df.loc[period, "endingBalance"] = prev_balance - principal_paid
     
     df = df.round(_round_dig)
-    
-    return df if not as_json else df.to_dict(orient="records")
+
+    if include_yearly_breakdown:
+        return {
+            "data": df.to_dict(orient="records"),
+            "breakdown": mortgage_calc_yearly_breakdown(df).to_dict(orient="records")
+        }
+    else:
+        return df if not as_json else { "data": df.to_dict(orient="records") }
 
 
-def mortgage_calc_yearly_breakdown(
-    property_value: float = None,
-    down_payment: float = None,
-    interest_rate: float = None,
-    loan_term_years: int = None,
-    start_date: datetime = None,
-    pmi: float = None,
-    property_insurance: float = None,
-    monthly_hoa: float = None):
-    mortgage_df = mortgage_calc(
-        property_value,
-        down_payment,
-        interest_rate,
-        loan_term_years,
-        start_date,
-        pmi,
-        property_insurance,
-        monthly_hoa)
+def mortgage_calc_yearly_breakdown(mortgage_df: DataFrame):
+    df = mortgage_df.copy()
+    df["year"] = df["paymentDate"].dt.year
+    unique_years = df["year"].unique()
+    year_dfs = [df[df["year"] == y] for y in unique_years]
     
-    return {
-        "data": mortgage_df.to_dict(orient="records")
-    }
+    total_df = pd.DataFrame(index=unique_years.tolist(), columns=["year", "startingBalance", "endingBalance", "totalPayment", "totalPrincipalPaid", "totalInterestPaid"], dtype="float")
+    for year_df in year_dfs:
+        total_df.loc[year_df.iloc[0]["year"]]["year"] = year_df.iloc[0]["year"]
+        total_df.loc[year_df.iloc[0]["year"]]["startingBalance"] = year_df.iloc[0]["startingBalance"]
+        total_df.loc[year_df.iloc[0]["year"]]["endingBalance"] = year_df.iloc[len(year_df) - 1]["endingBalance"]
+        total_df.loc[year_df.iloc[0]["year"]]["totalPayment"] = year_df["payment"].sum()
+        total_df.loc[year_df.iloc[0]["year"]]["totalPrincipalPaid"] = year_df["principalPaid"].sum()
+        total_df.loc[year_df.iloc[0]["year"]]["totalInterestPaid"] = year_df["interestPaid"].sum()
+    total_df["year"] = total_df["year"].astype(int)
+    total_df = total_df.round(_round_dig)
+
+    return total_df
 
 
 def house_mortgage_calc(principal_amount, rate_of_interest, number_of_periods, frequency="yearly"):
