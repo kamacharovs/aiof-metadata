@@ -19,5 +19,4 @@ async def mortgage_calc(req: MortgageCalculatorRequest):
         pmi                         = req.pmi,
         property_insurance          = req.propertyInsurance,
         monthly_hoa                 = req.monthlyHoa,
-        include_yearly_breakdown    = True,
         as_json                     = True)

@@ -22,7 +22,6 @@ def mortgage_calc(
     pmi: float = None,
     property_insurance: float = None,
     monthly_hoa: float = None,
-    include_yearly_breakdown: bool = False,
     as_json: bool = False):
     """
     Calculate mortgage
@@ -110,24 +109,14 @@ def mortgage_calc(
             df.loc[period, ["payment", "principalPaid", "interestPaid", "startingBalance", "endingBalance"]] == 0
             continue
         elif principal_paid <= prev_balance:
-            df.loc[period, "endingBalance"] = prev_balance - principal_paid
-    
+            df.loc[period, "endingBalance"] = prev_balance - principal_paid   
     df = df.round(_round_dig)
 
-    if include_yearly_breakdown:
-        return {
-            "data": df.to_dict(orient="records"),
-            "breakdown": mortgage_calc_yearly_breakdown(df).to_dict(orient="records")
-        }
-    else:
-        return df if not as_json else { "data": df.to_dict(orient="records") }
-
-
-def mortgage_calc_yearly_breakdown(mortgage_df: DataFrame):
-    df = mortgage_df.copy()
-    df["year"] = df["paymentDate"].dt.year
-    unique_years = df["year"].unique()
-    year_dfs = [df[df["year"] == y] for y in unique_years]
+    # Calculate yearly breakdown
+    breakdown_df = df.copy()
+    breakdown_df["year"] = breakdown_df["paymentDate"].dt.year
+    unique_years = breakdown_df["year"].unique()
+    year_dfs = [breakdown_df[breakdown_df["year"] == y] for y in unique_years]
     
     total_df = pd.DataFrame(index=unique_years.tolist(), columns=["year", "startingBalance", "endingBalance", "totalPayment", "totalPrincipalPaid", "totalInterestPaid"], dtype="float")
     for year_df in year_dfs:
@@ -140,7 +129,7 @@ def mortgage_calc_yearly_breakdown(mortgage_df: DataFrame):
     total_df["year"] = total_df["year"].astype(int)
     total_df = total_df.round(_round_dig)
 
-    return total_df
+    return df if not as_json else { "data": df.to_dict(orient="records"), "breakdown": total_df.to_dict(orient="records") }
 
 
 def house_mortgage_calc(principal_amount, rate_of_interest, number_of_periods, frequency="yearly"):
