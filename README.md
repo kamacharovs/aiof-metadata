@@ -32,6 +32,16 @@ API endpoints available are
 /api/asset/breakdown
 ```
 
+### Property
+
+Property functionality and analysis
+
+API endpoints available are
+
+```text
+/api/property/mortgage
+```
+
 ## How to run it
 
 In order to run the API locally, you would first need to run the `python .\setup.py develop` script, if it hasn't been setup locally before. Afterwards, start the API via `uvicorn`
@@ -62,7 +72,7 @@ Make API calls to
 http://localhost:8080/
 ```
 
-Optional command to clean up `<none>` images
+(Optional) clean up `<none>` images
 
 ```powershell
 docker rmi $(docker images -f “dangling=true” -q)
