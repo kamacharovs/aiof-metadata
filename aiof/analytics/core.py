@@ -50,9 +50,9 @@ def analyze(
     acceptable_assets = ["cash"]
     acceptable_liabilitites = ["credit card"]
 
-    cash_assets = list(map(lambda x: x.value, filter(lambda x: x.type.lower() in acceptable_assets, assets)))
+    cash_assets = list(map(lambda x: x.value, filter(lambda x: x.typeName.lower() in acceptable_assets, assets)))
     total_cash_assets = sum(cash_assets)
-    cc_liabilities = list(map(lambda x: x.value, filter(lambda x: x.type.lower() in acceptable_liabilitites, liabilities)))
+    cc_liabilities = list(map(lambda x: x.value, filter(lambda x: x.typeName.lower() in acceptable_liabilitites, liabilities)))
     total_cc_liabilities = sum(cc_liabilities)
 
     # Calculate cashToCcRatio or ccToCashRatio
@@ -97,15 +97,15 @@ def assets_fv(
     for year in _years:
         for asset in assets:
             interest = 0.0
-            if (asset.type == "cash"):
+            if (asset.typeName == "cash"):
                 interest = _average_bank_interest
-            elif (asset.type == "stock"):
+            elif (asset.typeName == "stock"):
                 interest = _average_market_interest
             fv_asset = helpers.fv(interest=interest, years=year, pmt=0, pv=asset.value)
             asset_fvs.append(
                 AssetFv(
                     year=year,
-                    type=asset.type,
+                    typeName=asset.typeName,
                     interest=interest,
                     pv=asset.value,
                     fv=round(fv_asset, _round_dig)
@@ -127,7 +127,7 @@ def debt_to_income_ratio_calc(
     `liabilities` : List[Liability].
         list of liabilities that will be used to calculate debt to income ratio\n
     """
-    filtered_liabilities = [x for x in liabilities if x.type.lower() in _acceptable_liability_types and x.monthlyPayment is not None]
+    filtered_liabilities = [x for x in liabilities if x.typeName.lower() in _acceptable_liability_types and x.monthlyPayment is not None]
 
     if len(filtered_liabilities) == 0:
         return 0.0

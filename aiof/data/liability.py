@@ -14,7 +14,7 @@ from typing import Optional
 
 class Liability(BaseModel):
     name: str
-    type: str
+    typeName: str
     value: float
 
     years: Optional[int]
