@@ -13,4 +13,5 @@ async def car_loan(req: CarLoanRequest):
     return car.loan_calc(
         car_loan = req.carLoan,
         interest = req.interst,
-        years    = req.years)
+        years    = req.years,
+        as_json  = True)
