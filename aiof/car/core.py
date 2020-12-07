@@ -1,20 +1,32 @@
-import aiof.helpers as helpers
+import math
+import numpy_financial as npf
+import pandas as pd
 
-def loan_calc(req):
-    principal_amount = req["principalAmount"] if "principalAmount" in req else 150000
-    number_of_months = req["numberOfMonths"] if "numberOfMonths" in req else 72
-    rate_of_interest = req["rateOfInterest"] if "rateOfInterest" in req else 7
-    return loan_calc_internal(
-        principal_amount, 
-        number_of_months,
-        rate_of_interest)
 
-def loan_calc_internal(
-    principal_amount, 
-    number_of_months,
-    rate_of_interest):
-    return helpers.loan_payments_calc(
-        principal_amount, 
-        number_of_months / 12, 
-        rate_of_interest, 
-        frequency="monthly")
+def loan_calc(
+    car_loan: float,
+    interest: float,
+    years: int):
+    """
+    Calculate car loan payments and details
+
+    Parameters
+    ----------
+    `car_loan` : float or None.
+        car loan amount. defaults to `35,000`\n
+    `interest` : float or None.
+        interest. defaults to `7`\n
+    `years` : int or None.
+        years for the loan. defaults to `5`
+    """
+    car_loan = car_loan if car_loan is not None else 35000
+    interest = interest if interest is not None else 7
+    years = years if years is not None else 5
+
+    car_payments = npf.pmt(
+        rate=interest / 100,
+        nper= years,
+        pv= -car_loan, 
+        when='end')
+
+    return car_payments
