@@ -11,5 +11,5 @@ router = APIRouter()
 @router.post("/analyze")
 async def analyze(req: AssetsLiabilitiesRequest):
     return a.analyze(
-        assets=req.assets,
-        liabilities=req.liabilities)
+        assets      = req.assets,
+        liabilities = req.liabilities)
