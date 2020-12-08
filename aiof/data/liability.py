@@ -16,6 +16,5 @@ class Liability(BaseModel):
     name: str
     typeName: str
     value: float
-
     years: Optional[int]
     monthlyPayment: Optional[float] = 0

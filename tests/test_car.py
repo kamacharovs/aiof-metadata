@@ -22,15 +22,19 @@ class CarTestCase(unittest.TestCase):
                 interest=4,
                 years=6))
 
-    def asset_loan_calc(self, df):
-        assert df is not None
-        assert df.size > 0
-        assert df.loc[len(df) - 1, "endingBalance"] == 0
+    def asset_loan_calc(self, resp):
+        assert resp.carLoan > 0
+        assert resp.interest > 0
+        assert resp.years > 0
+        assert resp.monthlyPayment > 0
+        assert resp.data is not None
+        assert resp.data.size > 0
+        assert resp.data.loc[len(resp.data) - 1, "endingBalance"] == 0
 
-        for index in range(1, len(df)):
-            assert df.loc[index, "year"] > 0
-            assert df.loc[index, "payments"] > 0
-            assert df.loc[index, "principalPaid"] > 0
-            assert df.loc[index, "interestPaid"] > 0
-            assert df.loc[index, "startingBalance"] > 0
-            assert df.loc[index, "endingBalance"] >= 0
+        for index in range(1, len(resp.data)):
+            assert resp.data.loc[index, "year"] > 0
+            assert resp.data.loc[index, "payments"] > 0
+            assert resp.data.loc[index, "principalPaid"] > 0
+            assert resp.data.loc[index, "interestPaid"] > 0
+            assert resp.data.loc[index, "startingBalance"] > 0
+            assert resp.data.loc[index, "endingBalance"] >= 0
