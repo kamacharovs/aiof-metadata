@@ -44,7 +44,12 @@ def loan_calc(
         pv=-car_loan, 
         fv=0,
         when='end')
-    car_payments_monthly = car_payments / 12
+    car_payments_monthly = npf.pmt(
+        rate=interest / 12,
+        nper=years * 12,
+        pv=-car_loan, 
+        fv=0,
+        when='end')
 
     loan_df = np.zeros((years, 6))
     loan_df = pd.DataFrame(loan_df)
