@@ -6,6 +6,8 @@ All in one finance data crunching backend
 
 ## API
 
+API documentation
+
 ### Financial independence (FI)
 
 Financial Independence is based on the FIRE movement. Financial Independence, Retire Early (FIRE) is a movement dedicated to a program of extreme savings and investment that allows proponents to retire far earlier than traditional budgets and retirement plans would allow. By dedicating up to 70% of income to savings, followers of the FIRE movement may eventually be able to quit their jobs and live solely off small withdrawals from their portfolios decades before the conventional retirement age of 65. More information can be found [here](https://www.investopedia.com/terms/f/financial-independence-retire-early-fire.asp)
@@ -44,10 +46,10 @@ API endpoints available are
 
 ## How to run it
 
-In order to run the API locally, you would first need to run the `python .\setup.py develop` script, if it hasn't been setup locally before. Afterwards, start the API via `uvicorn`
+In order to run the API locally, you would first need to run the `python .\setup.py develop` script, if it hasn't been setup locally before, in additional the installing the requirements. Afterwards, start the API via `uvicorn`
 
 ```powershell
-pip install -r .\requirements.txt
+python -m pip install -r .\requirements.txt
 python .\setup.py develop
 uvicorn api.main:app
 ```
