@@ -127,6 +127,8 @@ Helpful `FastAPI` documentation
 Helpful `pydantic` documentation
 
 - [Typing Iterables](https://pydantic-docs.helpmanual.io/usage/types/#typing-iterables)
+- [Field Types](https://pydantic-docs.helpmanual.io/usage/types/)
+- [Validators](https://pydantic-docs.helpmanual.io/usage/validators/)
 
 #### Pandas
 
