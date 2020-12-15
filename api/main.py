@@ -1,5 +1,4 @@
 import time
-from warnings import catch_warnings
 import aiof.config as config
 import aiof.helpers as helpers
 
@@ -26,7 +25,7 @@ app.add_middleware(
 
 @app.exception_handler(ValueError)
 async def unicorn_exception_handler(req: Request, ve: ValueError):
-    return write_exception_response(400, ve)
+    return write_exception_response(status_code=400, message=ve)
 
 def write_exception_response(status_code: int, message: str):
     return JSONResponse(
