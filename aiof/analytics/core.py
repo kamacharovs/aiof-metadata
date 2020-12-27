@@ -174,6 +174,8 @@ def life_event(life_event_request: LifeEventRequest) -> LifeEventResponse:
     """
     if life_event_request.type == "buying a house":
         print("test")
+    elif life_event_request.type =="selling a car":
+        print("selling a car")
 
     data = LifeEventResponse(
         currentAssets = life_event_request.assets,
