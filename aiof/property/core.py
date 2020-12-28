@@ -1,7 +1,6 @@
 import datetime
 import pandas as pd
 import numpy_financial as npf
-from pandas.core.frame import DataFrame
 
 import aiof.config as config
 

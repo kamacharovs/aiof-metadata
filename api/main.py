@@ -1,10 +1,9 @@
 import time
-from warnings import catch_warnings
 import aiof.config as config
 import aiof.helpers as helpers
 
 from aiof.data.asset import ComparableAsset
-from api.routers import fi, car, analytics, market, property
+from api.routers import fi, car, analytics, market, property, retirement
 
 from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -26,7 +25,7 @@ app.add_middleware(
 
 @app.exception_handler(ValueError)
 async def unicorn_exception_handler(req: Request, ve: ValueError):
-    return write_exception_response(400, ve)
+    return write_exception_response(status_code=400, message=ve)
 
 def write_exception_response(status_code: int, message: str):
     return JSONResponse(
@@ -117,3 +116,8 @@ app.include_router(
     property.router,
     prefix="/api/property",
     tags=["property"])
+
+app.include_router(
+    retirement.router,
+    prefix="/api/retirement",
+    tags=["retirement"])

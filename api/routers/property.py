@@ -1,8 +1,8 @@
 import aiof.property.core as property
 
-from fastapi import APIRouter
-
 from aiof.data.property import MortgageCalculatorRequest
+
+from fastapi import APIRouter
 
 
 router = APIRouter()
