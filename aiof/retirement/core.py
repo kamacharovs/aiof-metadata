@@ -39,11 +39,11 @@ def withdrawal_calc(
     # Check and fix parameters
     take_out_percentage = take_out_percentage / 100
 
-    if retirement_number < 0:
+    if retirement_number <= 0:
         raise ValueError("Retirement number cannot be negative")
-    elif take_out_percentage < 0 or take_out_percentage > 100:
+    elif take_out_percentage <= 0 or take_out_percentage > 100:
         raise ValueError("Take out percentage must be between 0 and 100")
-    elif number_of_years < 0 or number_of_years > 100:
+    elif number_of_years <= 0 or number_of_years > 100:
         raise ValueError("Number of years must be between 0 and 100")
 
     # Initial data frame

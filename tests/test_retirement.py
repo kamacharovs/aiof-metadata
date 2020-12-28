@@ -16,6 +16,60 @@ class RetirementTestCase(unittest.TestCase):
             take_out_percentage = None,
             number_of_years     = None))
 
+    def test_withdrawal_calc_valid(self):
+        self.assert_withdrawal_calc(withdrawal_calc(
+            retirement_number   = 1500000,
+            take_out_percentage = 7,
+            number_of_years     = 35))
+
+    def test_withdrawal_calc_valid_2(self):
+        self.assert_withdrawal_calc(withdrawal_calc(
+            retirement_number   = 3000000,
+            take_out_percentage = 3.5,
+            number_of_years     = 40))
+
+    def test_withdrawal_calc_retirement_number_0(self):
+        with self.assertRaises(ValueError): 
+            withdrawal_calc(
+                retirement_number   = 0,
+                take_out_percentage = 3.5,
+                number_of_years     = 30)
+
+    def test_withdrawal_calc_retirement_number_negative(self):
+        with self.assertRaises(ValueError): 
+            withdrawal_calc(
+                retirement_number   = -1000000,
+                take_out_percentage = 3.5,
+                number_of_years     = 30)
+
+    def test_withdrawal_calc_take_out_percentage_0(self):
+        with self.assertRaises(ValueError): 
+            withdrawal_calc(
+                retirement_number   = 1000000,
+                take_out_percentage = 0,
+                number_of_years     = 30)
+
+    def test_withdrawal_calc_take_out_percentage_negative(self):
+        with self.assertRaises(ValueError): 
+            withdrawal_calc(
+                retirement_number   = 1000000,
+                take_out_percentage = -3.5,
+                number_of_years     = 30)
+
+    def test_withdrawal_calc_number_of_years_0(self):
+        with self.assertRaises(ValueError): 
+            withdrawal_calc(
+                retirement_number   = 1000000,
+                take_out_percentage = 3.5,
+                number_of_years     = 0)
+
+    def test_withdrawal_calc_number_of_years_negative(self):
+        with self.assertRaises(ValueError): 
+            withdrawal_calc(
+                retirement_number   = 1000000,
+                take_out_percentage = 3.5,
+                number_of_years     = -30)
+
     def assert_withdrawal_calc(self, df):
         assert df is not None
         assert df.size > 0
