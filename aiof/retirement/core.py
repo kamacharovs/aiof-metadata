@@ -62,7 +62,7 @@ def withdrawal_calc(
             pv=retirement_number - withdrawal,
             when='end')
 
-    if take_out_percentage == 100:
+    if take_out_percentage == 0.1:
         return df if not as_json else df.to_dict(orient="records")
 
     for year in range(1, int(number_of_years)):
