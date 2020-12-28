@@ -1,19 +1,23 @@
 import datetime
+from numpy.lib.financial import pmt
 import pandas as pd
 import numpy_financial as npf
 
 import aiof.config as config
 
+from aiof.helpers import fv
+
 
 # Configs
 _settings = config.get_settings()
+_default_interest = _settings.DefaultInterest
 _round_dig = _settings.DefaultRoundingDigit
 
 
 def withdrawal_calc(
     retirement_number: float = None,
     take_out_percentage: float = None,
-    number_of_years: float = None,
+    number_of_years: int = None,
     as_json: bool = False) -> pd.DataFrame:
     """
     Calculate retirement
@@ -24,7 +28,7 @@ def withdrawal_calc(
         retirement number. defaults to `1,000,000`\n
     `take_out_percentage` : float.
         take out percentage of total retirement number. defaults to `3%`\n
-    `number_of_years` : float.
+    `number_of_years` : int.
         number of years to take money out. defaults to `35`
     """
     # Check for None
@@ -43,9 +47,26 @@ def withdrawal_calc(
         raise ValueError("Number of years must be between 0 and 100")
 
     # Initial data frame
-    df = pd.DataFrame(columns=["year", "principalPaid", "interestPaid", "startingBalance", "endingBalance"], dtype="float")
-    df.reset_index(inplace=True)
-    df.index += 1
-    df.index.name = "period"
+    df = pd.DataFrame(columns=["year", "takeOutPercentage", "startingRetirementNumber", "withdrawal", "endingRetirementNumber"], dtype="float")
 
-    print(df)
+    withdrawal = retirement_number * take_out_percentage
+
+    df.loc[0, "year"] = 1
+    df.loc[0, "takeOutPercentage"] = take_out_percentage
+    df.loc[0, "startingRetirementNumber"] = retirement_number
+    df.loc[0, "withdrawal"] = withdrawal
+    df.loc[0, "endingRetirementNumber"] = retirement_number - df.loc[0, "withdrawal"]
+    for year in range(1, int(number_of_years)):
+        df.loc[year, "year"] = year + 1
+        df.loc[year, "takeOutPercentage"] = take_out_percentage
+        df.loc[year, "startingRetirementNumber"] = -npf.fv(
+            rate=_default_interest / 100,
+            nper=1,
+            pmt=0,
+            pv=df.loc[year - 1, "endingRetirementNumber"],
+            when='end')
+        df.loc[year, "withdrawal"] = withdrawal
+        df.loc[year, "endingRetirementNumber"] = df.loc[year, "startingRetirementNumber"] - df.loc[0, "withdrawal"]    
+    df = df.round(_round_dig)
+
+    return df if not as_json else df.to_dict(orient="records")
