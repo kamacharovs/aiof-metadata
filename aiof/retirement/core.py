@@ -55,18 +55,25 @@ def withdrawal_calc(
     df.loc[0, "takeOutPercentage"] = take_out_percentage
     df.loc[0, "startingRetirementNumber"] = retirement_number
     df.loc[0, "withdrawal"] = withdrawal
-    df.loc[0, "endingRetirementNumber"] = retirement_number - df.loc[0, "withdrawal"]
-    for year in range(1, int(number_of_years)):
-        df.loc[year, "year"] = year + 1
-        df.loc[year, "takeOutPercentage"] = take_out_percentage
-        df.loc[year, "startingRetirementNumber"] = -npf.fv(
+    df.loc[0, "endingRetirementNumber"] =-npf.fv(
             rate=_default_interest / 100,
             nper=1,
             pmt=0,
-            pv=df.loc[year - 1, "endingRetirementNumber"],
+            pv=retirement_number - withdrawal,
             when='end')
+
+    for year in range(1, int(number_of_years)):
+        df.loc[year, "year"] = year + 1
+        df.loc[year, "takeOutPercentage"] = take_out_percentage
+        df.loc[year, "startingRetirementNumber"] = df.loc[year - 1, "endingRetirementNumber"]
         df.loc[year, "withdrawal"] = withdrawal
-        df.loc[year, "endingRetirementNumber"] = df.loc[year, "startingRetirementNumber"] - df.loc[0, "withdrawal"]    
+        df.loc[year, "endingRetirementNumber"] = -npf.fv(
+            rate=_default_interest / 100,
+            nper=1,
+            pmt=0,
+            pv=df.loc[year, "startingRetirementNumber"] - df.loc[year, "withdrawal"],
+            when='end')
+    df["year"] = df["year"].astype(int)
     df = df.round(_round_dig)
 
     return df if not as_json else df.to_dict(orient="records")
