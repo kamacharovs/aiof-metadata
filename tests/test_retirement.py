@@ -63,6 +63,13 @@ class RetirementTestCase(unittest.TestCase):
                 take_out_percentage = -3.5,
                 number_of_years     = 30)
 
+    def test_withdrawal_calc_take_out_percentage_100(self):
+        with self.assertRaises(ValueError): 
+            withdrawal_calc(
+                retirement_number   = 1000000,
+                take_out_percentage = 100,
+                number_of_years     = 30)
+
     def test_withdrawal_calc_number_of_years_0(self):
         with self.assertRaises(ValueError): 
             withdrawal_calc(
