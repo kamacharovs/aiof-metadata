@@ -18,3 +18,11 @@ class RetirementTestCase(unittest.TestCase):
 
     def assert_withdrawal_calc(self, df):
         assert df is not None
+        assert df.size > 0
+
+        for i in range (0, len(df)):
+            assert df.loc[i, "year"] >= 1
+            assert df.loc[i, "takeOutPercentage"] > 0
+            assert df.loc[i, "startingRetirementNumber"] > 0
+            assert df.loc[i, "withdrawal"] > 0
+            assert df.loc[i, "endingRetirementNumber"] > 0
