@@ -41,10 +41,10 @@ def withdrawal_calc(
 
     if retirement_number <= 0:
         raise ValueError("Retirement number cannot be negative")
-    elif take_out_percentage <= 0 or take_out_percentage > 100:
-        raise ValueError("Take out percentage must be between 0 and 100")
+    elif take_out_percentage <= 0 or take_out_percentage > 0.1:
+        raise ValueError("Take out percentage must be between 1 and 100")
     elif number_of_years <= 0 or number_of_years > 100:
-        raise ValueError("Number of years must be between 0 and 100")
+        raise ValueError("Number of years must be between 1 and 100")
 
     # Initial data frame
     df = pd.DataFrame(columns=["year", "takeOutPercentage", "startingRetirementNumber", "withdrawal", "endingRetirementNumber"], dtype="float")
@@ -61,6 +61,9 @@ def withdrawal_calc(
             pmt=0,
             pv=retirement_number - withdrawal,
             when='end')
+
+    if take_out_percentage == 100:
+        return df if not as_json else df.to_dict(orient="records")
 
     for year in range(1, int(number_of_years)):
         df.loc[year, "year"] = year + 1
