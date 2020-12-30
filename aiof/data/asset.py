@@ -17,7 +17,7 @@ _default_contribution = 500
 
 class Asset(BaseModel):
     name: Optional[str]
-    type: str
+    typeName: str
     value: float
 
     def subtract(self, value):
@@ -27,7 +27,7 @@ class Asset(BaseModel):
 
 class AssetFv(BaseModel):
     year: Optional[int]
-    type: Optional[str]
+    typeName: Optional[str]
     interest: Optional[float]
     pv: Optional[float]
     fv: Optional[float]
@@ -35,7 +35,7 @@ class AssetFv(BaseModel):
 
 class ComparableAsset(BaseModel):
     name: Optional[str]
-    type: Optional[str]
+    typeName: Optional[str]
     value: float
 
     interest: Optional[float] = _default_interest               # Interest

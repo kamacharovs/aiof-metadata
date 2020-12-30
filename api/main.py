@@ -1,14 +1,13 @@
 import time
-from warnings import catch_warnings
 import aiof.config as config
 import aiof.helpers as helpers
 
 from aiof.data.asset import ComparableAsset
-from api.routers import fi, car, analytics, market
+from api.routers import fi, car, analytics, market, property, retirement
 
 from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, JSONResponse
 from logzero import logger
 
 
@@ -23,6 +22,19 @@ app.add_middleware(
     allow_headers=config.get_settings().cors_allowed_headers,
 )
 
+
+@app.exception_handler(ValueError)
+async def unicorn_exception_handler(req: Request, ve: ValueError):
+    return write_exception_response(status_code=400, message=ve)
+
+def write_exception_response(status_code: int, message: str):
+    return JSONResponse(
+        status_code=status_code,
+        content={
+            "code": status_code,
+            "message": f"{message}"
+            },
+    )
 
 @app.middleware("http")
 async def exception_middleware(request: Request, call_next):
@@ -99,3 +111,13 @@ app.include_router(
     market.router,
     prefix="/api/market",
     tags=["market"])
+
+app.include_router(
+    property.router,
+    prefix="/api/property",
+    tags=["property"])
+
+app.include_router(
+    retirement.router,
+    prefix="/api/retirement",
+    tags=["retirement"])

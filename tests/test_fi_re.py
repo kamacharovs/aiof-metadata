@@ -53,3 +53,4 @@ class FireTestCase(unittest.TestCase):
             assert c.presentValueFour is not None
             assert c.presentValueThree is not None
             assert c.withdrawTwo is not None
+            

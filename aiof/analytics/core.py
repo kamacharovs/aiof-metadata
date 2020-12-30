@@ -7,7 +7,7 @@ import aiof.helpers as helpers
 from aiof.data.analytics import Analytics, AssetsLiabilities
 from aiof.data.asset import Asset, AssetFv
 from aiof.data.liability import Liability
-from aiof.fi.core import cost_of_raising_children
+from aiof.data.life_event import LifeEventRequest, LifeEventResponse
 
 from typing import List
 
@@ -50,9 +50,9 @@ def analyze(
     acceptable_assets = ["cash"]
     acceptable_liabilitites = ["credit card"]
 
-    cash_assets = list(map(lambda x: x.value, filter(lambda x: x.type.lower() in acceptable_assets, assets)))
+    cash_assets = list(map(lambda x: x.value, filter(lambda x: x.typeName.lower() in acceptable_assets, assets)))
     total_cash_assets = sum(cash_assets)
-    cc_liabilities = list(map(lambda x: x.value, filter(lambda x: x.type.lower() in acceptable_liabilitites, liabilities)))
+    cc_liabilities = list(map(lambda x: x.value, filter(lambda x: x.typeName.lower() in acceptable_liabilitites, liabilities)))
     total_cc_liabilities = sum(cc_liabilities)
 
     # Calculate cashToCcRatio or ccToCashRatio
@@ -97,15 +97,15 @@ def assets_fv(
     for year in _years:
         for asset in assets:
             interest = 0.0
-            if (asset.type == "cash"):
+            if (asset.typeName == "cash"):
                 interest = _average_bank_interest
-            elif (asset.type == "stock"):
+            elif (asset.typeName == "stock"):
                 interest = _average_market_interest
             fv_asset = helpers.fv(interest=interest, years=year, pmt=0, pv=asset.value)
             asset_fvs.append(
                 AssetFv(
                     year=year,
-                    type=asset.type,
+                    typeName=asset.typeName,
                     interest=interest,
                     pv=asset.value,
                     fv=round(fv_asset, _round_dig)
@@ -127,7 +127,7 @@ def debt_to_income_ratio_calc(
     `liabilities` : List[Liability].
         list of liabilities that will be used to calculate debt to income ratio\n
     """
-    filtered_liabilities = [x for x in liabilities if x.type.lower() in _acceptable_liability_types and x.monthlyPayment is not None]
+    filtered_liabilities = [x for x in liabilities if x.typeName.lower() in _acceptable_liability_types and x.monthlyPayment is not None]
 
     if len(filtered_liabilities) == 0:
         return 0.0
@@ -158,12 +158,27 @@ def debt_to_income_ratio_basic_calc(
     `income` : float. 
         annual income\n
     `total_monthly_debt_payments` : float.
-        total monthly debt payments. usually include credit cards, personal loan, student loan, etc.\n
+        total monthly debt payments. usually include credit cards, personal loan, student loan, etc.
     """
     return round(((total_monthly_debt_payments * 12) / income) * 100, _round_dig)
 
 
-def life_event(
-    event: str):
-    if event == "raising children":
-        cost = cost_of_raising_children()
+def life_event(life_event_request: LifeEventRequest) -> LifeEventResponse:
+    """
+    See how a life event impacts you
+
+    Parameters
+    ----------
+    `life_event_request`: LifeEventRequest. 
+        the life event request
+    """
+    if life_event_request.type == "buying a house":
+        print("test")
+    elif life_event_request.type =="selling a car":
+        print("selling a car")
+
+    data = LifeEventResponse(
+        currentAssets = life_event_request.assets,
+        currentLiabilities = life_event_request.liabilities)
+
+    return data

@@ -10,28 +10,28 @@ class AnalyticsTestCase(unittest.TestCase):
 
     test_assets = [
         Asset(name="asset 1",
-            type="cash",
+            typeName="cash",
             value=35000),
         Asset(name="asset 2",
-            type="cash",
+            typeName="cash",
             value=8000),
         Asset(name="asset 3",
-            type="stock",
+            typeName="stock",
             value=24999)
     ]
     test_liabilities = [
         Liability(name="l1",
-            type="personal loan",
+            typeName="personal loan",
             value=1685.50,
             years=5,
             monthlyPayment=35),
         Liability(name="l2",
-            type="student loan",
+            typeName="student loan",
             value=25000,
             years=10,
             monthlyPayment=208),
         Liability(name="l3",
-            type="car loan",
+            typeName="car loan",
             value=34000,
             years=6,
             monthlyPayment=500)
@@ -58,7 +58,7 @@ class AnalyticsTestCase(unittest.TestCase):
 
         assert len(resp) > 0
         assert resp[0].year > 0
-        assert resp[0].type == "cash" or "stock"
+        assert resp[0].typeName == "cash" or "stock"
         assert resp[0].interest > 0
         assert resp[0].pv == self.test_assets[0].value
         assert resp[0].fv > self.test_assets[0].value
@@ -72,7 +72,7 @@ class AnalyticsTestCase(unittest.TestCase):
     def test_debt_to_income_ratio_calc_liabilities_is_zero(self):
         specific_liabilities = [
             Liability(name="l1",
-                type="rv",
+                typeName="rv",
                 value=1000)
         ]
         resp = debt_to_income_ratio_calc(income=150000, liabilities=specific_liabilities)
@@ -82,11 +82,11 @@ class AnalyticsTestCase(unittest.TestCase):
     def test_debt_to_income_ratio_calc_no_monthly_payment_but_years(self):
         specific_liabilities = [
             Liability(name="l1",
-                type="personal loan",
+                typeName="personal loan",
                 value=5000,
                 years=5),
             Liability(name="l2",
-                type="auto lease",
+                typeName="auto lease",
                 value=12500,
                 years=6)
         ]
