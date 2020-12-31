@@ -310,3 +310,21 @@ def get_current_month_first() -> datetime:
     """
     today = datetime.today()
     return datetime(today.year, today.month, 1)
+
+
+def get_up_to_current_month_df() -> pd.DataFrame:
+    """
+    Get `pandas.DataFrame` with prefilled `month` column
+
+    Returns
+    -------
+    `pandas.DataFrame`
+
+    Notes
+    -----
+    This can be used to easily get a head start of a dataframe where each month already has a column
+    """
+    months = datetime.today().month
+    df = pd.DataFrame(index=list(range(1, months + 1)), columns=["month"], dtype="int")
+    df["month"] = df.index
+    return df
