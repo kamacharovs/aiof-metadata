@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import numpy_financial as npf
 
+from datetime import datetime
 from logzero import logger
 from decimal import Decimal
 
@@ -292,3 +293,20 @@ def export_to_csv(df):
     stream = io.StringIO()
     df.to_csv(stream, index=False)
     return iter([stream.getvalue()])
+
+
+def get_current_month_first() -> datetime:
+    """
+    Get the current month's first day
+
+    Returns
+    -------
+    `datetime`
+
+    Notes
+    -----
+    This can be used to easily get the first day of the current month as a `datetime` object 
+    and use it as a starting point
+    """
+    today = datetime.today()
+    return datetime(today.year, today.month, 1)
