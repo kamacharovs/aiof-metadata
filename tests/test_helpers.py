@@ -114,5 +114,9 @@ class HelpersTestCase(unittest.TestCase):
         assert round(fv_res, 2) > 5000
 
 
-if __name__ == "__main__":
-    unittest.main()
+    def test_get_current_month_first(self):
+        datem = get_current_month_first()
+        assert datem is not None
+        assert datem.day == 1
+        assert datem.month > 0
+        assert datem.year > 0
