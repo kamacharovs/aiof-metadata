@@ -4,8 +4,6 @@ import numpy_financial as npf
 
 import aiof.config as config
 
-from aiof.helpers import to_percentage, convert_frequency, loan_payments_calc_as_table, fv
-
 
 # Configs
 _settings = config.get_settings()
@@ -129,24 +127,3 @@ def mortgage_calc(
     total_df = total_df.round(_round_dig)
 
     return df if not as_json else { "data": df.to_dict(orient="records"), "breakdown": total_df.to_dict(orient="records") }
-
-
-def house_mortgage_calc(principal_amount, rate_of_interest, number_of_periods, frequency="yearly"):
-    interest = to_percentage(rate_of_interest)
-    periods = convert_frequency(frequency) * number_of_periods
-    numerator = interest * pow((1 + interest), float(periods))
-    denominator = pow(1 + interest, float(periods)) - 1
-    return principal_amount * (numerator / denominator)
-
-
-def house_future_value_calc(periodic_payment, rate_of_interest, number_of_years, frequency="yearly"):
-    return fv(
-        interest=rate_of_interest, 
-        years=number_of_years,
-        pmt=periodic_payment,
-        pv=0,
-        frequency=frequency)
-
-
-def house_sample():
-    return loan_payments_calc_as_table(250000, 30, 3.25, "yearly")
