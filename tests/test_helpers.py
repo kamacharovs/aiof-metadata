@@ -120,3 +120,10 @@ class HelpersTestCase(unittest.TestCase):
         assert datem.day == 1
         assert datem.month > 0
         assert datem.year > 0
+
+
+    def test_get_month_year_df(self):
+        df = get_month_year_df()
+        assert df is not None
+        assert df["month"].iloc[0] > 0
+        assert df["year"].iloc[0] > 0
