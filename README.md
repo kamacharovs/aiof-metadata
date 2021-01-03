@@ -14,14 +14,21 @@ Financial Independence is based on the FIRE movement. Financial Independence, Re
 
 API endpoinds available are
 
+### Financial independence
+
 ```text
 /api/fi/time
-/api/fi/added/time
-/api/fi/compound/interest
 /api/fi/rule/of/72
+/api/fi/added/time
 /api/fi/ten/million/dream/{monthlyInvestment}
+/api/fi/compound/interest
 /api/fi/investment/fees/effect
+/api/fi/cost/of/raising/children
+/api/fi/cost/of/raising/children/families
 /api/fi/savings/rate
+/api/fi/health/bmi/imperial
+/api/fi/health/bmi/metric
+/api/fi/coast/savings
 ```
 
 ### Asset
