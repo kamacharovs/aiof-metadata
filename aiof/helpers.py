@@ -314,7 +314,7 @@ def get_current_month_first() -> datetime:
 
 def get_month_year_df() -> pd.DataFrame:
     """
-    Get `pandas.DataFrame` with prefilled `month` column
+    Get `pandas.DataFrame` with prefilled `month` and `year` column
 
     Returns
     -------
@@ -322,7 +322,7 @@ def get_month_year_df() -> pd.DataFrame:
 
     Notes
     -----
-    This can be used to easily get a head start of a dataframe where each month already has a column
+    This can be used to easily get a head start of a dataframe where each month and year already has a column
     """
     today = datetime.today()
     month = today.month
