@@ -4,12 +4,15 @@ import pandas as pd
 import numpy as np
 import numpy_financial as npf
 
+from aiof.config import Settings
+from aiof.data.asset import Asset, ComparableAsset
+
 from datetime import datetime
 from logzero import logger
 from decimal import Decimal
+from typing import List
+from pandas.core.frame import DataFrame
 
-from aiof.config import Settings
-from aiof.data.asset import ComparableAsset
 
 # Configs
 _settings = Settings()
@@ -330,4 +333,32 @@ def get_month_year_df() -> pd.DataFrame:
     df = pd.DataFrame(index=list(range(1, month + 1)), columns=["month", "year"], dtype="int")
     df["month"] = df.index
     df["year"] = year
+    return df
+
+
+def assets_to_df(assets: List[Asset]) -> DataFrame:
+    """
+    Convert a list of assets to a `pandas.DataFrame`
+
+    Parameters
+    -------
+    `assets` : List[Asset]
+        list of assets to convert to `pandas.DataFrame`
+
+    Returns
+    -------
+    `pandas.DataFrame`
+    """
+    df = pd.DataFrame(columns=["name", "typeName", "value"])
+    nameList = []
+    typeNameList = []
+    valueList = []
+    for asset in assets:
+        nameList.append(asset.name)
+        typeNameList.append(asset.typeName)
+        valueList.append(asset.value)
+    df["name"] = nameList
+    df["typeName"] = typeNameList
+    df["value"] = valueList
+    df["value"] = df["value"].astype(float)
     return df
