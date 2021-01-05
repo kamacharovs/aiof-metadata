@@ -1,8 +1,10 @@
 import statistics as st
+import pandas as pd
 import numpy_financial as npf
 
 import aiof.config as config
 import aiof.helpers as helpers
+import aiof.fi.core as fi
 
 from aiof.data.analytics import Analytics, AssetsLiabilities
 from aiof.data.asset import Asset, AssetFv
@@ -163,22 +165,77 @@ def debt_to_income_ratio_basic_calc(
     return round(((total_monthly_debt_payments * 12) / income) * 100, _round_dig)
 
 
-def life_event(life_event_request: LifeEventRequest) -> LifeEventResponse:
+def life_event(req: LifeEventRequest) -> LifeEventResponse:
     """
     See how a life event impacts you
 
     Parameters
     ----------
-    `life_event_request`: LifeEventRequest. 
+    `req`: LifeEventRequest. 
         the life event request
     """
-    if life_event_request.type == "buying a house":
+    # The idea is to have 2 or more sets of data frames. One will keep track of how your Assets will do over the years
+    if req.type.lower() == "having a child":
+        # How will Assets change over the years
+        cost = fi.cost_of_raising_children(
+            annual_expenses_start=10000,
+            annual_expenses_increment=2000,
+            children=[1],
+            interests=[2],
+            years=18)
+        assets_df = helpers.assets_to_df(req.assets)
+        total_cash = assets_df.loc[assets_df["typeName"] == "cash"]["value"].sum()
+        total_stock = assets_df.loc[assets_df["typeName"] == "stock"]["value"].sum()
+
+        # How it will effect your cash assets
+        # What will happen to your assets if you have a child?
+        cost_of_child = cost[0]
+        monthly_cost = cost_of_child["cost"][0]["value"] / (cost_of_child["years"] * 12)
+        years = list(range(1, cost_of_child["years"] + 1))
+
+        life_event_cash_df = pd.DataFrame(index=years, columns=["year", "cash", "stock"])
+        life_event_cash_df["year"] = years
+
+        life_event_cash_df.iloc[0, 1] = -npf.fv(
+            rate=(_settings.DefaultAverageBankInterest / 100) / 12,
+            nper=12,
+            pmt=-monthly_cost,
+            pv=total_cash,
+            when="end")
+
+        life_event_cash_df.iloc[0, 2] = -npf.fv(
+            rate=(_settings.DefaultInterest / 100) / 12,
+            nper=12,
+            pmt=0,
+            pv=total_stock,
+            when="end")
+
+        for i in range(1, years[-1]):
+            # Calculate the future value of your asset each time 
+            # and then take out the expense
+            life_event_cash_df.iloc[i, 1] = -npf.fv(
+                rate=(_settings.DefaultAverageBankInterest / 100) / 12,
+                nper=12,
+                pmt=-monthly_cost,
+                pv=life_event_cash_df.iloc[i - 1, 1],
+                when="end")
+
+            life_event_cash_df.iloc[i, 2] = -npf.fv(
+                rate=(_settings.DefaultInterest / 100) / 12,
+                nper=12,
+                pmt=0,
+                pv=life_event_cash_df.iloc[i - 1, 2],
+                when="end")
+        life_event_cash_df = life_event_cash_df.round(_round_dig)
+        print(life_event_cash_df)
+
+    elif req.type == "buying a house":
         print("test")
-    elif life_event_request.type =="selling a car":
+    elif req.type =="selling a car":
         print("selling a car")
 
     data = LifeEventResponse(
-        currentAssets = life_event_request.assets,
-        currentLiabilities = life_event_request.liabilities)
+        currentAssets = req.assets,
+        currentLiabilities = req.liabilities)
 
     return data

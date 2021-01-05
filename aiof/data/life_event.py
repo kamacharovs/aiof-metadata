@@ -20,7 +20,7 @@ class LifeEventRequest(BaseModel):
     Life event request class. This is used to request specific event
     """
     assets: List[Asset]
-    liabilities: List[Liability]
+    liabilities: Optional[List[Liability]]
     type: str
     amount: float
     plannedDate: Optional[datetime.datetime]
