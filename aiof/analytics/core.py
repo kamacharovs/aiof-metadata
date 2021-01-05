@@ -185,7 +185,11 @@ def life_event(req: LifeEventRequest) -> LifeEventResponse:
             years=18)
         assets_df = helpers.assets_to_df(req.assets)
         total_cash = assets_df.loc[assets_df["typeName"] == "cash"]["value"].sum()
+        cash_monthly_contributions = 1000
+        cash_yearly_contributions = cash_monthly_contributions * 12
         total_stock = assets_df.loc[assets_df["typeName"] == "stock"]["value"].sum()
+        stock_monthly_contributions = 500
+        stock_yearly_contributions = stock_monthly_contributions * 12
 
         # How it will effect your cash assets
         # What will happen to your assets if you have a child?
@@ -193,41 +197,82 @@ def life_event(req: LifeEventRequest) -> LifeEventResponse:
         monthly_cost = cost_of_child["cost"][0]["value"] / (cost_of_child["years"] * 12)
         years = list(range(1, cost_of_child["years"] + 1))
 
-        life_event_cash_df = pd.DataFrame(index=years, columns=["year", "cash", "stock"])
-        life_event_cash_df["year"] = years
+        life_event_df = pd.DataFrame(index=years, columns=[
+            "year", 
+            "cash", 
+            "cashContribution", 
+            "cashWithContributions", 
+            "stock", 
+            "stockContribution", 
+            "stockWithContribuions"])
 
-        life_event_cash_df.iloc[0, 1] = -npf.fv(
+        life_event_df["year"] = years
+
+        life_event_df.iloc[0, 1] = -npf.fv(
             rate=(_settings.DefaultAverageBankInterest / 100) / 12,
             nper=12,
             pmt=-monthly_cost,
             pv=total_cash,
             when="end")
 
-        life_event_cash_df.iloc[0, 2] = -npf.fv(
+        life_event_df.iloc[0, 2] = cash_yearly_contributions
+        life_event_df.iloc[0, 3] = -npf.fv(
+            rate=(_settings.DefaultAverageBankInterest / 100) / 12,
+            nper=12,
+            pmt=cash_monthly_contributions - monthly_cost,
+            pv=total_cash,
+            when="end")
+
+        life_event_df.iloc[0, 4] = -npf.fv(
             rate=(_settings.DefaultInterest / 100) / 12,
             nper=12,
             pmt=0,
             pv=total_stock,
             when="end")
 
+        life_event_df.iloc[0, 5] = stock_yearly_contributions
+        life_event_df.iloc[0, 6] = -npf.fv(
+            rate=(_settings.DefaultInterest / 100) / 12,
+            nper=12,
+            pmt=stock_monthly_contributions,
+            pv=total_stock,
+            when="end")
+
         for i in range(1, years[-1]):
             # Calculate the future value of your asset each time 
             # and then take out the expense
-            life_event_cash_df.iloc[i, 1] = -npf.fv(
+            life_event_df.iloc[i, 1] = -npf.fv(
                 rate=(_settings.DefaultAverageBankInterest / 100) / 12,
                 nper=12,
                 pmt=-monthly_cost,
-                pv=life_event_cash_df.iloc[i - 1, 1],
+                pv=life_event_df.iloc[i - 1, 1],
                 when="end")
 
-            life_event_cash_df.iloc[i, 2] = -npf.fv(
+            life_event_df.iloc[i, 2] = cash_yearly_contributions
+            life_event_df.iloc[i, 3] = -npf.fv(
+                rate=(_settings.DefaultAverageBankInterest / 100) / 12,
+                nper=12,
+                pmt=cash_monthly_contributions - monthly_cost,
+                pv=life_event_df.iloc[i - 1, 3],
+                when="end")
+
+            life_event_df.iloc[i, 4] = -npf.fv(
                 rate=(_settings.DefaultInterest / 100) / 12,
                 nper=12,
                 pmt=0,
-                pv=life_event_cash_df.iloc[i - 1, 2],
+                pv=life_event_df.iloc[i - 1, 4],
                 when="end")
-        life_event_cash_df = life_event_cash_df.round(_round_dig)
-        print(life_event_cash_df)
+
+            life_event_df.iloc[i, 5] = stock_yearly_contributions
+            life_event_df.iloc[i, 6] = -npf.fv(
+                rate=(_settings.DefaultInterest / 100) / 12,
+                nper=12,
+                pmt=stock_monthly_contributions,
+                pv=life_event_df.iloc[i - 1, 6],
+                when="end")
+
+        life_event_df = life_event_df.round(_round_dig)
+        print(life_event_df)
 
     elif req.type == "buying a house":
         print("test")
