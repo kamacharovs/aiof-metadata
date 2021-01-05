@@ -86,7 +86,25 @@ async def frequencies_map():
 @app.get("/api/app/settings")
 async def info(settings: config.Settings = Depends(config.get_settings)):
     return {
-        "cors_origins": settings.cors_origins,
+        "defaults": {
+            "rounding_digit": settings.DefaultRoundingDigit,
+            "frequency": settings.DefaultFrequency,
+            "interest": settings.DefaultInterest,
+            "hys_interest": settings.DefaultHysInterest,
+            "average_bank_interest": settings.DefaultAverageBankInterest,
+            "investment_fee": settings.DefaultInvestmentFee,
+            "tax_drag": settings.DefaultTaxDrag,
+            "child": settings.DefaultChild
+        },
+        "cors": {
+            "origins": settings.cors_origins,
+            "allowed_methods": settings.cors_allowed_methods,
+            "allowed_headers": settings.cors_allowed_headers
+        },
+        "types": {
+            "asset": settings.AssetTypes,
+            "liability": settings.LiabilityTypes
+        }
     }
 
 
