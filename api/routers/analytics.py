@@ -17,4 +17,6 @@ async def analyze(req: AssetsLiabilitiesRequest):
 
 @router.post("/life/event")
 async def analyze(req: LifeEventRequest):
-    return a.life_event(req = req)
+    return a.life_event(
+        req     = req,
+        as_json = True)

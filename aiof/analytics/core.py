@@ -165,7 +165,9 @@ def debt_to_income_ratio_basic_calc(
     return round(((total_monthly_debt_payments * 12) / income) * 100, _round_dig)
 
 
-def life_event(req: LifeEventRequest) -> LifeEventResponse:
+def life_event(
+    req: LifeEventRequest,
+    as_json: bool = False) -> LifeEventResponse:
     """
     See how a life event impacts you
 
@@ -273,10 +275,10 @@ def life_event(req: LifeEventRequest) -> LifeEventResponse:
 
         life_event_df = life_event_df.round(_round_dig)
         print(life_event_df)
-
-    elif req.type == "buying a house":
+        return life_event_df if not as_json else life_event_df.to_dict(orient="records")
+    elif req.type.lower() == "buying a house":
         print("test")
-    elif req.type =="selling a car":
+    elif req.type.lower() =="selling a car":
         print("selling a car")
 
     data = LifeEventResponse(
