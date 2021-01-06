@@ -138,6 +138,14 @@ class Settings(BaseSettings):
         "other"
     ]
 
+    # Life event
+    LifeEventTypes = [
+        "having a child",
+        "buying a house",
+        "buying a car",
+        "selling a car"
+    ]
+
 
 @lru_cache()
 def get_settings():

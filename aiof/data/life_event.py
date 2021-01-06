@@ -1,28 +1,25 @@
 import datetime
 
+import aiof.config as config
+
 from aiof.data.asset import Asset
 from aiof.data.liability import Liability
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, typing, validator
 from typing import List, Optional
 
 
-_event_types = [
-    "having a child",
-    "buying a car",
-    "selling a car",
-    "buying a house",
-    "buying a condo",
-]
+_settings = config.get_settings()
+_event_types = _settings.LifeEventTypes
 
 class LifeEventRequest(BaseModel):
     """
     Life event request class. This is used to request specific event
     """
     assets: List[Asset]
-    liabilities: List[Liability]
+    liabilities: Optional[List[Liability]]
     type: str
-    amount: float
+    amount: Optional[float]
     plannedDate: Optional[datetime.datetime]
 
     @validator("type")
@@ -37,4 +34,5 @@ class LifeEventResponse(BaseModel):
     Life event response class. This is used to return specific response
     """
     currentAssets: List[Asset]
-    currentLiabilities: List[Liability] 
+    currentLiabilities: List[Liability]
+    event: Optional[typing.Any]
