@@ -329,7 +329,7 @@ def life_event(
                     pv=investment_df.iloc[i - 1, 3],
                     when="end")
 
-        if not investment_df.empty:
+        if not investment_df.isnull().values.any():
             life_event_df = pd.concat([life_event_df, investment_df], axis=1)
         life_event_df = life_event_df.round(_round_dig)
         data.event = life_event_df if not as_json else life_event_df.to_dict(orient="records")
