@@ -200,6 +200,7 @@ def life_event(
         # For each year you are raising a child, then your assets will change
         # For `cash` : take out cost of child, grow at bank interest rate
         # For `stock` : grow at default market rate
+        # For `investment` : grow at default market rate
         cost = fi.cost_of_raising_children(
             annual_expenses_start=10000,
             annual_expenses_increment=2000,
@@ -259,6 +260,28 @@ def life_event(
             pv=total_stock,
             when="end")
 
+        # Investment
+        total_investment = assets_df.loc[assets_df["typeName"] == "investment"]["value"].sum()
+        investment_monthly_contributions = 500
+        investment_yearly_contributions = stock_monthly_contributions * 12
+        investment_df = pd.DataFrame(index=years, columns=["year", "investment", "investmentContribution", "investmentWithContributions"])
+        if total_investment != 0:
+            investment_df["year"] = years
+            investment_df.iloc[0, 1] = -npf.fv(
+                rate=(_settings.DefaultInterest / 100) / 12,
+                nper=12,
+                pmt=0,
+                pv=total_investment,
+                when="end")
+            investment_df.iloc[0, 2] = investment_yearly_contributions
+            investment_df.iloc[0, 3] = -npf.fv(
+                rate=(_settings.DefaultInterest / 100) / 12,
+                nper=12,
+                pmt=investment_monthly_contributions,
+                pv=total_investment,
+                when="end")
+        # End investment
+
         for i in range(1, years[-1]):
             life_event_df.iloc[i, 1] = -npf.fv(
                 rate=(_settings.DefaultAverageBankInterest / 100) / 12,
@@ -290,6 +313,24 @@ def life_event(
                 pv=life_event_df.iloc[i - 1, 6],
                 when="end")
 
+            # Investment
+            if total_investment != 0:
+                investment_df.iloc[i, 1] = -npf.fv(
+                    rate=(_settings.DefaultInterest / 100) / 12,
+                    nper=12,
+                    pmt=0,
+                    pv=investment_df.iloc[i - 1, 1],
+                    when="end")
+                investment_df.iloc[i, 2] = investment_yearly_contributions
+                investment_df.iloc[i, 3] = -npf.fv(
+                    rate=(_settings.DefaultInterest / 100) / 12,
+                    nper=12,
+                    pmt=investment_monthly_contributions,
+                    pv=investment_df.iloc[i - 1, 3],
+                    when="end")
+
+        if not investment_df.empty:
+            life_event_df = pd.concat([life_event_df, investment_df], axis=1)
         life_event_df = life_event_df.round(_round_dig)
         data.event = life_event_df if not as_json else life_event_df.to_dict(orient="records")
     elif req.type.lower() == "buying a house":
