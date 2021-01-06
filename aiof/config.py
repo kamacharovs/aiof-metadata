@@ -138,7 +138,6 @@ class Settings(BaseSettings):
         "other"
     ]
 
-
     # Life event
     LifeEventTypes = [
         "having a child",

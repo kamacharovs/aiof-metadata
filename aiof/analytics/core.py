@@ -197,7 +197,9 @@ def life_event(
         currentLiabilities = req.liabilities)
 
     if req.type.lower() == "having a child":
-        # How will Assets change over the years
+        # For each year you are raising a child, then your assets will change
+        # For `cash` : take out cost of child, grow at bank interest rate
+        # For `stock` : grow at default market rate
         cost = fi.cost_of_raising_children(
             annual_expenses_start=10000,
             annual_expenses_increment=2000,
@@ -212,8 +214,6 @@ def life_event(
         stock_monthly_contributions = 500
         stock_yearly_contributions = stock_monthly_contributions * 12
 
-        # How it will effect your cash assets
-        # What will happen to your assets if you have a child?
         cost_of_child = cost[0]
         monthly_cost = cost_of_child["cost"][0]["value"] / (cost_of_child["years"] * 12)
         years = list(range(1, cost_of_child["years"] + 1))
@@ -259,11 +259,7 @@ def life_event(
             pv=total_stock,
             when="end")
 
-        # For each year you are raising a child, then your assets will change
-        # For `cash` : take out cost of child, grow at bank interest rate
-        # For `stock` : grow at default market rate
         for i in range(1, years[-1]):
-            # Calculate the future value of your assets
             life_event_df.iloc[i, 1] = -npf.fv(
                 rate=(_settings.DefaultAverageBankInterest / 100) / 12,
                 nper=12,
