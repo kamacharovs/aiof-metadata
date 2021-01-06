@@ -175,6 +175,52 @@ def life_event_types() -> List[str]:
     """
     return _settings.LifeEventTypes
 
+def life_event_df_f(
+    asset_type: str,
+    years: int,
+    total: float,
+    monthly_contribution: float):
+
+    years_list = list(range(1, years + 1))
+    # Figure out the interest based on asset_type
+    interest = 0
+    if asset_type in ["cash"]:
+        interest = _settings.DefaultAverageBankInterest
+    elif asset_type in ["stock", "investment"]:
+        interest = _settings.DefaultInterest
+
+    yearly_contribution = monthly_contribution * 12
+    df = pd.DataFrame(index=years_list, columns=["year", f"{asset_type}", f"{asset_type}Contribution", f"{asset_type}WithContributions"])
+    df["year"] = years_list
+    df.iloc[0, 1] = -npf.fv(
+        rate=(interest / 100) / 12,
+        nper=12,
+        pmt=0,
+        pv=total,
+        when="end")
+    df.iloc[0, 2] = yearly_contribution
+    df.iloc[0, 3] = -npf.fv(
+        rate=(interest / 100) / 12,
+        nper=12,
+        pmt=monthly_contribution,
+        pv=total,
+        when="end")
+    for i in range(1, years):
+        df.iloc[i, 1] = -npf.fv(
+                    rate=(interest / 100) / 12,
+                    nper=12,
+                    pmt=0,
+                    pv=df.iloc[i - 1, 1],
+                    when="end")
+        df.iloc[i, 2] = yearly_contribution
+        df.iloc[i, 3] = -npf.fv(
+                    rate=(interest / 100) / 12,
+                    nper=12,
+                    pmt=monthly_contribution,
+                    pv=df.iloc[i - 1, 3],
+                    when="end")
+    print(df)
+    return df
 
 def life_event(
     req: LifeEventRequest,
@@ -201,12 +247,13 @@ def life_event(
         # For `cash` : take out cost of child, grow at bank interest rate
         # For `stock` : grow at default market rate
         # For `investment` : grow at default market rate
+        child_year_to_be_raised_to = 18
         cost = fi.cost_of_raising_children(
             annual_expenses_start=10000,
             annual_expenses_increment=2000,
             children=[1],
             interests=[2],
-            years=18)
+            years=child_year_to_be_raised_to)
         assets_df = helpers.assets_to_df(req.assets)
         total_cash = assets_df.loc[assets_df["typeName"] == "cash"]["value"].sum()
         cash_monthly_contributions = 1000
@@ -214,6 +261,8 @@ def life_event(
         total_stock = assets_df.loc[assets_df["typeName"] == "stock"]["value"].sum()
         stock_monthly_contributions = 500
         stock_yearly_contributions = stock_monthly_contributions * 12
+
+        total_investment = assets_df.loc[assets_df["typeName"] == "investment"]["value"].sum()
 
         cost_of_child = cost[0]
         monthly_cost = cost_of_child["cost"][0]["value"] / (cost_of_child["years"] * 12)
@@ -261,26 +310,11 @@ def life_event(
             when="end")
 
         # Investment
-        total_investment = assets_df.loc[assets_df["typeName"] == "investment"]["value"].sum()
-        investment_monthly_contributions = 500
-        investment_yearly_contributions = stock_monthly_contributions * 12
-        investment_df = pd.DataFrame(index=years, columns=["year", "investment", "investmentContribution", "investmentWithContributions"])
-        if total_investment != 0:
-            investment_df["year"] = years
-            investment_df.iloc[0, 1] = -npf.fv(
-                rate=(_settings.DefaultInterest / 100) / 12,
-                nper=12,
-                pmt=0,
-                pv=total_investment,
-                when="end")
-            investment_df.iloc[0, 2] = investment_yearly_contributions
-            investment_df.iloc[0, 3] = -npf.fv(
-                rate=(_settings.DefaultInterest / 100) / 12,
-                nper=12,
-                pmt=investment_monthly_contributions,
-                pv=total_investment,
-                when="end")
-        # End investment
+        investment_df = life_event_df_f(
+            asset_type              = "investment",
+            years                   = child_year_to_be_raised_to,
+            total                   = total_investment,
+            monthly_contribution    = 500)
 
         for i in range(1, years[-1]):
             life_event_df.iloc[i, 1] = -npf.fv(
@@ -312,22 +346,6 @@ def life_event(
                 pmt=stock_monthly_contributions,
                 pv=life_event_df.iloc[i - 1, 6],
                 when="end")
-
-            # Investment
-            if total_investment != 0:
-                investment_df.iloc[i, 1] = -npf.fv(
-                    rate=(_settings.DefaultInterest / 100) / 12,
-                    nper=12,
-                    pmt=0,
-                    pv=investment_df.iloc[i - 1, 1],
-                    when="end")
-                investment_df.iloc[i, 2] = investment_yearly_contributions
-                investment_df.iloc[i, 3] = -npf.fv(
-                    rate=(_settings.DefaultInterest / 100) / 12,
-                    nper=12,
-                    pmt=investment_monthly_contributions,
-                    pv=investment_df.iloc[i - 1, 3],
-                    when="end")
 
         if not investment_df.isnull().values.any():
             life_event_df = pd.concat([life_event_df, investment_df], axis=1)
