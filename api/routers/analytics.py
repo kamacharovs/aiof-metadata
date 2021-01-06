@@ -15,8 +15,13 @@ async def analyze(req: AssetsLiabilitiesRequest):
         assets      = req.assets,
         liabilities = req.liabilities)
 
+@router.get("/life/event/types")
+async def get_life_event_types():
+    return a.life_event_types()
+
+
 @router.post("/life/event")
-async def analyze(req: LifeEventRequest):
+async def get_life_event(req: LifeEventRequest):
     return a.life_event(
         req     = req,
         as_json = True)

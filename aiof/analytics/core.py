@@ -165,6 +165,17 @@ def debt_to_income_ratio_basic_calc(
     return round(((total_monthly_debt_payments * 12) / income) * 100, _round_dig)
 
 
+def life_event_types() -> List[str]:
+    """
+    Get list of all life event types
+
+    Returns
+    ----------
+    `List[str]`
+    """
+    return _settings.LifeEventTypes
+
+
 def life_event(
     req: LifeEventRequest,
     as_json: bool = False) -> LifeEventResponse:
@@ -175,8 +186,16 @@ def life_event(
     ----------
     `req`: LifeEventRequest. 
         the life event request
-    """
-    # The idea is to have 2 or more sets of data frames. One will keep track of how your Assets will do over the years
+
+    Notes
+    ----------
+    There are a few assumption when it comes to your Assets. If they are of type `cash` then they are sitting in a bank with
+    national average interest. If they are of type `stock` then they are invested in the market and the default market interest is used
+    """   
+    data = LifeEventResponse(
+        currentAssets = req.assets,
+        currentLiabilities = req.liabilities)
+
     if req.type.lower() == "having a child":
         # How will Assets change over the years
         cost = fi.cost_of_raising_children(
@@ -240,9 +259,11 @@ def life_event(
             pv=total_stock,
             when="end")
 
+        # For each year you are raising a child, then your assets will change
+        # For `cash` : take out cost of child, grow at bank interest rate
+        # For `stock` : grow at default market rate
         for i in range(1, years[-1]):
-            # Calculate the future value of your asset each time 
-            # and then take out the expense
+            # Calculate the future value of your assets
             life_event_df.iloc[i, 1] = -npf.fv(
                 rate=(_settings.DefaultAverageBankInterest / 100) / 12,
                 nper=12,
@@ -275,14 +296,10 @@ def life_event(
 
         life_event_df = life_event_df.round(_round_dig)
         print(life_event_df)
-        return life_event_df if not as_json else life_event_df.to_dict(orient="records")
+        data.event = life_event_df if not as_json else life_event_df.to_dict(orient="records")
     elif req.type.lower() == "buying a house":
         print("test")
-    elif req.type.lower() =="selling a car":
+    elif req.type.lower() == "selling a car":
         print("selling a car")
-
-    data = LifeEventResponse(
-        currentAssets = req.assets,
-        currentLiabilities = req.liabilities)
 
     return data

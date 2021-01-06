@@ -2,7 +2,7 @@ import unittest
 
 from aiof.data.asset import Asset
 from aiof.data.liability import Liability
-from aiof.analytics.core import analyze, assets_fv, debt_to_income_ratio_calc, debt_to_income_ratio_basic_calc
+from aiof.analytics.core import analyze, assets_fv, debt_to_income_ratio_calc, debt_to_income_ratio_basic_calc, life_event_types
 
 
 class AnalyticsTestCase(unittest.TestCase):
@@ -105,3 +105,12 @@ class AnalyticsTestCase(unittest.TestCase):
         resp = debt_to_income_ratio_basic_calc(income=1000, total_monthly_debt_payments=10)
 
         assert round(resp) == 12
+
+
+    def test_life_event_types_issuccessful(self):
+        types = life_event_types()
+
+        assert types is not None
+        assert len(types) > 0
+        assert types[0] is not None
+        assert types[0] != ""

@@ -3,7 +3,7 @@ import datetime
 from aiof.data.asset import Asset
 from aiof.data.liability import Liability
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, typing, validator
 from typing import List, Optional
 
 
@@ -22,7 +22,7 @@ class LifeEventRequest(BaseModel):
     assets: List[Asset]
     liabilities: Optional[List[Liability]]
     type: str
-    amount: float
+    amount: Optional[float]
     plannedDate: Optional[datetime.datetime]
 
     @validator("type")
@@ -37,4 +37,5 @@ class LifeEventResponse(BaseModel):
     Life event response class. This is used to return specific response
     """
     currentAssets: List[Asset]
-    currentLiabilities: List[Liability] 
+    currentLiabilities: List[Liability]
+    event: Optional[typing.Any]
