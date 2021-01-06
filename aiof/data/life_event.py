@@ -33,6 +33,6 @@ class LifeEventResponse(BaseModel):
     """
     Life event response class. This is used to return specific response
     """
-    currentAssets: List[Asset]
-    currentLiabilities: List[Liability]
+    currentAssets: Optional[List[Asset]]
+    currentLiabilities: Optional[List[Liability]]
     event: Optional[typing.Any]
