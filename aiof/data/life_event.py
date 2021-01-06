@@ -1,5 +1,7 @@
 import datetime
 
+import aiof.config as config
+
 from aiof.data.asset import Asset
 from aiof.data.liability import Liability
 
@@ -7,13 +9,8 @@ from pydantic import BaseModel, typing, validator
 from typing import List, Optional
 
 
-_event_types = [
-    "having a child",
-    "buying a car",
-    "selling a car",
-    "buying a house",
-    "buying a condo",
-]
+_settings = config.get_settings()
+_event_types = _settings.LifeEventTypes
 
 class LifeEventRequest(BaseModel):
     """

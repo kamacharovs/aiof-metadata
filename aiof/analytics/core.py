@@ -191,7 +191,7 @@ def life_event(
     ----------
     There are a few assumption when it comes to your Assets. If they are of type `cash` then they are sitting in a bank with
     national average interest. If they are of type `stock` then they are invested in the market and the default market interest is used
-    """   
+    """
     data = LifeEventResponse(
         currentAssets = req.assets,
         currentLiabilities = req.liabilities)
@@ -295,7 +295,6 @@ def life_event(
                 when="end")
 
         life_event_df = life_event_df.round(_round_dig)
-        print(life_event_df)
         data.event = life_event_df if not as_json else life_event_df.to_dict(orient="records")
     elif req.type.lower() == "buying a house":
         print("test")
