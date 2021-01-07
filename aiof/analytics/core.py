@@ -248,7 +248,9 @@ def life_event(
     Parameters
     ----------
     `req`: LifeEventRequest. 
-        the life event request
+        the life event request\n
+    `as_json`: bool.
+        whether to return the response as JSON. defaults to `False`
 
     Notes
     ----------
