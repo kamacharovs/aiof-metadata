@@ -183,6 +183,21 @@ def life_event_df_f(
     monthly_cost: float = None):
     """
     Create a life event `pandas.DataFrame` based on the asset type, total value and monthly contribution based on the number of years
+
+    Parameters
+    ----------
+    `asset_type`: str. 
+        the type of the asset. some examples are `cash`, `investment`, `stock`, etc.\n
+    `years`: int.
+        the number of years to create the `pandas.DataFrame` for\n
+    `start_amount`: float.
+        the start amount of the asset. this will be changing over the years based on default interests\n
+    `monthly_contribution`: float.
+        the monthly contribution to add on at the end of each year
+    
+    Returns
+    ----------
+    `pandas.DataFrame`
     """
     years_list = list(range(1, years + 1))
     interest = 0
