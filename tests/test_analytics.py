@@ -2,7 +2,7 @@ import unittest
 
 from aiof.data.asset import Asset
 from aiof.data.liability import Liability
-from aiof.analytics.core import analyze, assets_fv, debt_to_income_ratio_calc, debt_to_income_ratio_basic_calc, life_event_types
+from aiof.analytics.core import analyze, assets_fv, debt_to_income_ratio_calc, debt_to_income_ratio_basic_calc, life_event_types, life_event_df_f
 
 
 class AnalyticsTestCase(unittest.TestCase):
@@ -114,3 +114,18 @@ class AnalyticsTestCase(unittest.TestCase):
         assert len(types) > 0
         assert types[0] is not None
         assert types[0] != ""
+
+
+    def test_life_event_df_f_issuccessful(self):
+        df = life_event_df_f(
+            asset_type="investment",
+            years=25,
+            start_amount=35000,
+            monthly_contribution=750
+        )
+
+        assert df is not None
+        assert df.iloc[0][0] > 0
+        assert df.iloc[0][1] > 0
+        assert df.iloc[0][2] > 0
+        assert df.iloc[0][3] > 0

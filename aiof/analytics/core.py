@@ -178,7 +178,7 @@ def life_event_types() -> List[str]:
 def life_event_df_f(
     asset_type: str,
     years: int,
-    total: float,
+    start_amount: float,
     monthly_contribution: float,
     monthly_cost: float = None):
     """
@@ -198,14 +198,14 @@ def life_event_df_f(
         rate=(interest / 100) / 12,
         nper=12,
         pmt=-monthly_cost if monthly_cost is not None else 0,
-        pv=total,
+        pv=start_amount,
         when="end")
     df.iloc[0, 2] = yearly_contribution
     df.iloc[0, 3] = -npf.fv(
         rate=(interest / 100) / 12,
         nper=12,
         pmt=monthly_contribution - monthly_cost if monthly_cost is not None else monthly_contribution,
-        pv=total,
+        pv=start_amount,
         when="end")
 
     for i in range(1, years):
@@ -273,23 +273,22 @@ def life_event(
         cash_df = life_event_df_f(
             asset_type              = "cash",
             years                   = child_year_to_be_raised_to,
-            total                   = total_cash,
+            start_amount            = total_cash,
             monthly_contribution    = 1000,
             monthly_cost            = monthly_cost)
-        print(cash_df)
 
         # Stock
         stock_df = life_event_df_f(
             asset_type              = "stock",
             years                   = child_year_to_be_raised_to,
-            total                   = total_stock,
+            start_amount            = total_stock,
             monthly_contribution    = 500)
 
         # Investment
         investment_df = life_event_df_f(
             asset_type              = "investment",
             years                   = child_year_to_be_raised_to,
-            total                   = total_investment,
+            start_amount            = total_investment,
             monthly_contribution    = 500)
 
         if not cash_df.isnull().values.any():
