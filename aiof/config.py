@@ -108,6 +108,7 @@ class Settings(BaseSettings):
         "house",
         "investment",
         "stock",
+        "401(k)",
         "other"
     ]
 
