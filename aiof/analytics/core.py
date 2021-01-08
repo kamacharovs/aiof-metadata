@@ -24,7 +24,8 @@ _average_bank_interest = _settings.DefaultAverageBankInterest
 _average_market_interest = _settings.DefaultInterest
 _years = _settings.DefaultShortYears
 _acceptable_liability_types = _settings.AnalyticsDebtToIncomeAcceptableLiabilityTypes
-_asset_types = _settings.AssetType
+_asset_type = _settings.AssetType
+_life_event_type = _settings.LifeEvent
 
 
 def analyze(
@@ -202,9 +203,9 @@ def life_event_df_f(
     """
     years_list = list(range(1, years + 1))
     interest = 0
-    if asset_type in [_asset_types.CASH]:
+    if asset_type in [_asset_type.CASH]:
         interest = _settings.DefaultAverageBankInterest
-    elif asset_type in [_asset_types.STOCK, _asset_types.INVESTMENT]:
+    elif asset_type in [_asset_type.STOCK, _asset_type.INVESTMENT]:
         interest = _settings.DefaultInterest
 
     yearly_contribution = monthly_contribution * 12
@@ -264,7 +265,7 @@ def life_event(
 
     assets_df = helpers.assets_to_df(req.assets)
 
-    if req.type.lower() == "having a child":
+    if req.type.lower() == _life_event_type.HAVING_A_CHILD:
         # For each year you are raising a child, then your assets will change
         # For `cash` : take out cost of child, grow at bank interest rate
         # For `stock` : grow at default market rate
@@ -277,9 +278,9 @@ def life_event(
             interests=[2],
             years=child_year_to_be_raised_to)
             
-        total_cash = assets_df.loc[assets_df["typeName"] == _asset_types.CASH]["value"].sum()
-        total_stock = assets_df.loc[assets_df["typeName"] == _asset_types.STOCK]["value"].sum()
-        total_investment = assets_df.loc[assets_df["typeName"] == _asset_types.INVESTMENT]["value"].sum()
+        total_cash = assets_df.loc[assets_df["typeName"] == _asset_type.CASH]["value"].sum()
+        total_stock = assets_df.loc[assets_df["typeName"] == _asset_type.STOCK]["value"].sum()
+        total_investment = assets_df.loc[assets_df["typeName"] == _asset_type.INVESTMENT]["value"].sum()
 
         cost_of_child = cost[0]
         monthly_cost = cost_of_child["cost"][0]["value"] / (cost_of_child["years"] * 12)
@@ -290,7 +291,7 @@ def life_event(
 
         # Cash
         cash_df = life_event_df_f(
-            asset_type              = _asset_types.CASH,
+            asset_type              = _asset_type.CASH,
             years                   = child_year_to_be_raised_to,
             start_amount            = total_cash,
             monthly_contribution    = req.monthlyCashContribution if req.monthlyCashContribution is not None else 1000,
@@ -298,14 +299,14 @@ def life_event(
 
         # Stock
         stock_df = life_event_df_f(
-            asset_type              = _asset_types.STOCK,
+            asset_type              = _asset_type.STOCK,
             years                   = child_year_to_be_raised_to,
             start_amount            = total_stock,
             monthly_contribution    = req.monthlyStockContribution if req.monthlyStockContribution is not None else 500)
 
         # Investment
         investment_df = life_event_df_f(
-            asset_type              = _asset_types.INVESTMENT,
+            asset_type              = _asset_type.INVESTMENT,
             years                   = child_year_to_be_raised_to,
             start_amount            = total_investment,
             monthly_contribution    = req.monthlyInvestmentContribution if req.monthlyInvestmentContribution is not None else 500)
@@ -319,9 +320,9 @@ def life_event(
 
         life_event_df = life_event_df.round(_round_dig)
         data.event = life_event_df if not as_json else life_event_df.to_dict(orient="records")
-    elif req.type.lower() == "buying a house":
-        print("test")
-    elif req.type.lower() == "selling a car":
-        print("selling a car")
+    elif req.type.lower() == _life_event_type.BUYING_A_CAR:
+        print(_life_event_type.BUYING_A_CAR)
+    elif req.type.lower() == _life_event_type.SELLING_A_CAR:
+        print(_life_event_type.SELLING_A_CAR)
 
     return data
