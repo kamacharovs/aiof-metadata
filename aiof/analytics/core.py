@@ -292,7 +292,7 @@ def life_event(
             asset_type              = "cash",
             years                   = child_year_to_be_raised_to,
             start_amount            = total_cash,
-            monthly_contribution    = 1000,
+            monthly_contribution    = req.monthlyCashContribution if req.monthlyCashContribution is not None else 1000,
             monthly_cost            = monthly_cost)
 
         # Stock
@@ -300,14 +300,14 @@ def life_event(
             asset_type              = "stock",
             years                   = child_year_to_be_raised_to,
             start_amount            = total_stock,
-            monthly_contribution    = 500)
+            monthly_contribution    = req.monthlyStockContribution if req.monthlyStockContribution is not None else 500)
 
         # Investment
         investment_df = life_event_df_f(
             asset_type              = "investment",
             years                   = child_year_to_be_raised_to,
             start_amount            = total_investment,
-            monthly_contribution    = 500)
+            monthly_contribution    = req.monthlyInvestmentContribution if req.monthlyInvestmentContribution is not None else 500)
 
         if not cash_df.isnull().values.any():
             life_event_df = pd.merge(life_event_df, cash_df, on="year", how="outer")

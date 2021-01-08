@@ -22,6 +22,11 @@ class LifeEventRequest(BaseModel):
     amount: Optional[float]
     plannedDate: Optional[datetime.datetime]
 
+    # Contributions
+    monthlyCashContribution: Optional[float]
+    monthlyInvestmentContribution: Optional[float]
+    monthlyStockContribution: Optional[float]
+
     @validator("type")
     def type_must_be_valid(cls, t):
         if t not in _event_types:
