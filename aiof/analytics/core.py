@@ -284,7 +284,8 @@ def life_event(
         monthly_cost = cost_of_child["cost"][0]["value"] / (cost_of_child["years"] * 12)
         years = list(range(1, cost_of_child["years"] + 1))
 
-        life_event_df = pd.DataFrame(index=years)
+        life_event_df = pd.DataFrame(index=years, columns=["year"])
+        life_event_df["year"] = years
 
         # Cash
         cash_df = life_event_df_f(
@@ -309,11 +310,11 @@ def life_event(
             monthly_contribution    = 500)
 
         if not cash_df.isnull().values.any():
-            life_event_df = pd.concat([life_event_df, cash_df], axis=1)
+            life_event_df = pd.merge(life_event_df, cash_df, on="year", how="outer")
         if not investment_df.isnull().values.any():
-            life_event_df = pd.concat([life_event_df, investment_df], axis=1)
+            life_event_df = pd.merge(life_event_df, investment_df, on="year", how="outer")
         if not stock_df.isnull().values.any():
-            life_event_df = pd.concat([life_event_df, stock_df], axis=1)
+            life_event_df = pd.merge(life_event_df, stock_df, on="year", how="outer")
 
         life_event_df = life_event_df.round(_round_dig)
         data.event = life_event_df if not as_json else life_event_df.to_dict(orient="records")
