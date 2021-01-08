@@ -1,9 +1,10 @@
-from aiof.data.analytics import Analytics
 import os
 
 from pydantic import BaseSettings
 from typing import Optional, List
 from functools import lru_cache
+
+from aiof.data.analytics import Analytics
 
 
 class Settings(BaseSettings):
@@ -102,13 +103,23 @@ class Settings(BaseSettings):
 
 
     # Asset
+    class AssetType(object):
+        CASH        = "cash"
+        CAR         = "car"
+        HOUSE       = "house"
+        INVESTMENT  = "investment"
+        STOCK       = "stock"
+        FOUROHONEK  = "401(k)"
+        OTHER       = "other"
+
     AssetTypes = [
-        "cash",
-        "car",
-        "house",
-        "investment",
-        "stock",
-        "other"
+        AssetType.CASH,
+        AssetType.CAR,
+        AssetType.HOUSE,
+        AssetType.INVESTMENT,
+        AssetType.STOCK,
+        AssetType.FOUROHONEK,
+        AssetType.OTHER
     ]
 
     # Liability
@@ -139,11 +150,17 @@ class Settings(BaseSettings):
     ]
 
     # Life event
+    class LifeEvent(object):
+        HAVING_A_CHILD = "having a child"
+        BUYING_A_HOUSE = "buying a house"
+        BUYING_A_CAR = "buying a car"
+        SELLING_A_CAR = "selling a car"
+
     LifeEventTypes = [
-        "having a child",
-        "buying a house",
-        "buying a car",
-        "selling a car"
+        LifeEvent.HAVING_A_CHILD,
+        LifeEvent.BUYING_A_HOUSE,
+        LifeEvent.BUYING_A_CAR,
+        LifeEvent.SELLING_A_CAR
     ]
 
 
