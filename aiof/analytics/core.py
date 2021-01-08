@@ -24,6 +24,7 @@ _average_bank_interest = _settings.DefaultAverageBankInterest
 _average_market_interest = _settings.DefaultInterest
 _years = _settings.DefaultShortYears
 _acceptable_liability_types = _settings.AnalyticsDebtToIncomeAcceptableLiabilityTypes
+_asset_types = _settings.AssetType
 
 
 def analyze(
@@ -201,9 +202,9 @@ def life_event_df_f(
     """
     years_list = list(range(1, years + 1))
     interest = 0
-    if asset_type in ["cash"]:
+    if asset_type in [_asset_types.CASH]:
         interest = _settings.DefaultAverageBankInterest
-    elif asset_type in ["stock", "investment"]:
+    elif asset_type in [_asset_types.STOCK, _asset_types.INVESTMENT]:
         interest = _settings.DefaultInterest
 
     yearly_contribution = monthly_contribution * 12
@@ -276,9 +277,9 @@ def life_event(
             interests=[2],
             years=child_year_to_be_raised_to)
             
-        total_cash = assets_df.loc[assets_df["typeName"] == "cash"]["value"].sum()
-        total_stock = assets_df.loc[assets_df["typeName"] == "stock"]["value"].sum()
-        total_investment = assets_df.loc[assets_df["typeName"] == "investment"]["value"].sum()
+        total_cash = assets_df.loc[assets_df["typeName"] == _asset_types.CASH]["value"].sum()
+        total_stock = assets_df.loc[assets_df["typeName"] == _asset_types.STOCK]["value"].sum()
+        total_investment = assets_df.loc[assets_df["typeName"] == _asset_types.INVESTMENT]["value"].sum()
 
         cost_of_child = cost[0]
         monthly_cost = cost_of_child["cost"][0]["value"] / (cost_of_child["years"] * 12)
@@ -289,7 +290,7 @@ def life_event(
 
         # Cash
         cash_df = life_event_df_f(
-            asset_type              = "cash",
+            asset_type              = _asset_types.CASH,
             years                   = child_year_to_be_raised_to,
             start_amount            = total_cash,
             monthly_contribution    = req.monthlyCashContribution if req.monthlyCashContribution is not None else 1000,
@@ -297,14 +298,14 @@ def life_event(
 
         # Stock
         stock_df = life_event_df_f(
-            asset_type              = "stock",
+            asset_type              = _asset_types.STOCK,
             years                   = child_year_to_be_raised_to,
             start_amount            = total_stock,
             monthly_contribution    = req.monthlyStockContribution if req.monthlyStockContribution is not None else 500)
 
         # Investment
         investment_df = life_event_df_f(
-            asset_type              = "investment",
+            asset_type              = _asset_types.INVESTMENT,
             years                   = child_year_to_be_raised_to,
             start_amount            = total_investment,
             monthly_contribution    = req.monthlyInvestmentContribution if req.monthlyInvestmentContribution is not None else 500)

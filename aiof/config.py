@@ -1,9 +1,10 @@
-from aiof.data.analytics import Analytics
 import os
 
 from pydantic import BaseSettings
 from typing import Optional, List
 from functools import lru_cache
+
+from aiof.data.analytics import Analytics
 
 
 class Settings(BaseSettings):
@@ -102,14 +103,23 @@ class Settings(BaseSettings):
 
 
     # Asset
+    class AssetType(object):
+        CASH        = "cash"
+        CAR         = "car"
+        HOUSE       = "house"
+        INVESTMENT  = "investment"
+        STOCK       = "stock"
+        FOUROHONEK  = "401(k)"
+        OTHER       = "other"
+
     AssetTypes = [
-        "cash",
-        "car",
-        "house",
-        "investment",
-        "stock",
-        "401(k)",
-        "other"
+        AssetType.CASH,
+        AssetType.CAR,
+        AssetType.HOUSE,
+        AssetType.INVESTMENT,
+        AssetType.STOCK,
+        AssetType.FOUROHONEK,
+        AssetType.OTHER
     ]
 
     # Liability
