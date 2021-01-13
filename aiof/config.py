@@ -150,17 +150,17 @@ class Settings(BaseSettings):
     ]
 
     # Life event
-    class LifeEvent(object):
+    class LifeEventType(object):
         HAVING_A_CHILD = "having a child"
         BUYING_A_HOUSE = "buying a house"
         BUYING_A_CAR = "buying a car"
         SELLING_A_CAR = "selling a car"
 
     LifeEventTypes = [
-        LifeEvent.HAVING_A_CHILD,
-        LifeEvent.BUYING_A_HOUSE,
-        LifeEvent.BUYING_A_CAR,
-        LifeEvent.SELLING_A_CAR
+        LifeEventType.HAVING_A_CHILD,
+        LifeEventType.BUYING_A_HOUSE,
+        LifeEventType.BUYING_A_CAR,
+        LifeEventType.SELLING_A_CAR
     ]
 
 

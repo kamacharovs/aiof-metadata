@@ -25,7 +25,7 @@ _average_market_interest = _settings.DefaultInterest
 _years = _settings.DefaultShortYears
 _acceptable_liability_types = _settings.AnalyticsDebtToIncomeAcceptableLiabilityTypes
 _asset_type = _settings.AssetType
-_life_event_type = _settings.LifeEvent
+_life_event_type = _settings.LifeEventType
 
 
 def analyze(
