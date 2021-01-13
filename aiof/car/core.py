@@ -7,6 +7,8 @@ import aiof.config as config
 
 from aiof.data.car import CarLoanResponse
 
+from random import randrange
+
 
 # Configs
 _settings = config.get_settings()
@@ -79,3 +81,25 @@ def loan_calc(
         data = loan_df if not data_as_json else loan_df.to_dict(orient="records"))
 
     return resp
+
+
+def value_depreciation_calc(
+    loan_amount: float  = None,
+    years: int          = None,
+    as_json: bool       = False):
+    """
+    Calculates how much your car will depreciate over the years. 
+    The assumptions are that your car's value decreases around 20% to 30% by the end of the first year. 
+    From years two to six, depreciation ranges from 15% to 18% per year. 
+    As a rule of thumb, in five years, cars lose 60% or more of their initial value
+    """
+    loan_amount = loan_amount if loan_amount is not None else 35000
+    years = years if years is not None else 5
+
+    first_year_avg_int = randrange(20, 30)
+    two_to_six_years_avg_int = randrange(15, 18)
+    remaining_years_int = 60 - (first_year_avg_int + two_to_six_years_avg_int)
+
+    two_to_six_years_avg_int = (two_to_six_years_avg_int / 4) / 100 if years >= 6 else (two_to_six_years_avg_int / years - 1) / 100
+
+    print("here")
