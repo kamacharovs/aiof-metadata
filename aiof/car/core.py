@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from numpy.lib.financial import pmt
 import numpy_financial as npf
 import pandas as pd
 
@@ -96,10 +97,46 @@ def value_depreciation_calc(
     loan_amount = loan_amount if loan_amount is not None else 35000
     years = years if years is not None else 5
 
+    value = loan_amount
+    years_list = list(range(1, years + 1))
+
     first_year_avg_int = randrange(20, 30)
     two_to_six_years_avg_int = randrange(15, 18)
     remaining_years_int = 60 - (first_year_avg_int + two_to_six_years_avg_int)
 
-    two_to_six_years_avg_int = (two_to_six_years_avg_int / 4) / 100 if years >= 6 else (two_to_six_years_avg_int / years - 1) / 100
+    first_year_avg_int = first_year_avg_int / 100
+    two_to_six_years_avg_int = two_to_six_years_avg_int / 100
+    remaining_years_int = remaining_years_int / 100
 
-    print("here")
+    value = loan_amount - (-npf.fv(
+        rate=first_year_avg_int,
+        nper=1,
+        pmt=0,
+        pv=loan_amount,
+        when="end") - loan_amount)
+
+    value_df = pd.DataFrame(index=years_list, columns=["year", "depreciationPercentage", "value"], dtype="float")
+    value_df["year"] = years_list
+
+    value_df.iloc[0, 1] = first_year_avg_int
+    value_df.iloc[0, 2] = value
+
+    for year in range(1, years):
+        interest = two_to_six_years_avg_int
+        if year >= 2 and year <= 6:
+            interest = two_to_six_years_avg_int
+        elif year > 6:
+            interest = remaining_years_int
+
+        year_value = value_df.iloc[year - 1, 2] - (-npf.fv(
+            rate=interest,
+            nper=1,
+            pmt=0,
+            pv=value_df.iloc[year - 1, 2],
+            when="end") - value_df.iloc[year - 1, 2])
+
+        value_df.iloc[year, 1] = interest
+        value_df.iloc[year, 2] = year_value
+
+    value_df = value_df.round(_round_dig)
+    return value_df if not as_json else value_df.to_dict(orient="records")

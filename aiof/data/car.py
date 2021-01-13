@@ -20,3 +20,8 @@ class CarLoanResponse(BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
+
+
+class CarValueDepreciationRequest(BaseModel):
+    value: Optional[float]
+    years: Optional[int]
