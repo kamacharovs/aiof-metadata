@@ -85,7 +85,7 @@ def loan_calc(
 
 
 def value_depreciation_calc(
-    loan_amount: float  = None,
+    initial_value: float  = None,
     years: int          = None,
     as_json: bool       = False):
     """
@@ -93,11 +93,20 @@ def value_depreciation_calc(
     The assumptions are that your car's value decreases around 20% to 30% by the end of the first year. 
     From years two to six, depreciation ranges from 15% to 18% per year. 
     As a rule of thumb, in five years, cars lose 60% or more of their initial value
+
+    Parameters
+    ----------
+    `initial_value`: float. 
+        the initial value of the car. defaults to `35,000`\n
+    `years`: int.
+        the number of years to calculate the depreciation for. defaults to `5`\n
+    `as_json`: bool.
+        whether to return the response as JSON. defaults to `False`
     """
-    loan_amount = loan_amount if loan_amount is not None else 35000
+    initial_value = initial_value if initial_value is not None else 35000
     years = years if years is not None else 5
 
-    value = loan_amount
+    value = initial_value
     years_list = list(range(1, years + 1))
 
     first_year_avg_int = randrange(20, 30)
@@ -108,12 +117,12 @@ def value_depreciation_calc(
     two_to_six_years_avg_int = two_to_six_years_avg_int / 100
     remaining_years_int = remaining_years_int / 100
 
-    value = loan_amount - (-npf.fv(
+    value = initial_value - (-npf.fv(
         rate=first_year_avg_int,
         nper=1,
         pmt=0,
-        pv=loan_amount,
-        when="end") - loan_amount)
+        pv=initial_value,
+        when="end") - initial_value)
 
     value_df = pd.DataFrame(index=years_list, columns=["year", "depreciationPercentage", "value"], dtype="float")
     value_df["year"] = years_list

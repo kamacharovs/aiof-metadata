@@ -19,6 +19,6 @@ async def car_loan(req: CarLoanRequest):
 @router.post("/depreciation")
 async def value_depreciation(req: CarValueDepreciationRequest):
     return car.value_depreciation_calc(
-        loan_amount = req.value,
-        years       = req.years,
-        as_json     = True)
+        initial_value   = req.value,
+        years           = req.years,
+        as_json         = True)
