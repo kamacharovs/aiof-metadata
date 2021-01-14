@@ -46,13 +46,13 @@ def loan_calc(
         nper=years,
         pv=-car_loan, 
         fv=0,
-        when='end')
+        when="end")
     car_payments_monthly = npf.pmt(
         rate=interest / 12,
         nper=years * 12,
         pv=-car_loan, 
         fv=0,
-        when='end')
+        when="end")
 
     loan_df = np.zeros((years, 6))
     loan_df = pd.DataFrame(loan_df)
@@ -86,8 +86,8 @@ def loan_calc(
 
 def value_depreciation_calc(
     initial_value: float  = None,
-    years: int          = None,
-    as_json: bool       = False):
+    years: int            = None,
+    as_json: bool         = False):
     """
     Calculates how much your car will depreciate over the years. 
     The assumptions are that your car's value decreases around 20% to 30% by the end of the first year. 

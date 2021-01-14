@@ -27,6 +27,13 @@ class LifeEventRequest(BaseModel):
     monthlyInvestmentContribution: Optional[float]
     monthlyStockContribution: Optional[float]
 
+    # Car
+    carLoanAmount: Optional[float]
+    carDownPayment: Optional[float]
+    carInterest: Optional[float]
+    carYears: Optional[int]
+
+
     @validator("type")
     def type_must_be_valid(cls, t):
         if t not in _event_types:
@@ -38,6 +45,6 @@ class LifeEventResponse(BaseModel):
     """
     Life event response class. This is used to return specific response
     """
-    currentAssets: Optional[List[Asset]]
-    currentLiabilities: Optional[List[Liability]]
+    assets: Optional[List[Asset]]
+    liabilities: Optional[List[Liability]]
     event: Optional[typing.Any]
