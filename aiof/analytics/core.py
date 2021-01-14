@@ -196,7 +196,9 @@ def life_event_df_f(
     `start_amount`: float.
         the start amount of the asset. this will be changing over the years based on default interests\n
     `monthly_contribution`: float.
-        the monthly contribution to add on at the end of each year
+        the monthly contribution to add on at the end of each year\n
+    `monthly_cost`: float or None.
+        the monthly cost to add on. defaults to `None`
     
     Returns
     ----------
@@ -266,6 +268,7 @@ def life_event(
 
     assets_df = helpers.assets_to_df(req.assets)
 
+    # Having a child
     if req.type.lower() == _life_event_type.HAVING_A_CHILD:
         # For each year you are raising a child, then your assets will change
         # For `cash` : take out cost of child, grow at bank interest rate
@@ -322,6 +325,7 @@ def life_event(
         life_event_df = life_event_df.round(_round_dig)
         data.event = life_event_df if not as_json else life_event_df.to_dict(orient="records")
 
+    # Buying a car
     elif req.type.lower() == _life_event_type.BUYING_A_CAR:
         # For the years of the car loan, calculate the car payments
         # For the years of the car loan, the car will depreciate
