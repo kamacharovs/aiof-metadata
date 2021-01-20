@@ -1,10 +1,12 @@
 import statistics as st
 import pandas as pd
 import numpy_financial as npf
+from pandas.core.frame import DataFrame
 
 import aiof.config as config
 import aiof.helpers as helpers
 import aiof.fi.core as fi
+import aiof.car.core as car
 
 from aiof.data.analytics import Analytics, AssetsLiabilities
 from aiof.data.asset import Asset, AssetFv
@@ -195,7 +197,9 @@ def life_event_df_f(
     `start_amount`: float.
         the start amount of the asset. this will be changing over the years based on default interests\n
     `monthly_contribution`: float.
-        the monthly contribution to add on at the end of each year
+        the monthly contribution to add on at the end of each year\n
+    `monthly_cost`: float or None.
+        the monthly cost to add on. defaults to `None`
     
     Returns
     ----------
@@ -209,7 +213,7 @@ def life_event_df_f(
         interest = _settings.DefaultInterest
 
     yearly_contribution = monthly_contribution * 12
-    df = pd.DataFrame(index=years_list, columns=["year", f"{asset_type}", f"{asset_type}Contribution", f"{asset_type}WithContributions"])
+    df = pd.DataFrame(index=years_list, columns=["year", f"{asset_type}", f"{asset_type}Contribution", f"{asset_type}WithContributions"], dtype="float")
     df["year"] = years_list
     df.iloc[0, 1] = -npf.fv(
         rate=(interest / 100) / 12,
@@ -260,11 +264,16 @@ def life_event(
     national average interest. If they are of type `stock` then they are invested in the market and the default market interest is used
     """
     data = LifeEventResponse(
-        currentAssets = req.assets,
-        currentLiabilities = req.liabilities)
+        assets = req.assets,
+        liabilities = req.liabilities)
 
     assets_df = helpers.assets_to_df(req.assets)
+    
+    total_cash = assets_df.loc[assets_df["typeName"] == _asset_type.CASH]["value"].sum()
+    total_stock = assets_df.loc[assets_df["typeName"] == _asset_type.STOCK]["value"].sum()
+    total_investment = assets_df.loc[assets_df["typeName"] == _asset_type.INVESTMENT]["value"].sum()
 
+    # Having a child
     if req.type.lower() == _life_event_type.HAVING_A_CHILD:
         # For each year you are raising a child, then your assets will change
         # For `cash` : take out cost of child, grow at bank interest rate
@@ -277,10 +286,6 @@ def life_event(
             children=[1],
             interests=[2],
             years=child_year_to_be_raised_to)
-            
-        total_cash = assets_df.loc[assets_df["typeName"] == _asset_type.CASH]["value"].sum()
-        total_stock = assets_df.loc[assets_df["typeName"] == _asset_type.STOCK]["value"].sum()
-        total_investment = assets_df.loc[assets_df["typeName"] == _asset_type.INVESTMENT]["value"].sum()
 
         cost_of_child = cost[0]
         monthly_cost = cost_of_child["cost"][0]["value"] / (cost_of_child["years"] * 12)
@@ -311,17 +316,72 @@ def life_event(
             start_amount            = total_investment,
             monthly_contribution    = req.monthlyInvestmentContribution if req.monthlyInvestmentContribution is not None else 500)
 
-        if not cash_df.isnull().values.any():
+        if not cash_df.empty and not cash_df.isnull().values.any():
             life_event_df = pd.merge(life_event_df, cash_df, on="year", how="outer")
-        if not investment_df.isnull().values.any():
+        if not investment_df.empty and not investment_df.isnull().values.any():
             life_event_df = pd.merge(life_event_df, investment_df, on="year", how="outer")
-        if not stock_df.isnull().values.any():
+        if not stock_df.empty and not stock_df.isnull().values.any():
             life_event_df = pd.merge(life_event_df, stock_df, on="year", how="outer")
 
         life_event_df = life_event_df.round(_round_dig)
         data.event = life_event_df if not as_json else life_event_df.to_dict(orient="records")
+
+    # Buying a car
     elif req.type.lower() == _life_event_type.BUYING_A_CAR:
-        print(_life_event_type.BUYING_A_CAR)
+        # For the years of the car loan, calculate the car payments
+        # For the years of the car loan, the car will depreciate
+        req.carLoanAmount = req.carLoanAmount if req.carLoanAmount is not None else 35000
+        req.carDownPayment = req.carDownPayment if req.carDownPayment is not None else 0
+        req.carInterest = req.carInterest if req.carInterest is not None else 6
+        req.carYears = req.carYears if req.carYears is not None else 5
+
+        car_loan = car.loan_calc(
+            car_loan = req.carLoanAmount - req.carDownPayment,
+            interest = req.carInterest,
+            years = req.carYears)
+
+        car_depreciation_df = car.value_depreciation_calc(
+            initial_value = req.carLoanAmount - req.carDownPayment,
+            years = req.carYears)
+
+        years_list = list(range(1, req.carYears + 1))
+
+        life_event_df = pd.DataFrame(index=years_list, columns=["year"], dtype="float")
+        life_event_df["year"] = years_list
+
+        # Cash
+        cash_df = life_event_df_f(
+            asset_type              = _asset_type.CASH,
+            years                   = req.carYears,
+            start_amount            = total_cash,
+            monthly_contribution    = req.monthlyCashContribution if req.monthlyCashContribution is not None else 1000,
+            monthly_cost            = car_loan.monthlyPayment)
+        
+        # Stock
+        stock_df = life_event_df_f(
+            asset_type              = _asset_type.STOCK,
+            years                   = req.carYears,
+            start_amount            = total_stock,
+            monthly_contribution    = req.monthlyStockContribution if req.monthlyStockContribution is not None else 500) if total_stock > 0 else pd.DataFrame()
+
+        # Investment
+        investment_df = life_event_df_f(
+            asset_type              = _asset_type.INVESTMENT,
+            years                   = req.carYears,
+            start_amount            = total_investment,
+            monthly_contribution    = req.monthlyInvestmentContribution if req.monthlyInvestmentContribution is not None else 500)
+
+
+        if not cash_df.empty and  not cash_df.isnull().values.any():
+            life_event_df = pd.merge(life_event_df, cash_df, on="year", how="outer")
+        if not investment_df.empty and  not investment_df.isnull().values.any():
+            life_event_df = pd.merge(life_event_df, investment_df, on="year", how="outer")
+        if not stock_df.empty and not stock_df.isnull().values.any():
+            life_event_df = pd.merge(life_event_df, stock_df, on="year", how="outer")
+
+        life_event_df = life_event_df.round(_round_dig)
+        data.event = life_event_df if not as_json else life_event_df.to_dict(orient="records")
+
     elif req.type.lower() == _life_event_type.SELLING_A_CAR:
         print(_life_event_type.SELLING_A_CAR)
 

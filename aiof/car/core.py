@@ -1,11 +1,14 @@
 import math
 import numpy as np
+from numpy.lib.financial import pmt
 import numpy_financial as npf
 import pandas as pd
 
 import aiof.config as config
 
 from aiof.data.car import CarLoanResponse
+
+from random import randrange
 
 
 # Configs
@@ -43,13 +46,13 @@ def loan_calc(
         nper=years,
         pv=-car_loan, 
         fv=0,
-        when='end')
+        when="end")
     car_payments_monthly = npf.pmt(
         rate=interest / 12,
         nper=years * 12,
         pv=-car_loan, 
         fv=0,
-        when='end')
+        when="end")
 
     loan_df = np.zeros((years, 6))
     loan_df = pd.DataFrame(loan_df)
@@ -79,3 +82,70 @@ def loan_calc(
         data = loan_df if not data_as_json else loan_df.to_dict(orient="records"))
 
     return resp
+
+
+def value_depreciation_calc(
+    initial_value: float  = None,
+    years: int            = None,
+    as_json: bool         = False):
+    """
+    Calculates how much your car will depreciate over the years. 
+    The assumptions are that your car's value decreases around 20% to 30% by the end of the first year. 
+    From years two to six, depreciation ranges from 15% to 18% per year. 
+    As a rule of thumb, in five years, cars lose 60% or more of their initial value
+
+    Parameters
+    ----------
+    `initial_value`: float. 
+        the initial value of the car. defaults to `35,000`\n
+    `years`: int.
+        the number of years to calculate the depreciation for. defaults to `5`\n
+    `as_json`: bool.
+        whether to return the response as JSON. defaults to `False`
+    """
+    initial_value = initial_value if initial_value is not None else 35000
+    years = years if years is not None else 5
+
+    value = initial_value
+    years_list = list(range(1, years + 1))
+
+    first_year_avg_int = randrange(20, 30)
+    two_to_six_years_avg_int = randrange(15, 18)
+    remaining_years_int = 60 - (first_year_avg_int + two_to_six_years_avg_int)
+
+    first_year_avg_int = first_year_avg_int / 100
+    two_to_six_years_avg_int = two_to_six_years_avg_int / 100
+    remaining_years_int = remaining_years_int / 100
+
+    value = initial_value - (-npf.fv(
+        rate=first_year_avg_int,
+        nper=1,
+        pmt=0,
+        pv=initial_value,
+        when="end") - initial_value)
+
+    value_df = pd.DataFrame(index=years_list, columns=["year", "depreciationPercentage", "value"], dtype="float")
+    value_df["year"] = years_list
+
+    value_df.iloc[0, 1] = first_year_avg_int
+    value_df.iloc[0, 2] = value
+
+    for year in range(1, years):
+        interest = two_to_six_years_avg_int
+        if year >= 2 and year <= 6:
+            interest = two_to_six_years_avg_int
+        elif year > 6:
+            interest = remaining_years_int
+
+        year_value = value_df.iloc[year - 1, 2] - (-npf.fv(
+            rate=interest,
+            nper=1,
+            pmt=0,
+            pv=value_df.iloc[year - 1, 2],
+            when="end") - value_df.iloc[year - 1, 2])
+
+        value_df.iloc[year, 1] = interest
+        value_df.iloc[year, 2] = year_value
+
+    value_df = value_df.round(_round_dig)
+    return value_df if not as_json else value_df.to_dict(orient="records")

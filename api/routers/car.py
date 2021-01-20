@@ -1,6 +1,6 @@
 import aiof.car.core as car
 
-from aiof.data.car import CarLoanRequest
+from aiof.data.car import CarLoanRequest, CarValueDepreciationRequest
 
 from fastapi import APIRouter
 
@@ -15,3 +15,10 @@ async def car_loan(req: CarLoanRequest):
         interest        = req.interst,
         years           = req.years,
         data_as_json    = True)
+
+@router.post("/depreciation")
+async def value_depreciation(req: CarValueDepreciationRequest):
+    return car.value_depreciation_calc(
+        initial_value   = req.value,
+        years           = req.years,
+        as_json         = True)
