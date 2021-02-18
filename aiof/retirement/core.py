@@ -1,5 +1,4 @@
 import datetime
-from numpy.lib.financial import pmt
 import pandas as pd
 import numpy_financial as npf
 
@@ -80,3 +79,77 @@ def withdrawal_calc(
     df = df.round(_round_dig)
 
     return df if not as_json else df.to_dict(orient="records")
+
+
+def common_investments(
+    interest: float,
+    start_year: int,
+    end_year: int,
+    compouding_periods: int,
+    fourohone_k_starting_amount: float = None,
+    fourohone_k_monthly_contributions: float = None,
+    roth_ira_starting_amount: float = None,
+    roth_ira_monthly_contributions: float = None,
+    brokerage_starting_amount: float = None,
+    brokerage_monthly_contributions: float = None,
+    as_json: bool = False) -> pd.DataFrame:
+    """
+    Calculate common retirement investments - 401(k), Roth IRA, Brokerage
+
+    Parameters
+    ----------
+    `as_json` : bool.
+        whether to return the data as JSON. defaults to `False`
+    """
+    # Check for None
+    interest = interest if interest is not None else 7
+    start_year = start_year if start_year is not None else datetime.datetime.today().year
+    end_year = end_year if end_year is not None else start_year + 10
+    compouding_periods = compouding_periods if compouding_periods is not None else 12
+    fourohone_k_starting_amount = fourohone_k_starting_amount if fourohone_k_starting_amount is not None else 0
+    fourohone_k_monthly_contributions = fourohone_k_monthly_contributions if fourohone_k_monthly_contributions is not None else 500
+    roth_ira_starting_amount = roth_ira_starting_amount if roth_ira_starting_amount is not None else 0
+    roth_ira_monthly_contributions = roth_ira_monthly_contributions if roth_ira_monthly_contributions is not None else 500
+    brokerage_starting_amount = brokerage_starting_amount if brokerage_starting_amount is not None else 0
+    brokerage_monthly_contributions = brokerage_monthly_contributions if brokerage_monthly_contributions is not None else 500
+
+    # Check and fix parameters
+    if (interest > 100 or interest < 1):
+        raise ValueError("Interest must be at least 1% and less than or equal to 100%")
+    elif (end_year <= start_year):
+        raise ValueError("Start year cannot be less than end year")
+    elif (fourohone_k_starting_amount < 0):
+        raise ValueError("401(k) starting amount cannot be less than 0")
+    elif (fourohone_k_monthly_contributions < 0):
+        raise ValueError("401(k) monthly contributions cannot be less than 0")
+    elif (roth_ira_starting_amount < 0):
+        raise ValueError("Roth IRA starting amount cannot be less than 0")
+    elif (roth_ira_monthly_contributions < 0):
+        raise ValueError("Roth IRA monthly contributions cannot be less than 0")
+    elif (brokerage_starting_amount < 0):
+        raise ValueError("Brokerage starting amount cannot be less than 0")
+    elif (brokerage_monthly_contributions < 0):
+        raise ValueError("Brokerage monthly contributions cannot be less than 0")
+
+    interest = interest / 100
+
+    # Initial data frame
+    df = pd.DataFrame(columns=["year", "compoundingPeriods", "fourohoneK", "fourohoneKMonthlyContributions", "rothIra", "rothIraMonthlyContributions", "brokerage", "brokerageMonthlyContributions"], dtype="float")
+
+    df.loc[0, "year"] = start_year
+    df.loc[0, "compoundingPeriods"] = compouding_periods
+    df.loc[0, "fourohoneK"] = fourohone_k_starting_amount
+    df.loc[0, "fourohoneKMonthlyContributions"] = fourohone_k_monthly_contributions
+    df.loc[0, "rothIra"] = fourohone_k_starting_amount
+    df.loc[0, "rothIraMonthlyContributions"] = roth_ira_monthly_contributions
+    df.loc[0, "brokerage"] = brokerage_starting_amount
+    df.loc[0, "brokerageMonthlyContributions"] = brokerage_monthly_contributions
+
+    for i in range(1, int(end_year - start_year) + 1):
+        df.loc[i, "year"] = start_year + i
+        df.loc[i, "compoundingPeriods"] = compouding_periods
+
+    df["year"] = df["year"].astype(int)
+    df = df.round(_round_dig)
+
+    print(df)
