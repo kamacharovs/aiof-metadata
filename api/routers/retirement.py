@@ -1,6 +1,6 @@
 import aiof.retirement.core as retirement
 
-from aiof.data.retirement import WithdrawalRequest
+from aiof.data.retirement import WithdrawalRequest, CommonInvestmentsRequest
 
 from fastapi import APIRouter
 
@@ -17,15 +17,16 @@ async def withdrawal_calc(req: WithdrawalRequest):
         as_json             = True)
 
 @router.post("/common/investments")
-async def common_investments():
+async def common_investments(req: CommonInvestmentsRequest):
     return retirement.common_investments(
-        interest=7,
-        start_year=2020,
-        end_year=2050,
-        compouding_periods=12,
-        fourohone_k_starting_amount=1000,
-        fourohone_k_monthly_contributions=1625,
-        roth_ira_starting_amount=1000,
-        roth_ira_monthly_contributions=500,
-        brokerage_starting_amount=1000,
-        brokerage_monthly_contributions=500)
+        interest                            = req.interest,
+        start_year                          = req.startYear,
+        end_year                            = req.endYear,
+        compouding_periods                  = req.compoundingPeriods,
+        fourohone_k_starting_amount         = req.fourOhOneKStartingAmount,
+        fourohone_k_monthly_contributions   = req.fourOhOneKMonthlyContributions,
+        roth_ira_starting_amount            = req.rothIraStartingAmount,
+        roth_ira_monthly_contributions      = req.rothIraMonthlyContributions,
+        brokerage_starting_amount           = req.brokerageStartingAmount,
+        brokerage_monthly_contributions     = req.brokerageMonthlyContributions,
+        as_json                             = True)

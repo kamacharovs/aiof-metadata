@@ -134,22 +134,62 @@ def common_investments(
     interest = interest / 100
 
     # Initial data frame
-    df = pd.DataFrame(columns=["year", "compoundingPeriods", "fourohoneK", "fourohoneKMonthlyContributions", "rothIra", "rothIraMonthlyContributions", "brokerage", "brokerageMonthlyContributions"], dtype="float")
+    df = pd.DataFrame(columns=[
+        "year", 
+        "compoundingPeriods", 
+        "fourohoneK", 
+        "fourohoneKMonthlyContributions", 
+        "rothIra", 
+        "rothIraMonthlyContributions", 
+        "brokerage", 
+        "brokerageMonthlyContributions",
+        "total",
+        "totalMonthlyContributions"], dtype="float")
 
     df.loc[0, "year"] = start_year
     df.loc[0, "compoundingPeriods"] = compouding_periods
     df.loc[0, "fourohoneK"] = fourohone_k_starting_amount
     df.loc[0, "fourohoneKMonthlyContributions"] = fourohone_k_monthly_contributions
-    df.loc[0, "rothIra"] = fourohone_k_starting_amount
+    df.loc[0, "rothIra"] = roth_ira_starting_amount
     df.loc[0, "rothIraMonthlyContributions"] = roth_ira_monthly_contributions
     df.loc[0, "brokerage"] = brokerage_starting_amount
     df.loc[0, "brokerageMonthlyContributions"] = brokerage_monthly_contributions
+    df.loc[0, "total"] = fourohone_k_starting_amount + roth_ira_starting_amount + brokerage_starting_amount
+    df.loc[0, "totalMonthlyContributions"] = fourohone_k_monthly_contributions + roth_ira_monthly_contributions + brokerage_monthly_contributions
 
     for i in range(1, int(end_year - start_year) + 1):
         df.loc[i, "year"] = start_year + i
         df.loc[i, "compoundingPeriods"] = compouding_periods
 
+        df.loc[i, "fourohoneK"] = -npf.fv(
+            rate=interest / compouding_periods,
+            nper=compouding_periods,
+            pmt=fourohone_k_monthly_contributions,
+            pv=df.loc[i - 1, "fourohoneK"],
+            when='end')
+        df.loc[i, "fourohoneKMonthlyContributions"] = fourohone_k_monthly_contributions
+
+        df.loc[i, "rothIra"] = -npf.fv(
+            rate=interest / compouding_periods,
+            nper=compouding_periods,
+            pmt=roth_ira_monthly_contributions,
+            pv=df.loc[i - 1, "rothIra"],
+            when='end')
+        df.loc[i, "rothIraMonthlyContributions"] = roth_ira_monthly_contributions
+        
+        df.loc[i, "brokerage"] = -npf.fv(
+            rate=interest / compouding_periods,
+            nper=compouding_periods,
+            pmt=brokerage_monthly_contributions,
+            pv=df.loc[i - 1, "brokerage"],
+            when='end')
+        df.loc[i, "brokerageMonthlyContributions"] = brokerage_monthly_contributions
+
+        df.loc[i, "total"] = df.loc[i, "fourohoneK"] + df.loc[i, "rothIra"] + df.loc[i, "brokerage"]
+        df.loc[i, "totalMonthlyContributions"] = df.loc[i, "fourohoneKMonthlyContributions"] + df.loc[i, "rothIraMonthlyContributions"] + df.loc[i, "brokerageMonthlyContributions"]
+
     df["year"] = df["year"].astype(int)
+    df["compoundingPeriods"] = df["compoundingPeriods"].astype(int)
     df = df.round(_round_dig)
 
-    print(df)
+    return df if not as_json else df.to_dict(orient="records")
