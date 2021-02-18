@@ -101,3 +101,98 @@ class RetirementTestCase(unittest.TestCase):
             assert df.loc[i, "startingRetirementNumber"] > 0
             assert df.loc[i, "withdrawal"] > 0
             assert df.loc[i, "endingRetirementNumber"] > 0
+
+
+    def test_common_investments_defaults(self):
+        self.assert_common_investments(common_investments(
+            interest                            = None,
+            start_year                          = None,
+            end_year                            = None,
+            compouding_periods                  = None,
+            fourohone_k_starting_amount         = None,
+            fourohone_k_monthly_contributions   = None,
+            roth_ira_starting_amount            = None,
+            roth_ira_monthly_contributions      = None,
+            brokerage_starting_amount           = None,
+            brokerage_monthly_contributions     = None))
+    
+    def test_common_investments_valid(self):
+        self.assert_common_investments(common_investments(
+            interest                            = 8,
+            start_year                          = 2025,
+            end_year                            = 2050,
+            compouding_periods                  = 12,
+            fourohone_k_starting_amount         = 15677,
+            fourohone_k_monthly_contributions   = 1625,
+            roth_ira_starting_amount            = 75489,
+            roth_ira_monthly_contributions      = 500,
+            brokerage_starting_amount           = 9587,
+            brokerage_monthly_contributions     = 250))
+
+    def test_common_investments_general_defaults(self):
+        self.assert_common_investments(common_investments(
+            interest                            = None,
+            start_year                          = None,
+            end_year                            = None,
+            compouding_periods                  = None,
+            fourohone_k_starting_amount         = 15677,
+            fourohone_k_monthly_contributions   = 1625,
+            roth_ira_starting_amount            = 75489,
+            roth_ira_monthly_contributions      = 500,
+            brokerage_starting_amount           = 9587,
+            brokerage_monthly_contributions     = 250))
+
+    def test_common_investments_fourohonek_defaults(self):
+        self.assert_common_investments(common_investments(
+            interest                            = 7,
+            start_year                          = 2025,
+            end_year                            = 2050,
+            compouding_periods                  = 12,
+            fourohone_k_starting_amount         = None,
+            fourohone_k_monthly_contributions   = None,
+            roth_ira_starting_amount            = 75489,
+            roth_ira_monthly_contributions      = 500,
+            brokerage_starting_amount           = 9587,
+            brokerage_monthly_contributions     = 250))
+
+    def test_common_investments_rothira_defaults(self):
+        self.assert_common_investments(common_investments(
+            interest                            = 7,
+            start_year                          = 2025,
+            end_year                            = 2050,
+            compouding_periods                  = 12,
+            fourohone_k_starting_amount         = 8957,
+            fourohone_k_monthly_contributions   = 1625,
+            roth_ira_starting_amount            = None,
+            roth_ira_monthly_contributions      = None,
+            brokerage_starting_amount           = 9587,
+            brokerage_monthly_contributions     = 250))
+
+    def test_common_investments_brokerage_defaults(self):
+        self.assert_common_investments(common_investments(
+            interest                            = 8,
+            start_year                          = 2025,
+            end_year                            = 2050,
+            compouding_periods                  = 12,
+            fourohone_k_starting_amount         = 15677,
+            fourohone_k_monthly_contributions   = 1625,
+            roth_ira_starting_amount            = 75489,
+            roth_ira_monthly_contributions      = 500,
+            brokerage_starting_amount           = None,
+            brokerage_monthly_contributions     = None))
+
+    def assert_common_investments(self, df):
+        assert df is not None
+        assert df.size > 0
+
+        for i in range (0, len(df)):
+            assert df.loc[i, "year"] >= 1
+            assert df.loc[i, "compoundingPeriods"] >= 0
+            assert df.loc[i, "fourohoneK"] >= 0
+            assert df.loc[i, "fourohoneKMonthlyContributions"] >= 0
+            assert df.loc[i, "rothIra"] >= 0
+            assert df.loc[i, "rothIraMonthlyContributions"] >= 0
+            assert df.loc[i, "brokerage"] >= 0
+            assert df.loc[i, "brokerageMonthlyContributions"] >= 0
+            assert df.loc[i, "total"] >= 0
+            assert df.loc[i, "totalMonthlyContributions"] >= 0
