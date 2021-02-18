@@ -82,10 +82,10 @@ def withdrawal_calc(
 
 
 def common_investments(
-    interest: float,
-    start_year: int,
-    end_year: int,
-    compouding_periods: int,
+    interest: float = None,
+    start_year: int = None,
+    end_year: int = None,
+    compouding_periods: int = None,
     fourohone_k_starting_amount: float = None,
     fourohone_k_monthly_contributions: float = None,
     roth_ira_starting_amount: float = None,
@@ -98,6 +98,26 @@ def common_investments(
 
     Parameters
     ----------
+    `interest` : int.
+        interest number, from 1 to 100. defaults to `7`\n
+    `start_year` : int.
+        start year. defaults to `datetime.datetime.today().year`\n
+    `end_year` : int.
+        end year. defaults to `start_year + 10`\n
+    `compouding_periods` : int.
+        compouding periods. defaults to `12`\n
+    `fourohone_k_starting_amount` : float.
+        401(k) starting amount. defaults to `0`\n
+    `fourohone_k_monthly_contributions` : float.
+        401(k) monthly contributions. defaults to `500`\n
+    `roth_ira_starting_amount` : float.
+        Roth IRA starting amount. defaults to `0`\n
+    `roth_ira_monthly_contributions` : float.
+        Roth IRA monthly contributions. defaults to `500`\n
+    `brokerage_starting_amount` : float.
+        Brokerage starting amount. defaults to `0`\n
+    `brokerage_monthly_contributions` : float.
+        Brokerage monthly contributions. defaults to `500`\n
     `as_json` : bool.
         whether to return the data as JSON. defaults to `False`
     """

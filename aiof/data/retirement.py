@@ -10,13 +10,13 @@ class WithdrawalRequest(BaseModel):
     numberOfYears: float
 
 class CommonInvestmentsRequest(BaseModel):
-    interest: float
-    startYear: int
-    endYear: int
-    compoundingPeriods: int
-    fourOhOneKStartingAmount: float
-    fourOhOneKMonthlyContributions: float
-    rothIraStartingAmount: float
-    rothIraMonthlyContributions: float
-    brokerageStartingAmount: float
-    brokerageMonthlyContributions: float
+    interest: Optional[float]
+    startYear: Optional[int]
+    endYear: Optional[int]
+    compoundingPeriods: Optional[int]
+    fourOhOneKStartingAmount: Optional[float]
+    fourOhOneKMonthlyContributions: Optional[float]
+    rothIraStartingAmount: Optional[float]
+    rothIraMonthlyContributions: Optional[float]
+    brokerageStartingAmount: Optional[float]
+    brokerageMonthlyContributions: Optional[float]
