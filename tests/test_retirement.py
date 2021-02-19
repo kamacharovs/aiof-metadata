@@ -3,12 +3,25 @@ import json
 import math
 
 from aiof.retirement.core import *
+from aiof.data.retirement import CommonInvestmentsRequest
 
 
 class RetirementTestCase(unittest.TestCase):
     """
     Retirement unit tests
     """
+    common_investments_req = CommonInvestmentsRequest(
+        interest                        = 8,
+        startYear                       = 2025,
+        endYear                         = 2050,
+        compoundingPeriods              = 12,
+        fourOhOneKStartingAmount        = 15677,
+        fourOhOneKMonthlyContributions  = 1625,
+        rothIraStartingAmount           = 75489,
+        rothIraMonthlyContributions     = 500,
+        brokerageStartingAmount         = 9587,
+        brokerageMonthlyContributions   = 250)
+
 
     def test_withdrawal_calc_defaults(self):
         self.assert_withdrawal_calc(withdrawal_calc(
@@ -118,16 +131,16 @@ class RetirementTestCase(unittest.TestCase):
     
     def test_common_investments_valid(self):
         self.assert_common_investments(common_investments(
-            interest                            = 8,
-            start_year                          = 2025,
-            end_year                            = 2050,
-            compouding_periods                  = 12,
-            fourohone_k_starting_amount         = 15677,
-            fourohone_k_monthly_contributions   = 1625,
-            roth_ira_starting_amount            = 75489,
-            roth_ira_monthly_contributions      = 500,
-            brokerage_starting_amount           = 9587,
-            brokerage_monthly_contributions     = 250))
+            interest                            = self.common_investments_req.interest,
+            start_year                          = self.common_investments_req.startYear,
+            end_year                            = self.common_investments_req.endYear,
+            compouding_periods                  = self.common_investments_req.compoundingPeriods,
+            fourohone_k_starting_amount         = self.common_investments_req.fourOhOneKStartingAmount,
+            fourohone_k_monthly_contributions   = self.common_investments_req.fourOhOneKMonthlyContributions,
+            roth_ira_starting_amount            = self.common_investments_req.rothIraStartingAmount,
+            roth_ira_monthly_contributions      = self.common_investments_req.rothIraMonthlyContributions,
+            brokerage_starting_amount           = self.common_investments_req.brokerageStartingAmount,
+            brokerage_monthly_contributions     = self.common_investments_req.brokerageMonthlyContributions))
 
     def test_common_investments_general_defaults(self):
         self.assert_common_investments(common_investments(
@@ -135,51 +148,177 @@ class RetirementTestCase(unittest.TestCase):
             start_year                          = None,
             end_year                            = None,
             compouding_periods                  = None,
-            fourohone_k_starting_amount         = 15677,
-            fourohone_k_monthly_contributions   = 1625,
-            roth_ira_starting_amount            = 75489,
-            roth_ira_monthly_contributions      = 500,
-            brokerage_starting_amount           = 9587,
-            brokerage_monthly_contributions     = 250))
+            fourohone_k_starting_amount         = self.common_investments_req.fourOhOneKStartingAmount,
+            fourohone_k_monthly_contributions   = self.common_investments_req.fourOhOneKMonthlyContributions,
+            roth_ira_starting_amount            = self.common_investments_req.rothIraStartingAmount,
+            roth_ira_monthly_contributions      = self.common_investments_req.rothIraMonthlyContributions,
+            brokerage_starting_amount           = self.common_investments_req.brokerageStartingAmount,
+            brokerage_monthly_contributions     = self.common_investments_req.brokerageMonthlyContributions))
 
     def test_common_investments_fourohonek_defaults(self):
         self.assert_common_investments(common_investments(
-            interest                            = 7,
-            start_year                          = 2025,
-            end_year                            = 2050,
-            compouding_periods                  = 12,
+            interest                            = self.common_investments_req.interest,
+            start_year                          = self.common_investments_req.startYear,
+            end_year                            = self.common_investments_req.endYear,
+            compouding_periods                  = self.common_investments_req.compoundingPeriods,
             fourohone_k_starting_amount         = None,
             fourohone_k_monthly_contributions   = None,
-            roth_ira_starting_amount            = 75489,
-            roth_ira_monthly_contributions      = 500,
-            brokerage_starting_amount           = 9587,
-            brokerage_monthly_contributions     = 250))
+            roth_ira_starting_amount            = self.common_investments_req.rothIraStartingAmount,
+            roth_ira_monthly_contributions      = self.common_investments_req.rothIraMonthlyContributions,
+            brokerage_starting_amount           = self.common_investments_req.brokerageStartingAmount,
+            brokerage_monthly_contributions     = self.common_investments_req.brokerageMonthlyContributions))
 
     def test_common_investments_rothira_defaults(self):
         self.assert_common_investments(common_investments(
-            interest                            = 7,
-            start_year                          = 2025,
-            end_year                            = 2050,
-            compouding_periods                  = 12,
-            fourohone_k_starting_amount         = 8957,
-            fourohone_k_monthly_contributions   = 1625,
+            interest                            = self.common_investments_req.interest,
+            start_year                          = self.common_investments_req.startYear,
+            end_year                            = self.common_investments_req.endYear,
+            compouding_periods                  = self.common_investments_req.compoundingPeriods,
+            fourohone_k_starting_amount         = self.common_investments_req.fourOhOneKStartingAmount,
+            fourohone_k_monthly_contributions   = self.common_investments_req.fourOhOneKMonthlyContributions,
             roth_ira_starting_amount            = None,
             roth_ira_monthly_contributions      = None,
-            brokerage_starting_amount           = 9587,
-            brokerage_monthly_contributions     = 250))
+            brokerage_starting_amount           = self.common_investments_req.brokerageStartingAmount,
+            brokerage_monthly_contributions     = self.common_investments_req.brokerageMonthlyContributions))
 
     def test_common_investments_brokerage_defaults(self):
         self.assert_common_investments(common_investments(
-            interest                            = 8,
-            start_year                          = 2025,
-            end_year                            = 2050,
-            compouding_periods                  = 12,
-            fourohone_k_starting_amount         = 15677,
-            fourohone_k_monthly_contributions   = 1625,
-            roth_ira_starting_amount            = 75489,
-            roth_ira_monthly_contributions      = 500,
+            interest                            = self.common_investments_req.interest,
+            start_year                          = self.common_investments_req.startYear,
+            end_year                            = self.common_investments_req.endYear,
+            compouding_periods                  = self.common_investments_req.compoundingPeriods,
+            fourohone_k_starting_amount         = self.common_investments_req.fourOhOneKStartingAmount,
+            fourohone_k_monthly_contributions   = self.common_investments_req.fourOhOneKMonthlyContributions,
+            roth_ira_starting_amount            = self.common_investments_req.rothIraStartingAmount,
+            roth_ira_monthly_contributions      = self.common_investments_req.rothIraMonthlyContributions,
             brokerage_starting_amount           = None,
             brokerage_monthly_contributions     = None))
+
+    def test_common_investments_interest_negative_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            common_investments(
+                interest                            = -self.common_investments_req.interest,
+                start_year                          = self.common_investments_req.startYear,
+                end_year                            = self.common_investments_req.endYear,
+                compouding_periods                  = self.common_investments_req.compoundingPeriods,
+                fourohone_k_starting_amount         = self.common_investments_req.fourOhOneKStartingAmount,
+                fourohone_k_monthly_contributions   = self.common_investments_req.fourOhOneKMonthlyContributions,
+                roth_ira_starting_amount            = self.common_investments_req.rothIraStartingAmount,
+                roth_ira_monthly_contributions      = self.common_investments_req.rothIraMonthlyContributions,
+                brokerage_starting_amount           = self.common_investments_req.brokerageStartingAmount,
+                brokerage_monthly_contributions     = self.common_investments_req.brokerageMonthlyContributions)
+
+    def test_common_investments_interest_toobig_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            common_investments(
+                interest                            = self.common_investments_req.interest * 1000,
+                start_year                          = self.common_investments_req.startYear,
+                end_year                            = self.common_investments_req.endYear,
+                compouding_periods                  = self.common_investments_req.compoundingPeriods,
+                fourohone_k_starting_amount         = self.common_investments_req.fourOhOneKStartingAmount,
+                fourohone_k_monthly_contributions   = self.common_investments_req.fourOhOneKMonthlyContributions,
+                roth_ira_starting_amount            = self.common_investments_req.rothIraStartingAmount,
+                roth_ira_monthly_contributions      = self.common_investments_req.rothIraMonthlyContributions,
+                brokerage_starting_amount           = self.common_investments_req.brokerageStartingAmount,
+                brokerage_monthly_contributions     = self.common_investments_req.brokerageMonthlyContributions)
+
+    def test_common_investments_endyear_less_than_startyear_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            common_investments(
+                interest                            = self.common_investments_req.interest,
+                start_year                          = 2020,
+                end_year                            = 2019,
+                compouding_periods                  = self.common_investments_req.compoundingPeriods,
+                fourohone_k_starting_amount         = self.common_investments_req.fourOhOneKStartingAmount,
+                fourohone_k_monthly_contributions   = self.common_investments_req.fourOhOneKMonthlyContributions,
+                roth_ira_starting_amount            = self.common_investments_req.rothIraStartingAmount,
+                roth_ira_monthly_contributions      = self.common_investments_req.rothIraMonthlyContributions,
+                brokerage_starting_amount           = self.common_investments_req.brokerageStartingAmount,
+                brokerage_monthly_contributions     = self.common_investments_req.brokerageMonthlyContributions)
+
+    def test_common_investments_fourohone_k_starting_amount_negative_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            common_investments(
+                interest                            = self.common_investments_req.interest,
+                start_year                          = self.common_investments_req.startYear,
+                end_year                            = self.common_investments_req.endYear,
+                compouding_periods                  = self.common_investments_req.compoundingPeriods,
+                fourohone_k_starting_amount         = -self.common_investments_req.fourOhOneKStartingAmount,
+                fourohone_k_monthly_contributions   = self.common_investments_req.fourOhOneKMonthlyContributions,
+                roth_ira_starting_amount            = self.common_investments_req.rothIraStartingAmount,
+                roth_ira_monthly_contributions      = self.common_investments_req.rothIraMonthlyContributions,
+                brokerage_starting_amount           = self.common_investments_req.brokerageStartingAmount,
+                brokerage_monthly_contributions     = self.common_investments_req.brokerageMonthlyContributions)
+
+    def test_common_investments_fourohone_k_monthly_contributions_negative_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            common_investments(
+                interest                            = self.common_investments_req.interest,
+                start_year                          = self.common_investments_req.startYear,
+                end_year                            = self.common_investments_req.endYear,
+                compouding_periods                  = self.common_investments_req.compoundingPeriods,
+                fourohone_k_starting_amount         = self.common_investments_req.fourOhOneKStartingAmount,
+                fourohone_k_monthly_contributions   = -self.common_investments_req.fourOhOneKMonthlyContributions,
+                roth_ira_starting_amount            = self.common_investments_req.rothIraStartingAmount,
+                roth_ira_monthly_contributions      = self.common_investments_req.rothIraMonthlyContributions,
+                brokerage_starting_amount           = self.common_investments_req.brokerageStartingAmount,
+                brokerage_monthly_contributions     = self.common_investments_req.brokerageMonthlyContributions)
+
+    def test_common_investments_roth_ira_starting_amount_negative_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            common_investments(
+                interest                            = self.common_investments_req.interest,
+                start_year                          = self.common_investments_req.startYear,
+                end_year                            = self.common_investments_req.endYear,
+                compouding_periods                  = self.common_investments_req.compoundingPeriods,
+                fourohone_k_starting_amount         = self.common_investments_req.fourOhOneKStartingAmount,
+                fourohone_k_monthly_contributions   = self.common_investments_req.fourOhOneKMonthlyContributions,
+                roth_ira_starting_amount            = -self.common_investments_req.rothIraStartingAmount,
+                roth_ira_monthly_contributions      = self.common_investments_req.rothIraMonthlyContributions,
+                brokerage_starting_amount           = self.common_investments_req.brokerageStartingAmount,
+                brokerage_monthly_contributions     = self.common_investments_req.brokerageMonthlyContributions)
+
+    def test_common_investments_roth_ira_monthly_contributions_negative_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            common_investments(
+                interest                            = self.common_investments_req.interest,
+                start_year                          = self.common_investments_req.startYear,
+                end_year                            = self.common_investments_req.endYear,
+                compouding_periods                  = self.common_investments_req.compoundingPeriods,
+                fourohone_k_starting_amount         = self.common_investments_req.fourOhOneKStartingAmount,
+                fourohone_k_monthly_contributions   = self.common_investments_req.fourOhOneKMonthlyContributions,
+                roth_ira_starting_amount            = self.common_investments_req.rothIraStartingAmount,
+                roth_ira_monthly_contributions      = -self.common_investments_req.rothIraMonthlyContributions,
+                brokerage_starting_amount           = self.common_investments_req.brokerageStartingAmount,
+                brokerage_monthly_contributions     = self.common_investments_req.brokerageMonthlyContributions)
+
+    def test_common_investments_brokerage_starting_amount_negative_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            common_investments(
+                interest                            = self.common_investments_req.interest,
+                start_year                          = self.common_investments_req.startYear,
+                end_year                            = self.common_investments_req.endYear,
+                compouding_periods                  = self.common_investments_req.compoundingPeriods,
+                fourohone_k_starting_amount         = self.common_investments_req.fourOhOneKStartingAmount,
+                fourohone_k_monthly_contributions   = self.common_investments_req.fourOhOneKMonthlyContributions,
+                roth_ira_starting_amount            = self.common_investments_req.rothIraStartingAmount,
+                roth_ira_monthly_contributions      = self.common_investments_req.rothIraMonthlyContributions,
+                brokerage_starting_amount           = -self.common_investments_req.brokerageStartingAmount,
+                brokerage_monthly_contributions     = self.common_investments_req.brokerageMonthlyContributions)
+
+    def test_common_investments_brokerage_monthly_contributions_negative_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            common_investments(
+                interest                            = self.common_investments_req.interest,
+                start_year                          = self.common_investments_req.startYear,
+                end_year                            = self.common_investments_req.endYear,
+                compouding_periods                  = self.common_investments_req.compoundingPeriods,
+                fourohone_k_starting_amount         = self.common_investments_req.fourOhOneKStartingAmount,
+                fourohone_k_monthly_contributions   = self.common_investments_req.fourOhOneKMonthlyContributions,
+                roth_ira_starting_amount            = self.common_investments_req.rothIraStartingAmount,
+                roth_ira_monthly_contributions      = self.common_investments_req.rothIraMonthlyContributions,
+                brokerage_starting_amount           = self.common_investments_req.brokerageStartingAmount,
+                brokerage_monthly_contributions     = -self.common_investments_req.brokerageMonthlyContributions)
 
     def assert_common_investments(self, df):
         assert df is not None
