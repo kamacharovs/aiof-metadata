@@ -4,7 +4,7 @@ import numpy_financial as npf
 
 import aiof.config as config
 
-from aiof.retirement.input_check import float_check
+from aiof.retirement.input_check import float_check, age_check
 
 
 # Configs
@@ -225,8 +225,41 @@ def number_simple(
     `current_salary` : float.
         your current salary. defaults to `50,000`\n
     """
-    # Checks
+    # Input checks
     current_salary = current_salary if current_salary is not None else 50000
     float_check(current_salary, "current salary")
 
     return current_salary * 12
+
+def number(
+    desired_retirement_age: int = None,
+    desired_monthly_income: float = None,
+    retirement_end_age: int = None) -> float:
+    """
+    Calculate your retirement number
+
+    Parameters
+    ----------
+    `desired_retirement_age` : int.
+        your desired retirement age. defaults to `65`\n
+    `desired_monthly_income` : float.
+        your desired monthly income. defaults to `5,000`\n
+    `retirement_end_age` : int.
+        your retirement end age. when you're going out of retirement. defaults to `95`
+    """
+    # Input checks
+    desired_retirement_age = desired_retirement_age if desired_retirement_age is not None else 65
+    desired_monthly_income = desired_monthly_income if desired_monthly_income is not None else 5000
+    retirement_end_age = retirement_end_age if retirement_end_age is not None else 95
+
+    age_check(desired_retirement_age, "desired retirement age")
+    float_check(desired_monthly_income, "desired monthly income")
+    age_check(retirement_end_age, "retirement end age")
+
+    if (desired_retirement_age > retirement_end_age):
+        raise ValueError("desired retirement age cannot be smaller than retirement end age")
+
+    age_diff = retirement_end_age - desired_retirement_age
+    desired_salary = desired_monthly_income * 12
+
+    return age_diff * desired_salary
