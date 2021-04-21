@@ -1,5 +1,7 @@
+from datetime import datetime
+
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 
 # Assets
@@ -15,10 +17,20 @@ _default_taxDrag = 0
 _default_contribution = 500
 
 
+class AssetSnapshot(BaseModel):
+    assetId: int
+    name: str
+    typeName: str
+    value: Optional[float]
+    valueChange: Optional[float]
+    created: datetime
+
 class Asset(BaseModel):
     name: Optional[str]
     typeName: str
     value: float
+
+    snapshots: Optional[List[AssetSnapshot]]
 
     def subtract(self, value):
         self.value - value
