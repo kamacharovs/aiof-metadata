@@ -4,7 +4,7 @@ import numpy_financial as npf
 
 import aiof.config as config
 
-from aiof.helpers import fv
+from aiof.retirement.input_check import float_check
 
 
 # Configs
@@ -213,3 +213,20 @@ def common_investments(
     df = df.round(_round_dig)
 
     return df if not as_json else df.to_dict(orient="records")
+
+
+def number_simple(
+    current_salary: float = None) -> float:
+    """
+    Calculate your retirement number (simple)
+
+    Parameters
+    ----------
+    `current_salary` : float.
+        your current salary. defaults to `50,000`\n
+    """
+    # Checks
+    current_salary = current_salary if current_salary is not None else 50000
+    float_check(current_salary, "current salary")
+
+    return current_salary * 12
