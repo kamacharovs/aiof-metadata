@@ -1,5 +1,3 @@
-import datetime
-
 from pydantic import BaseModel
 from typing import Optional
 
@@ -20,3 +18,11 @@ class CommonInvestmentsRequest(BaseModel):
     rothIraMonthlyContributions: Optional[float]
     brokerageStartingAmount: Optional[float]
     brokerageMonthlyContributions: Optional[float]
+
+class NumberSimpleRequest(BaseModel):
+    currentSalary: Optional[float]
+
+class NumberRequest(BaseModel):
+    desiredRetirementAge:   Optional[int]
+    desiredMonthlyIncome:   Optional[float]
+    retirementEndAge:       Optional[int]
