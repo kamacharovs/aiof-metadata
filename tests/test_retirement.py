@@ -3,7 +3,7 @@ import json
 import math
 
 from aiof.retirement.core import *
-from aiof.data.retirement import CommonInvestmentsRequest
+from aiof.data.retirement import CommonInvestmentsRequest, NumberSimpleRequest, NumberRequest
 
 
 class RetirementTestCase(unittest.TestCase):
@@ -21,6 +21,14 @@ class RetirementTestCase(unittest.TestCase):
         rothIraMonthlyContributions     = 500,
         brokerageStartingAmount         = 9587,
         brokerageMonthlyContributions   = 250)
+
+    number_simple_req = NumberSimpleRequest(
+        currentSalary   = 40000)
+
+    number_req = NumberRequest(
+        desiredRetirementAge    = 60,
+        desiredMonthlyIncome    = 6000,
+        retirementEndAge        = 90)
 
 
     def test_withdrawal_calc_defaults(self):
@@ -335,3 +343,67 @@ class RetirementTestCase(unittest.TestCase):
             assert df.loc[i, "brokerageMonthlyContributions"] >= 0
             assert df.loc[i, "total"] >= 0
             assert df.loc[i, "totalMonthlyContributions"] >= 0
+
+
+    def test_number_simple_defaults(self):
+        res = number_simple(current_salary = self.number_simple_req.currentSalary)
+        self.assert_number(res)
+
+    def test_number_simple_random_salary(self):
+        res = number_simple(current_salary = 125000)
+        self.assert_number(res)
+
+    def test_number_simple_negative_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            number_simple(current_salary = -10)
+
+    def test_number_defaults(self):
+        res = number(
+            desired_retirement_age  =   self.number_req.desiredRetirementAge,
+            desired_monthly_income  =   self.number_req.desiredMonthlyIncome,
+            retirement_end_age      =   self.number_req.retirementEndAge)
+        self.assert_number(res)
+
+    def test_number_random(self):
+        res = number(
+            desired_retirement_age  =   40,
+            desired_monthly_income  =   8000,
+            retirement_end_age      =   90)
+        self.assert_number(res)
+
+    def test_number_negative_desired_retirement_age_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            number(
+                desired_retirement_age  =   self.number_req.desiredRetirementAge * -1,
+                desired_monthly_income  =   self.number_req.desiredMonthlyIncome,
+                retirement_end_age      =   self.number_req.retirementEndAge)
+    def test_number_zero_desired_retirement_age_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            number(
+                desired_retirement_age  =   self.number_req.desiredRetirementAge * 0,
+                desired_monthly_income  =   self.number_req.desiredMonthlyIncome,
+                retirement_end_age      =   self.number_req.retirementEndAge)
+
+    def test_number_negative_desired_monthly_income_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            number(
+                desired_retirement_age  =   self.number_req.desiredRetirementAge,
+                desired_monthly_income  =   self.number_req.desiredMonthlyIncome * -1,
+                retirement_end_age      =   self.number_req.retirementEndAge)
+
+    def test_number_negative_retirement_end_age_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            number(
+                desired_retirement_age  =   self.number_req.desiredRetirementAge,
+                desired_monthly_income  =   self.number_req.desiredMonthlyIncome,
+                retirement_end_age      =   self.number_req.retirementEndAge * -1)
+    def test_number_zero_retirement_end_age_raises_valueerror(self):
+        with self.assertRaises(ValueError): 
+            number(
+                desired_retirement_age  =   self.number_req.desiredRetirementAge,
+                desired_monthly_income  =   self.number_req.desiredMonthlyIncome,
+                retirement_end_age      =   self.number_req.retirementEndAge * 0)
+
+    def assert_number(self, number):
+        assert number is not None
+        assert number > 0
