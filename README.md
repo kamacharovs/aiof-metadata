@@ -130,6 +130,7 @@ Helpful `FastAPI` documentation
 - [Middleware](https://fastapi.tiangolo.com/tutorial/middleware/)
 - [Handling Errors](https://fastapi.tiangolo.com/tutorial/handling-errors/)
 - [Extending OpenAPI](https://fastapi.tiangolo.com/advanced/extending-openapi/)
+- [OAuth2 with Password (and hashing), Bearer with JWT tokens](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/?h=jwt)
 - [tiangolo/uvicorn-gunicorn-fastapi-docker](https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker)
 
 #### Pydantic
@@ -153,4 +154,3 @@ Helpful `python` documentation
 - [Dependency injection and inversion of control in Python](http://python-dependency-injector.ets-labs.org/introduction/di_in_python.html)
 - [Lambda, Map, and Filter in Python](https://medium.com/better-programming/lambda-map-and-filter-in-python-4935f248593)
 - [numpydoc docstring guide](https://numpydoc.readthedocs.io/en/latest/format.html#numpydoc-docstring-guide)
-- [pyjwt](https://pyjwt.readthedocs.io/en/stable/)
