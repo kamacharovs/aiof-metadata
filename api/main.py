@@ -4,12 +4,12 @@ import aiof.helpers as help
 
 from aiof.data.asset import ComparableAsset
 from api.routers import helpers, fi, car, analytics, market, property, retirement
-from api.auth.handler import decode_jwt
 
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.openapi.utils import get_openapi
+from jose import JWTError, jwt, jwk
 from logzero import logger
 
 
@@ -108,6 +108,14 @@ async def info(settings: config.Settings = Depends(config.get_settings)):
             "liability": settings.LiabilityTypes
         }
     }
+
+
+@app.get("/jwt/decode")
+async def decode_async():
+    settings = config.get_settings()
+    print(settings.JwtPublicKey)
+    payload = jwt.decode("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsInB1YmxpY19rZXkiOiJiZDUzMTQ3OC0zYjM2LTRlZWEtODI4ZC1lODNlYWI3ZWEwNWMiLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE2MjA3NTU4MDQsImV4cCI6MTYyMDc1NjcwNCwiaWF0IjoxNjIwNzU1ODA0LCJpc3MiOiJhaW9mOmF1dGgiLCJhdWQiOiJhaW9mOmF1dGg6YXVkaWVuY2UifQ.PKWUXxs5ypWiHo4he9WHk7G0qAfi7GmPPKm1O5t30VZRKCeNjoR-sjXB3MG3yN9Rua--jG8payx6h_s0OSjvimeNxWDZS1dOfoZc1TntV0be_8teYRki8DX622u945xB3i4AbIdCMB2aigO62XfinuVWb0fPWXT0xFVRz_V3AgQ4LGT4QjqkIfhHu0VN2hJiT10LIMrjoWmAX5Mf9a4r3qY644coBusyug6iHnqqw9Q_ciieRngDGLosVOsM-lumgPUbf-u1VG4E4pvkVIiSLuX1ubkIp4Xi4IgVe0R-LVkPej_9xcBZ1Q5qpBSA3rS3gmNguLCpZ_YGx_cfChPwrw", settings.JwtPublicKey, algorithms=[settings.JwtAlgorithm])
+    return payload
 
 def openapi():
     if app.openapi_schema:
