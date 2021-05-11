@@ -129,6 +129,7 @@ Helpful `FastAPI` documentation
 - [Custom Response - HTML, Stream, File, others](https://fastapi.tiangolo.com/advanced/custom-response/)
 - [Middleware](https://fastapi.tiangolo.com/tutorial/middleware/)
 - [Handling Errors](https://fastapi.tiangolo.com/tutorial/handling-errors/)
+- [Extending OpenAPI](https://fastapi.tiangolo.com/advanced/extending-openapi/)
 - [tiangolo/uvicorn-gunicorn-fastapi-docker](https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker)
 
 #### Pydantic
