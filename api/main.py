@@ -5,9 +5,10 @@ import aiof.helpers as help
 from aiof.data.asset import ComparableAsset
 from api.routers import helpers, fi, car, analytics, market, property, retirement
 
-from fastapi import FastAPI, Request, HTTPException, Depends
+from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.openapi.utils import get_openapi
 from logzero import logger
 
 
@@ -107,6 +108,20 @@ async def info(settings: config.Settings = Depends(config.get_settings)):
         }
     }
 
+def openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="aiof.metadata",
+        version="v1.0",
+        description="All in one finance metadata microservice",
+        routes=app.routes,
+    )
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+app.openapi = openapi
 
 app.include_router(
     helpers.router,
