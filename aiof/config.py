@@ -9,9 +9,10 @@ from aiof.data.analytics import Analytics
 
 class Settings(BaseSettings):
     # Authentication
+    JwtAlgorithm: str = os.getenv("JwtAlgorithm", "RS256")
     JwtIssuer: str = os.getenv("JwtIssuer", "aiof:auth")
     JwtAudience: str = os.getenv("JwtAudience", "aiof:auth:audience")
-    JwtPublicKey: str = os.getenv("JwtPublicKey", "<RSAKeyValue><Modulus>1EW6wdxMPYBCc/L9RZRSpZx02eSI4YerUl9kHpYk7yFDRArngEZm2ckhQgZFU5BH13JYkfiyB5vLx9L8qZf9w/DtAZewDCaRGWckhGeNtGBDJvCAJaI/PVkwVVOLV/rosbBaqeRjiE4AQl7H+QSPzeidXmf5Zh+otywvtcZqLw8wwPLPFyoqrTeF6naDqxwkGW4E33EwR1qSp2L7RjHJleVbp6EieSsOruekT4QHCVzOfL3C5rz8QmFCPDRycPwuCnB1z0rEm5LWZuDd1z2xFxr3WFgofyEJ+LPicAt/ULrCrj0PB8/f0tMNXGPzj/ZXyerZ3gACX1shLRTDGXxMYQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>")
+    JwtPublicKey: str = os.getenv("JwtPublicKey", "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1EW6wdxMPYBCc/L9RZRSpZx02eSI4YerUl9kHpYk7yFDRArngEZm2ckhQgZFU5BH13JYkfiyB5vLx9L8qZf9w/DtAZewDCaRGWckhGeNtGBDJvCAJaI/PVkwVVOLV/rosbBaqeRjiE4AQl7H+QSPzeidXmf5Zh+otywvtcZqLw8wwPLPFyoqrTeF6naDqxwkGW4E33EwR1qSp2L7RjHJleVbp6EieSsOruekT4QHCVzOfL3C5rz8QmFCPDRycPwuCnB1z0rEm5LWZuDd1z2xFxr3WFgofyEJ+LPicAt/ULrCrj0PB8/f0tMNXGPzj/ZXyerZ3gACX1shLRTDGXxMYQIDAQAB-----END PUBLIC KEY-----")
 
     # OpenAPI
     OpenApiTitle: str = os.getenv("OpenApiTitle", "aiof.metadata")

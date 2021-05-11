@@ -4,6 +4,7 @@ import aiof.helpers as help
 
 from aiof.data.asset import ComparableAsset
 from api.routers import helpers, fi, car, analytics, market, property, retirement
+from api.auth.handler import decode_jwt
 
 from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -120,7 +121,7 @@ def openapi():
         routes=app.routes,
     )
     app.openapi_schema = openapi_schema
-    
+
     return app.openapi_schema
 
 
