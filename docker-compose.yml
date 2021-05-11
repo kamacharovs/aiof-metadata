@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  aiofdata:
+    image: gkama/aiof-data:latest
+    container_name: aiof-data
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: aiof
+      POSTGRES_PASSWORD: aiofiscool
+      POSTGRES_DB: aiof
+
+  aiofauth:
+    image: gkama/aiof-auth:latest
+    container_name: aiof-auth
+    depends_on:
+      - aiofdata
+    ports:
+      - 8000:80
+    environment: 
+      ASPNETCORE_ENVIRONMENT: Development
+      Data__PostgreSQL: Server=aiofdata;Port=5432;Database=aiof;User Id=aiof;Password=aiofiscool;
