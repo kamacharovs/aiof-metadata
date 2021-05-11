@@ -111,13 +111,16 @@ async def info(settings: config.Settings = Depends(config.get_settings)):
 def openapi():
     if app.openapi_schema:
         return app.openapi_schema
+
+    settings = config.get_settings()
     openapi_schema = get_openapi(
-        title="aiof.metadata",
-        version="v1.0",
-        description="All in one finance metadata microservice",
+        title=settings.OpenApiTitle,
+        version=settings.OpenApiVersion,
+        description=settings.OpenApiDescription,
         routes=app.routes,
     )
     app.openapi_schema = openapi_schema
+    
     return app.openapi_schema
 
 

@@ -8,6 +8,17 @@ from aiof.data.analytics import Analytics
 
 
 class Settings(BaseSettings):
+    # Authentication
+    JwtIssuer: str = os.getenv("JwtIssuer", "aiof:auth")
+    JwtAudience: str = os.getenv("JwtAudience", "aiof:auth:audience")
+    JwtPublicKey: str = os.getenv("JwtPublicKey", "<RSAKeyValue><Modulus>1EW6wdxMPYBCc/L9RZRSpZx02eSI4YerUl9kHpYk7yFDRArngEZm2ckhQgZFU5BH13JYkfiyB5vLx9L8qZf9w/DtAZewDCaRGWckhGeNtGBDJvCAJaI/PVkwVVOLV/rosbBaqeRjiE4AQl7H+QSPzeidXmf5Zh+otywvtcZqLw8wwPLPFyoqrTeF6naDqxwkGW4E33EwR1qSp2L7RjHJleVbp6EieSsOruekT4QHCVzOfL3C5rz8QmFCPDRycPwuCnB1z0rEm5LWZuDd1z2xFxr3WFgofyEJ+LPicAt/ULrCrj0PB8/f0tMNXGPzj/ZXyerZ3gACX1shLRTDGXxMYQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>")
+
+    # OpenAPI
+    OpenApiTitle: str = os.getenv("OpenApiTitle", "aiof.metadata")
+    OpenApiVersion: str = os.getenv("OpenApiVersion", "v1.0")
+    OpenApiDescription: str = os.getenv("OpenApiDescription", "All in one finance metadata microservice")
+
+    # Defaults
     DefaultRoundingDigit: int = os.getenv("DefaultRoundingDigit", 2)
     DefaultFrequency: int = os.getenv("DefaultFrequency", 12)
     DefaultInterest: float = os.getenv("DefaultInterest", 7)
