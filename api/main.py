@@ -9,7 +9,7 @@ from fastapi import FastAPI, Request, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.openapi.utils import get_openapi
-from jose import JWTError, jwt, jwk
+from jose import JWTError, jwt
 from logzero import logger
 
 
@@ -26,8 +26,12 @@ app.add_middleware(
 
 
 @app.exception_handler(ValueError)
-async def unicorn_exception_handler(req: Request, ve: ValueError):
+async def uvicorn_exception_handler(req: Request, ve: ValueError):
     return write_exception_response(status_code=400, message=ve)
+
+@app.exception_handler(JWTError)
+async def unauthorized_handler_async(req: Request, jwte: JWTError):
+    return write_exception_response(status_code=401, message="Unauthorized")
 
 def write_exception_response(status_code: int, message: str):
     return JSONResponse(
@@ -44,6 +48,9 @@ async def exception_middleware(request: Request, call_next):
         return await call_next(request)
     except Exception as e:
         logger.exception(e)
+    except JWTError as jwte:
+        logger.exception(jwte)
+
 
 @app.middleware("http")
 async def logging_middleware(request: Request, call_next):
@@ -113,8 +120,7 @@ async def info(settings: config.Settings = Depends(config.get_settings)):
 @app.get("/jwt/decode")
 async def decode_async():
     settings = config.get_settings()
-    print(settings.JwtPublicKey)
-    payload = jwt.decode("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsInB1YmxpY19rZXkiOiJiZDUzMTQ3OC0zYjM2LTRlZWEtODI4ZC1lODNlYWI3ZWEwNWMiLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE2MjA3NTU4MDQsImV4cCI6MTYyMDc1NjcwNCwiaWF0IjoxNjIwNzU1ODA0LCJpc3MiOiJhaW9mOmF1dGgiLCJhdWQiOiJhaW9mOmF1dGg6YXVkaWVuY2UifQ.PKWUXxs5ypWiHo4he9WHk7G0qAfi7GmPPKm1O5t30VZRKCeNjoR-sjXB3MG3yN9Rua--jG8payx6h_s0OSjvimeNxWDZS1dOfoZc1TntV0be_8teYRki8DX622u945xB3i4AbIdCMB2aigO62XfinuVWb0fPWXT0xFVRz_V3AgQ4LGT4QjqkIfhHu0VN2hJiT10LIMrjoWmAX5Mf9a4r3qY644coBusyug6iHnqqw9Q_ciieRngDGLosVOsM-lumgPUbf-u1VG4E4pvkVIiSLuX1ubkIp4Xi4IgVe0R-LVkPej_9xcBZ1Q5qpBSA3rS3gmNguLCpZ_YGx_cfChPwrw", settings.JwtPublicKey, algorithms=[settings.JwtAlgorithm])
+    payload = jwt.decode("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsInB1YmxpY19rZXkiOiI1ODFmM2NlNi1jZjJhLTQyYTUtODI4Zi0xNTdhMmJmYWI3NjMiLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE2MjEzNjExNTksImV4cCI6MTYyMTM2MjA1OSwiaWF0IjoxNjIxMzYxMTU5LCJpc3MiOiJhaW9mOmF1dGgiLCJhdWQiOiJhaW9mOmF1dGg6YXVkaWVuY2UifQ.bPwWseUPSK-dIf3JkOL8xAwc1NgWM_WDpLIA6FCBJarWSJuch8UXAM08JyIJ0G1p6UWKnolRxSTPda69z0bOh2B2Qfj9tYkr6CmChA5cfsoau6gvHriXvOW4xO_M_fJ4FHN1fypcPddZpuFdvDq_55kiHVz0NLLAky38_q_GPDxMtrMXdxtJVmhuQqmrOHGCzixCaaJCF0NByQiVEo7LI9ZONHK3rORWVzQm73CyDPERdLnYgWv1mT7NSEhH-7QVEhvSSVJ1b5x2MH0alCRV9ciuxqrme1MHHNxPXIUUvUsBB0peSwwd-ZV2SYbhtahwqNSCqG6wwlmjRjVMEhUSwA", settings.JwtPublicKey, algorithms=[settings.JwtAlgorithm])
     return payload
 
 def openapi():

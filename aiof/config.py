@@ -12,7 +12,15 @@ class Settings(BaseSettings):
     JwtAlgorithm: str = os.getenv("JwtAlgorithm", "RS256")
     JwtIssuer: str = os.getenv("JwtIssuer", "aiof:auth")
     JwtAudience: str = os.getenv("JwtAudience", "aiof:auth:audience")
-    JwtPublicKey: str = os.getenv("JwtPublicKey", "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1EW6wdxMPYBCc/L9RZRSpZx02eSI4YerUl9kHpYk7yFDRArngEZm2ckhQgZFU5BH13JYkfiyB5vLx9L8qZf9w/DtAZewDCaRGWckhGeNtGBDJvCAJaI/PVkwVVOLV/rosbBaqeRjiE4AQl7H+QSPzeidXmf5Zh+otywvtcZqLw8wwPLPFyoqrTeF6naDqxwkGW4E33EwR1qSp2L7RjHJleVbp6EieSsOruekT4QHCVzOfL3C5rz8QmFCPDRycPwuCnB1z0rEm5LWZuDd1z2xFxr3WFgofyEJ+LPicAt/ULrCrj0PB8/f0tMNXGPzj/ZXyerZ3gACX1shLRTDGXxMYQIDAQAB")
+    JwtPublicKey: str = os.getenv("JwtPublicKey", b"""-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1EW6wdxMPYBCc/L9RZRS
+pZx02eSI4YerUl9kHpYk7yFDRArngEZm2ckhQgZFU5BH13JYkfiyB5vLx9L8qZf9
+w/DtAZewDCaRGWckhGeNtGBDJvCAJaI/PVkwVVOLV/rosbBaqeRjiE4AQl7H+QSP
+zeidXmf5Zh+otywvtcZqLw8wwPLPFyoqrTeF6naDqxwkGW4E33EwR1qSp2L7RjHJ
+leVbp6EieSsOruekT4QHCVzOfL3C5rz8QmFCPDRycPwuCnB1z0rEm5LWZuDd1z2x
+Fxr3WFgofyEJ+LPicAt/ULrCrj0PB8/f0tMNXGPzj/ZXyerZ3gACX1shLRTDGXxM
+YQIDAQAB
+-----END PUBLIC KEY-----""")
 
     # OpenAPI
     OpenApiTitle: str = os.getenv("OpenApiTitle", "aiof.metadata")
