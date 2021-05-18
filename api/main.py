@@ -31,7 +31,7 @@ async def uvicorn_exception_handler(req: Request, ve: ValueError):
 
 @app.exception_handler(JWTError)
 async def unauthorized_handler_async(req: Request, jwte: JWTError):
-    return write_exception_response(status_code=401, message="Unauthorized")
+    return write_exception_response(status_code=401, message=config.get_settings().UnauthorizedMessage)
 
 def write_exception_response(status_code: int, message: str):
     return JSONResponse(

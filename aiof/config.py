@@ -21,6 +21,7 @@ leVbp6EieSsOruekT4QHCVzOfL3C5rz8QmFCPDRycPwuCnB1z0rEm5LWZuDd1z2x
 Fxr3WFgofyEJ+LPicAt/ULrCrj0PB8/f0tMNXGPzj/ZXyerZ3gACX1shLRTDGXxM
 YQIDAQAB
 -----END PUBLIC KEY-----""")
+    UnauthorizedMessage  = "Unauthorized. Missing, invalid or expired credentials provided"
 
     # OpenAPI
     OpenApiTitle: str = os.getenv("OpenApiTitle", "aiof.metadata")
