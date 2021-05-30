@@ -61,51 +61,18 @@ async def health_check():
 async def asset_breakdown(asset: ComparableAsset):
     return help.asset_breakdown(asset)
 
-@app.get("/api/asset/breakdown/csv")
-async def export_asset_fv_breakdown_as_table_to_csv():
-    df = help.asset_fv_breakdown_as_table(
-        asset_value=15957,
-        contribution=500,
-        years=15,
-        rate=(8/100)/12,
-        frequency=12,
-    )
-    response = StreamingResponse(help.export_to_csv(df),
-                                media_type="text/csv")
-    return response 
-
 
 @app.get("/api/frequencies")
 async def frequencies():
     return config.get_settings().Frequencies
+
 @app.get("/api/frequencies/map")
 async def frequencies_map():
     return config.get_settings().FrequenciesMap
 
-
 @app.get("/api/app/settings")
 async def info(settings: config.Settings = Depends(config.get_settings)):
-    return {
-        "defaults": {
-            "rounding_digit": settings.DefaultRoundingDigit,
-            "frequency": settings.DefaultFrequency,
-            "interest": settings.DefaultInterest,
-            "hys_interest": settings.DefaultHysInterest,
-            "average_bank_interest": settings.DefaultAverageBankInterest,
-            "investment_fee": settings.DefaultInvestmentFee,
-            "tax_drag": settings.DefaultTaxDrag,
-            "child": settings.DefaultChild
-        },
-        "cors": {
-            "origins": settings.cors_origins,
-            "allowed_methods": settings.cors_allowed_methods,
-            "allowed_headers": settings.cors_allowed_headers
-        },
-        "types": {
-            "asset": settings.AssetTypes,
-            "liability": settings.LiabilityTypes
-        }
-    }
+    return settings
 
 
 app.include_router(

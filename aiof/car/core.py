@@ -1,6 +1,5 @@
 import math
 import numpy as np
-from numpy.lib.financial import pmt
 import numpy_financial as npf
 import pandas as pd
 
