@@ -32,6 +32,7 @@ class GoalTrip(Goal):
 
 class GoalAnalyzeRequest(BaseModel):
     goal: Goal
+    monthlyIncome: float
     currentGoals: List[Goal]
     currentAssets: List[Asset]
     currentLiabilities: List[Liability]

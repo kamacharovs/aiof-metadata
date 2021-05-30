@@ -1,10 +1,8 @@
 import os
 
 from pydantic import BaseSettings
-from typing import Optional, List
+from typing import List
 from functools import lru_cache
-
-from aiof.data.analytics import Analytics
 
 
 class Settings(BaseSettings):

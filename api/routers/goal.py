@@ -12,6 +12,7 @@ router = APIRouter()
 async def goal_analyze_async(req: GoalAnalyzeRequest):
     return goal.analyze(
         goal                = req.goal, 
+        monthly_income      = req.monthlyIncome,
         current_goals       = req.currentGoals,
         current_assets      = req.currentAssets,
         current_liabilities = req.currentLiabilities)
