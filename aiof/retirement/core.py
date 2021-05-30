@@ -4,7 +4,7 @@ import numpy_financial as npf
 
 import aiof.config as config
 
-from aiof.retirement.input_check import float_check, age_check
+from aiof.retirement.parameter_check import float_check, age_check
 
 
 # Configs
@@ -225,7 +225,7 @@ def number_simple(
     `current_salary` : float.
         your current salary. defaults to `50,000`\n
     """
-    # Input checks
+    # Parameter checks
     current_salary = current_salary if current_salary is not None else 50000
     float_check(current_salary, "current salary")
 
@@ -247,7 +247,7 @@ def number(
     `retirement_end_age` : int.
         your retirement end age. when you're going out of retirement. defaults to `95`
     """
-    # Input checks
+    # Parameter checks
     desired_retirement_age = desired_retirement_age if desired_retirement_age is not None else 65
     desired_monthly_income = desired_monthly_income if desired_monthly_income is not None else 5000
     retirement_end_age = retirement_end_age if retirement_end_age is not None else 95
