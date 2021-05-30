@@ -3,6 +3,9 @@ from datetime import datetime
 from pydantic import BaseModel
 from typing import Optional, List
 
+from aiof.data.asset import Asset
+from aiof.data.liability import Liability
+
 
 # Financial Goals
 #   - Mandatory short-term goals
@@ -30,3 +33,5 @@ class GoalTrip(Goal):
 class GoalAnalyzeRequest(BaseModel):
     goal: Goal
     currentGoals: List[Goal]
+    currentAssets: List[Asset]
+    currentLiabilities: List[Liability]
