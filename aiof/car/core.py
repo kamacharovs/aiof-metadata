@@ -1,13 +1,12 @@
-import math
 import numpy as np
 import numpy_financial as npf
 import pandas as pd
 
+from random import randrange
+
 import aiof.config as config
 
 from aiof.data.car import CarLoanResponse
-
-from random import randrange
 
 
 # Configs

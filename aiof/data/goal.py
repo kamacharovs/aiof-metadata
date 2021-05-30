@@ -1,13 +1,32 @@
+from datetime import datetime
+
+from pydantic import BaseModel
+from typing import Optional, List
+
+
 # Financial Goals
 #   - Mandatory short-term goals
+class Goal(BaseModel):
+    name: str
+    type: str
+    amount: Optional[float]
+    currentAmount: Optional[float]
+    monthlyContribution: Optional[float]
+    plannedDate: datetime
+    projectedDate: Optional[datetime]
 
-class Goal:
-    _types = [
-        "short-term",
-        "long-term"
-    ]
+class GoalTrip(Goal):
+    destination: str
+    tripType: str
+    Duration: float
+    travelers: int
+    flight: Optional[float]
+    hotel: Optional[float]
+    car: Optional[float]
+    food: Optional[float]
+    activities: Optional[float]
+    other: Optional[float]
 
-    def __init__(self, name, type):
-        self.name = name
-        self.type = type if type in self._types else "other"
-        self.savings = False
+class GoalAnalyzeRequest(BaseModel):
+    goal: Goal
+    currentGoals: List[Goal]

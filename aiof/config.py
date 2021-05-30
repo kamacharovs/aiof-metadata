@@ -136,6 +136,22 @@ class Settings(BaseSettings):
         "other"
     ]
 
+    # Goal
+    class GoalType(object):
+        GENERIC         = "generic"
+        TRIP            = "trip"
+        BUYAHOME        = "buyAHome"
+        BUYACAR         = "buyACar"
+        SAVEFORCOLLEGE  = "saveForCollege"
+
+    GoalTypes = [
+        GoalType.GENERIC,
+        GoalType.TRIP,
+        GoalType.BUYAHOME,
+        GoalType.BUYACAR,
+        GoalType.SAVEFORCOLLEGE,
+    ]
+
 
     # Analytics
     AnalyticsDebtToIncomeAcceptableLiabilityTypes = [
