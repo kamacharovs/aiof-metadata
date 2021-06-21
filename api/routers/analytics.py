@@ -12,8 +12,9 @@ router = APIRouter()
 @router.post("/analyze")
 async def analyze(req: AssetsLiabilitiesRequest):
     return a.analyze(
-        assets      = req.assets,
-        liabilities = req.liabilities)
+        assets          = req.assets,
+        liabilities     = req.liabilities,
+        annual_income   = req.annualIncome)
 
 @router.get("/life/event/types")
 async def get_life_event_types():

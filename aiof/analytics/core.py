@@ -25,14 +25,14 @@ _round_dig = _settings.DefaultRoundingDigit
 _average_bank_interest = _settings.DefaultAverageBankInterest
 _average_market_interest = _settings.DefaultInterest
 _years = _settings.DefaultShortYears
-_acceptable_liability_types = _settings.AnalyticsDebtToIncomeAcceptableLiabilityTypes
 _asset_type = _settings.AssetType
 _life_event_type = _settings.LifeEventType
 
 
 def analyze(
     assets: List[Asset],
-    liabilities: List[Liability]) -> AssetsLiabilities:
+    liabilities: List[Liability],
+    annual_income: float) -> AssetsLiabilities:
     """
     Given a list of assets and liabilities, perform analytics on them
 
@@ -76,7 +76,7 @@ def analyze(
     analytics.assetsFv = assets_fv(assets=assets)
 
     # Debt to income ration calculation
-    analytics.debtToIncomeRatio = debt_to_income_ratio_calc(income=150000, liabilities=liabilities)
+    analytics.debtToIncomeRatio = debt_to_income_ratio_calc(annual_income, liabilities)
 
     return AssetsLiabilities(
         assets=assets_values,
@@ -121,52 +121,47 @@ def assets_fv(
                 
 
 def debt_to_income_ratio_calc(
-    income: float,
+    annual_income: float,
     liabilities: List[Liability]) -> float:
     """
     Calculate debt to income ratio
 
     Parameters
     ----------
-    `income` : float. 
+    `annual_income` : float. 
         annual income\n
     `liabilities` : List[Liability].
         list of liabilities that will be used to calculate debt to income ratio\n
     """
-    filtered_liabilities = [x for x in liabilities if x.typeName.lower() in _acceptable_liability_types and x.monthlyPayment is not None]
+    filtered_liabilities = [x for x in liabilities if x.monthlyPayment is None or x.monthlyPayment == 0]
 
-    if len(filtered_liabilities) == 0:
-        return 0.0
-    
-    total_liabilities_payments = 0.0
-    for liability in filtered_liabilities:
-        liability_monthly_payment = 0
+    total_liabilities_monthly_payments = 0
+    for l in liabilities:
+        total_liabilities_monthly_payments += l.monthlyPayment
 
+    for l in filtered_liabilities:
         # Check if there are cases where .monthlyPayment is 0 and .years is there
         # then calculate the monthly payment
-        if liability.years is not None and liability.years > 0 and liability.monthlyPayment == 0:
-            liability_monthly_payment = (liability.value / liability.years) / 12
-        else:
-            liability_monthly_payment = liability.monthlyPayment
-        total_liabilities_payments += liability_monthly_payment
+        if l.years is not None and l.years > 0:
+            total_liabilities_monthly_payments += (l.value / l.years) / 12
 
-    return debt_to_income_ratio_basic_calc(income, total_liabilities_payments)
+    return debt_to_income_ratio_basic_calc(annual_income, total_liabilities_monthly_payments)
 
 
 def debt_to_income_ratio_basic_calc(
-    income: float,
+    annual_income: float,
     total_monthly_debt_payments: float) -> float:
     """
     Calculate debt to income ratio
 
     Parameters
     ----------
-    `income` : float. 
+    `annual_income` : float. 
         annual income\n
     `total_monthly_debt_payments` : float.
         total monthly debt payments. usually include credit cards, personal loan, student loan, etc.
     """
-    return round(((total_monthly_debt_payments * 12) / income) * 100, _round_dig)
+    return round(((total_monthly_debt_payments * 12) / annual_income) * 100, _round_dig)
 
 
 def life_event_types() -> List[str]:

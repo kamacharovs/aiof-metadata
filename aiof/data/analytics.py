@@ -16,6 +16,7 @@ class Analytics(BaseModel):
 class AssetsLiabilitiesRequest(BaseModel):
     assets: List[Asset]
     liabilities: List[Liability]
+    annualIncome: float
 
 class AssetsLiabilities(BaseModel):
     assets: List[float]

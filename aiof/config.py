@@ -152,16 +152,7 @@ class Settings(BaseSettings):
 
 
     # Analytics
-    AnalyticsDebtToIncomeAcceptableLiabilityTypes = [
-        "personal loan",
-        "student loan",
-        "auto loan",
-        "credit card",
-        "rent",
-        "mortgage",
-        "auto lease",
-        "other"
-    ]
+
 
     # Life event
     class LifeEventType(object):
