@@ -1,7 +1,7 @@
 name: build
 
 on:
-  pull_request:
+  push:
     branches: [ master ]
 
 jobs:
@@ -25,5 +25,5 @@ jobs:
       with:
         context: .
         file: ./Dockerfile
-        push: false
+        push: true
         tags: gkama/aiof-metadata:latest
