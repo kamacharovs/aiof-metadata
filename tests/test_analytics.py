@@ -39,7 +39,7 @@ class AnalyticsTestCase(unittest.TestCase):
 
 
     def test_analyze(self):
-        resp = analyze(assets=self.test_assets, liabilities=self.test_liabilities)
+        resp = analyze(self.test_assets, self.test_liabilities, 150000)
 
         assert len(resp.assets) > 0
         assert len(resp.liabilities) > 0
@@ -65,7 +65,7 @@ class AnalyticsTestCase(unittest.TestCase):
 
 
     def test_debt_to_income_ratio_calc_liabilities(self):
-        resp = debt_to_income_ratio_calc(income=150000, liabilities=self.test_liabilities)
+        resp = debt_to_income_ratio_calc(150000, self.test_liabilities)
 
         assert resp > 0
 
@@ -75,7 +75,7 @@ class AnalyticsTestCase(unittest.TestCase):
                 typeName="rv",
                 value=1000)
         ]
-        resp = debt_to_income_ratio_calc(income=150000, liabilities=specific_liabilities)
+        resp = debt_to_income_ratio_calc(150000, specific_liabilities)
 
         assert resp == 0
 
@@ -90,19 +90,19 @@ class AnalyticsTestCase(unittest.TestCase):
                 value=12500,
                 years=6)
         ]
-        resp = debt_to_income_ratio_calc(income=150000, liabilities=specific_liabilities)
+        resp = debt_to_income_ratio_calc(150000, specific_liabilities)
 
         assert resp > 0
         assert resp > 1
 
 
     def test_debt_to_income_ratio_basic_calc(self):
-        resp = debt_to_income_ratio_basic_calc(income=50000, total_monthly_debt_payments=1250)
+        resp = debt_to_income_ratio_basic_calc(50000, 1250)
 
         assert resp > 0
 
     def test_debt_to_income_ratio_basic_calc_exact(self):
-        resp = debt_to_income_ratio_basic_calc(income=1000, total_monthly_debt_payments=10)
+        resp = debt_to_income_ratio_basic_calc(1000, 10)
 
         assert round(resp) == 12
 

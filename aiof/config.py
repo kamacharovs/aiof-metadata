@@ -1,10 +1,8 @@
 import os
 
 from pydantic import BaseSettings
-from typing import Optional, List
+from typing import List
 from functools import lru_cache
-
-from aiof.data.analytics import Analytics
 
 
 class Settings(BaseSettings):
@@ -136,18 +134,25 @@ class Settings(BaseSettings):
         "other"
     ]
 
+    # Goal
+    class GoalType(object):
+        GENERIC         = "generic"
+        TRIP            = "trip"
+        BUYAHOME        = "buyAHome"
+        BUYACAR         = "buyACar"
+        SAVEFORCOLLEGE  = "saveForCollege"
+
+    GoalTypes = [
+        GoalType.GENERIC,
+        GoalType.TRIP,
+        GoalType.BUYAHOME,
+        GoalType.BUYACAR,
+        GoalType.SAVEFORCOLLEGE,
+    ]
+
 
     # Analytics
-    AnalyticsDebtToIncomeAcceptableLiabilityTypes = [
-        "personal loan",
-        "student loan",
-        "auto loan",
-        "credit card",
-        "rent",
-        "mortgage",
-        "auto lease",
-        "other"
-    ]
+
 
     # Life event
     class LifeEventType(object):

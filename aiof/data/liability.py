@@ -11,7 +11,6 @@ from typing import Optional
 #   - RV
 #   - Any personal loan
 #   - Etc.
-
 class Liability(BaseModel):
     name: str
     typeName: str
