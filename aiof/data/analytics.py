@@ -29,3 +29,8 @@ class AssetsLiabilities(BaseModel):
     liabilitiesMean: float
 
     analytics: Analytics
+
+
+class DebtToIncomeRatioRequest(BaseModel):
+    annualIncome: float
+    liabilities: List[Liability]

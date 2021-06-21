@@ -1,6 +1,6 @@
 import aiof.analytics.core as a
 
-from aiof.data.analytics import AssetsLiabilitiesRequest
+from aiof.data.analytics import AssetsLiabilitiesRequest, DebtToIncomeRatioRequest
 from aiof.data.life_event import LifeEventRequest
 
 from fastapi import APIRouter
@@ -26,3 +26,10 @@ async def get_life_event(req: LifeEventRequest):
     return a.life_event(
         req     = req,
         as_json = True)
+
+
+@router.post("/debt/income/ratio")
+async def debt_to_income_ratio(req: DebtToIncomeRatioRequest):
+    return a.debt_to_income_ratio_calc(
+        annual_income   = req.annualIncome,
+        liabilities     = req.liabilities)
