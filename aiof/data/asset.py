@@ -19,8 +19,8 @@ _default_contribution = 500
 
 class AssetSnapshot(BaseModel):
     assetId: int
-    name: str
-    typeName: str
+    name: Optional[str]
+    typeName: Optional[str]
     value: Optional[float]
     valueChange: Optional[float]
     created: datetime
