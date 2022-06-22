@@ -2,7 +2,7 @@
 fastapi==0.65.2
 uvicorn==0.11.8
 pytest==6.0.2
-numpy==1.19.0
+numpy==1.22.0
 numpy_financial===1.0.0
 pandas===1.1.2
 pandas_datareader===0.9.0
